@@ -32,7 +32,7 @@ namespace  terraclear
 {
 
     //Copied most common subset from LibSerial...
-    enum XKBaud
+    enum Baud
     {
         BAUD_2400 = 2400,
         BAUD_4800 = 4800,
@@ -51,7 +51,7 @@ namespace  terraclear
             basicserial();   
             ~basicserial();
             
-            void open(string serialPortPath, XKBaud baudRate);
+            void open(string serialPortPath, Baud baudRate);
             void close();
             int writeString(string dataString, uint32_t timeout_ms);
             string readstring(uint32_t maxbufflen, uint32_t timeout_ms);

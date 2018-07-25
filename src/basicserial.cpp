@@ -42,7 +42,7 @@ namespace terraclear
     }
 
     //Constructor with init for serial comms.
-    void basicserial::open(string serialPortPath, XKBaud baudRate)
+    void basicserial::open(string serialPortPath, Baud baudRate)
     {
         //force close on already open ports..
         if (_ttyport != nullptr)
