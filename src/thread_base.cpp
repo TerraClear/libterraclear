@@ -27,6 +27,13 @@ namespace  terraclear
 
     thread_base::~thread_base() 
     {   
+        //kill thread if still running..
+        if (_threadRunning)
+        {
+            _threadRunning = false;
+            pthread_join(_thread_main, NULL);
+        }
+
         pthread_mutex_destroy(&_mutex);
     }
     

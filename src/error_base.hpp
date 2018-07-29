@@ -14,7 +14,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * 
+ * CREATED BY: Koos du Preez - koos@terraclear.com
+ */
             
 #ifndef ERROR_BASE_HPP
 #define ERROR_BASE_HPP

@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/src/appsettings.o \
 	${OBJECTDIR}/src/basicserial.o \
 	${OBJECTDIR}/src/camera_base.o \
 	${OBJECTDIR}/src/camera_depth.o \
@@ -43,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_file.o \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/error_base.o \
+	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o
 
 
@@ -69,6 +71,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibterraclear.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/liblibterraclear.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
+
+${OBJECTDIR}/src/appsettings.o: src/appsettings.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/appsettings.o src/appsettings.cpp
 
 ${OBJECTDIR}/src/basicserial.o: src/basicserial.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -109,6 +116,11 @@ ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/error_base.o src/error_base.cpp
+
+${OBJECTDIR}/src/stopwatch.o: src/stopwatch.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/stopwatch.o src/stopwatch.cpp
 
 ${OBJECTDIR}/src/thread_base.o: src/thread_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

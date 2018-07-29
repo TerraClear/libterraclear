@@ -14,18 +14,16 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * CREATED BY: Koos du Preez - koos@terraclear.com
 */
 
 #include <cstring>
+#include "iostream"
 #include <libserialport.h>
 
 #include "basicserial.hpp"
-
 #include "error_base.hpp"
-
-#include "iostream"
-
-using namespace std;
 
 namespace terraclear
 {
@@ -42,7 +40,7 @@ namespace terraclear
     }
 
     //Constructor with init for serial comms.
-    void basicserial::open(string serialPortPath, Baud baudRate)
+    void basicserial::open(std::string serialPortPath, Baud baudRate)
     {
         //force close on already open ports..
         if (_ttyport != nullptr)
@@ -85,14 +83,14 @@ namespace terraclear
 
     
     //Writing string data to serial port..
-    int basicserial::writeString(string dataString, uint32_t timeout_ms)
+    int basicserial::writeString(std::string dataString, uint32_t timeout_ms)
     {
          return sp_blocking_write(_ttyport, dataString.c_str(), dataString.length(), timeout_ms);
     }
     
-    string basicserial::readstring(uint32_t maxbufflen, uint32_t timeout_ms)
+    std::string basicserial::readstring(uint32_t maxbufflen, uint32_t timeout_ms)
     {
-        string retstr = "";
+        std::string retstr = "";
         
         if (maxbufflen < 1)
             throw error_base("READ: Max Length must be non zero.");

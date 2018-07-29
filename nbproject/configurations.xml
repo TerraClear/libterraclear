@@ -5,7 +5,11 @@
                    displayName="Resource Files"
                    projectFiles="true">
     </logicalFolder>
-    <logicalFolder name="f3" displayName="src" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f3" displayName="src" projectFiles="true">
+      <logicalFolder name="f6" displayName="appsettings" projectFiles="true">
+        <itemPath>src/appsettings.cpp</itemPath>
+        <itemPath>src/appsettings.hpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="camera" projectFiles="true">
         <itemPath>src/camera_base.cpp</itemPath>
         <itemPath>src/camera_base.hpp</itemPath>
@@ -20,10 +24,7 @@
         <itemPath>src/camera_usb.cpp</itemPath>
         <itemPath>src/camera_usb.hpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f4"
-                     displayName="exceptions"
-                     projectFiles="true"
-                     kind="ROOT">
+      <logicalFolder name="f4" displayName="exceptions" projectFiles="true">
         <itemPath>src/error_base.cpp</itemPath>
         <itemPath>src/error_base.hpp</itemPath>
       </logicalFolder>
@@ -31,10 +32,11 @@
         <itemPath>src/basicserial.cpp</itemPath>
         <itemPath>src/basicserial.hpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3"
-                     displayName="threading"
-                     projectFiles="true"
-                     kind="ROOT">
+      <logicalFolder name="f5" displayName="stopwatch" projectFiles="true">
+        <itemPath>src/stopwatch.cpp</itemPath>
+        <itemPath>src/stopwatch.hpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="threading" projectFiles="true">
         <itemPath>src/thread_base.cpp</itemPath>
         <itemPath>src/thread_base.hpp</itemPath>
       </logicalFolder>
@@ -73,6 +75,10 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/basicserial.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/basicserial.hpp" ex="false" tool="3" flavor2="0">
@@ -104,6 +110,10 @@
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/thread_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -130,6 +140,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/basicserial.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/basicserial.hpp" ex="false" tool="3" flavor2="0">
@@ -161,6 +175,10 @@
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/thread_base.cpp" ex="false" tool="1" flavor2="0">
       </item>

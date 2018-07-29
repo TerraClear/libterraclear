@@ -14,7 +14,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ * 
+ * CREATED BY: Koos du Preez - koos@terraclear.com
+ */
 
 #include "error_base.hpp"
 

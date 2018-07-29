@@ -14,6 +14,8 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * CREATED BY: Koos du Preez - koos@terraclear.com
 */
 
 #ifndef BASICSERIAL_HPP
@@ -25,8 +27,6 @@
 //using libserialport from sigrok
 // https://sigrok.org/wiki/Libserialport
 #include <libserialport.h>
-
-using namespace std;
 
 namespace  terraclear
 {
@@ -51,10 +51,10 @@ namespace  terraclear
             basicserial();   
             ~basicserial();
             
-            void open(string serialPortPath, Baud baudRate);
+            void open(std::string serialPortPath, Baud baudRate);
             void close();
-            int writeString(string dataString, uint32_t timeout_ms);
-            string readstring(uint32_t maxbufflen, uint32_t timeout_ms);
+            int writeString(std::string dataString, uint32_t timeout_ms);
+            std::string readstring(uint32_t maxbufflen, uint32_t timeout_ms);
         
             bool isopen = false;
        
