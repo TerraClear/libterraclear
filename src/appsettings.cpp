@@ -43,31 +43,30 @@ namespace terraclear
         config_doc.close();
     }
 
-    bool appsettings::getvalue_bool(std::string setting_name)
+    bool appsettings::getvalue_bool(std::string setting_name, bool default_value)
     {
-        return _settings.get(setting_name, false).asBool();
+        return _settings.get(setting_name, default_value).asBool();
     }
 
-    int32_t appsettings::getvalue_int(std::string setting_name)
+    int32_t appsettings::getvalue_int(std::string setting_name, int default_value)
     {
-       return _settings.get(setting_name, 0).asInt();
+       return _settings.get(setting_name, default_value).asInt();
     }
 
-    uint32_t appsettings::getvalue_uint(std::string setting_name)
+    uint32_t appsettings::getvalue_uint(std::string setting_name, uint32_t default_value)
     {
-       return _settings.get(setting_name, 0).asUInt();
+       return _settings.get(setting_name, default_value).asUInt();
     }
 
-    float appsettings::getvalue_float(std::string setting_name)
+    float appsettings::getvalue_float(std::string setting_name, float default_value)
     {
-       return _settings.get(setting_name, 0.0f).asFloat();
+       return _settings.get(setting_name, default_value).asFloat();
     }
 
-    std::string appsettings::getvalue_string(std::string setting_name)
+    std::string appsettings::getvalue_string(std::string setting_name, std::string default_value)
     {
-        return _settings.get(setting_name, "").asString();
+        return _settings.get(setting_name, default_value).asString();
     }
-
 
 
     appsettings::~appsettings() 

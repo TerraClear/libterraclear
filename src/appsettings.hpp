@@ -36,11 +36,11 @@ namespace terraclear
             appsettings(std::string json_filename);
             virtual ~appsettings();
 
-            bool getvalue_bool(std::string setting_name);
-            int32_t getvalue_int(std::string setting_name);
-            uint32_t getvalue_uint(std::string setting_name);
-            float getvalue_float(std::string setting_name);
-            std::string getvalue_string(std::string setting_name);
+            bool getvalue_bool(std::string setting_name, bool default_value = false);
+            int32_t getvalue_int(std::string setting_name, int32_t default_value = 0);
+            uint32_t getvalue_uint(std::string setting_name, uint32_t default_value = 0);
+            float getvalue_float(std::string setting_name, float default_value = 0.0f);
+            std::string getvalue_string(std::string setting_name, std::string default_value = "s");
 
         private:
             Json::Value _settings;

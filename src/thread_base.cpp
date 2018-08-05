@@ -41,15 +41,17 @@ namespace  terraclear
     void thread_base::thread_start(std::string threadName)
     {
         _threadName = threadName;
-        _threadRunning = true;
 
         pthread_create(&_thread_main, NULL, thread_run, this);
+
+        _threadRunning = true;
+
         std::cout << ">>> STARTED THREAD: " << _threadName << std::endl;
     }
 
     void* thread_base::thread_run(void* thread_obj)
     {
-        thread_base* ctxt = (thread_base*) thread_obj;        
+        thread_base* ctxt = static_cast<thread_base*>(thread_obj);        
         
         while (ctxt->_threadRunning)
         {
