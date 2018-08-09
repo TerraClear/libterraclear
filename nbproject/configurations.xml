@@ -28,6 +28,10 @@
         <itemPath>src/error_base.cpp</itemPath>
         <itemPath>src/error_base.hpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f7" displayName="iptools" projectFiles="true">
+        <itemPath>src/msgserver.cpp</itemPath>
+        <itemPath>src/msgserver.hpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="serial" projectFiles="true">
         <itemPath>src/basicserial.cpp</itemPath>
         <itemPath>src/basicserial.hpp</itemPath>
@@ -111,6 +115,10 @@
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/msgserver.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
@@ -175,6 +183,10 @@
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/msgserver.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
       </item>

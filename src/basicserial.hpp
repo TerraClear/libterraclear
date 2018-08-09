@@ -53,7 +53,7 @@ namespace  terraclear
             
             void open(std::string serialPortPath, Baud baudRate);
             void close();
-            int writeString(std::string dataString, uint32_t timeout_ms);
+            int writeString(std::string dataString, uint32_t timeout_ms = 250);
             std::string readstring(uint32_t maxbufflen, uint32_t timeout_ms);
         
             bool isopen = false;

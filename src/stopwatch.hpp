@@ -23,7 +23,6 @@
 
 #include <vector>
 #include <chrono>
-#include <opencv2/core/hal/interface.h>
 
 namespace  terraclear
 {

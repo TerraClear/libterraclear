@@ -22,6 +22,8 @@
 #define ERROR_BASE_HPP
 
 #include <iostream>
+#include <sstream>
+#include <cstring>
 #include <exception>
 
 namespace  terraclear
@@ -31,6 +33,7 @@ namespace  terraclear
     {
         public:
             error_base(std::string errmsg);
+            error_base(std::string errmsg, int error_number);
             virtual const char* what() const throw();
             
         private:

@@ -27,6 +27,13 @@ namespace terraclear
         _errmsg = errmsg;
     }
 
+    error_base::error_base(std::string errmsg, int error_number)
+    {
+        std::stringstream strstrm;
+        strstrm << errmsg << " : " <<  std::strerror(error_number);
+        _errmsg = strstrm.str();
+    }
+
     const char* error_base::what() const throw()
     {
         return _errmsg.c_str();
