@@ -12,8 +12,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define MSGSERVER_DEFAULT_INTERFACE "lo"
 #define MSGSERVER_DEFAULT_SERVER_TYPE terraclear::msgserver::UDP_BROADCAST
+#define MSGSERVER_DEFAULT_INTERFACE "lo"
 #define MSGSERVER_DEFAULT_IP_ADDRESS "127.255.255.255"
 #define MSGSERVER_DEFAULT_IP_PORT 52525
 
