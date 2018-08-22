@@ -44,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_file.o \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/error_base.o \
+	${OBJECTDIR}/src/hsvcalibration.o \
 	${OBJECTDIR}/src/msgserver.o \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o
@@ -117,6 +118,11 @@ ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/error_base.o src/error_base.cpp
+
+${OBJECTDIR}/src/hsvcalibration.o: src/hsvcalibration.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/hsvcalibration.o src/hsvcalibration.cpp
 
 ${OBJECTDIR}/src/msgserver.o: src/msgserver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
