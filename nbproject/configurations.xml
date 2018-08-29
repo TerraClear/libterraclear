@@ -29,6 +29,10 @@
         <itemPath>src/camera_usb.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f9" displayName="detectors" projectFiles="true">
+        <itemPath>src/detector_base.cpp</itemPath>
+        <itemPath>src/detector_base.hpp</itemPath>
+        <itemPath>src/detector_hsv.cpp</itemPath>
+        <itemPath>src/detector_hsv.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f4" displayName="exceptions" projectFiles="true">
         <itemPath>src/error_base.cpp</itemPath>
@@ -117,6 +121,14 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
@@ -189,6 +201,14 @@
       <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>

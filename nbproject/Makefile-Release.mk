@@ -43,6 +43,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_depth_zed.o \
 	${OBJECTDIR}/src/camera_file.o \
 	${OBJECTDIR}/src/camera_usb.o \
+	${OBJECTDIR}/src/detector_base.o \
+	${OBJECTDIR}/src/detector_hsv.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
 	${OBJECTDIR}/src/msgserver.o \
@@ -113,6 +115,16 @@ ${OBJECTDIR}/src/camera_usb.o: src/camera_usb.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_usb.o src/camera_usb.cpp
+
+${OBJECTDIR}/src/detector_base.o: src/detector_base.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_base.o src/detector_base.cpp
+
+${OBJECTDIR}/src/detector_hsv.o: src/detector_hsv.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_hsv.o src/detector_hsv.cpp
 
 ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
