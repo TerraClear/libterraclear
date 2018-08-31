@@ -26,8 +26,8 @@ namespace terraclear
     camera_depth_realsense::camera_depth_realsense() 
     {
         //enable RGB and Depth streams.
-        _pipe_config.enable_stream(RS2_STREAM_COLOR,1280,720,RS2_FORMAT_BGR8, 30);
-//        _pipe_config.enable_stream(RS2_STREAM_COLOR, 1920,1080,RS2_FORMAT_BGR8, 30);
+        //_pipe_config.enable_stream(RS2_STREAM_COLOR,1280,720,RS2_FORMAT_BGR8, 30);
+        _pipe_config.enable_stream(RS2_STREAM_COLOR, 1920,1080,RS2_FORMAT_BGR8, 30);
         _pipe_config.enable_stream(RS2_STREAM_DEPTH, 1280,720,RS2_FORMAT_ANY, 30);
         
         _pipe.start(_pipe_config);

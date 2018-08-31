@@ -37,7 +37,7 @@ namespace terraclear
         protected:
             cv::Mat _imgsrc;
             void mergeBoundingBoxes(std::vector<bounding_box> &object_boxes, uint32_t expand_pixels = 0);
-            cv::Rect getIntersectRect(bounding_box b1, bounding_box b2);        
+            cv::Rect getIntersectRect(bounding_box b1, bounding_box b2);   
            
     };
 
