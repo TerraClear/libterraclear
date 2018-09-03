@@ -14,7 +14,21 @@ namespace terraclear
         float confidence;                 
         unsigned int class_id;        
         unsigned int track_id;        
-        unsigned int frame_count;         
+        unsigned int frame_count;    
+        float distance_cm;
+        
+        // < operator overload for sorting.
+        bool operator < (const bounding_box &compare_box) const 
+        {
+            return (y + height) < (compare_box.y + compare_box.height);
+        }
+
+        // > operator overload for sorting.
+        bool operator > (const bounding_box &compare_box) const 
+        {
+            return (y + height) > (compare_box.y + compare_box.height);
+        }
+
     };
 
     struct bounding_box_cluster
