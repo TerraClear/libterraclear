@@ -29,6 +29,8 @@ namespace terraclear
         if(!_videofeed.open(camera_index))
         {
             //TODO: Add custom exception handlers..
+            std::cerr << "\n** Camera Not Available!!\n";
+            
             throw std::exception();
         }
     }

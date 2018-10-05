@@ -63,6 +63,11 @@ namespace terraclear
        return _settings.get(setting_name, default_value).asFloat();
     }
 
+    double appsettings::getvalue_double(std::string setting_name, double default_value)
+    {
+       return _settings.get(setting_name, default_value).asDouble();
+    }
+
     std::string appsettings::getvalue_string(std::string setting_name, std::string default_value)
     {
         return _settings.get(setting_name, default_value).asString();

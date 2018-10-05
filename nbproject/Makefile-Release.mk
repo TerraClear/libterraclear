@@ -48,6 +48,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
 	${OBJECTDIR}/src/msgserver.o \
+	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o
 
@@ -140,6 +141,11 @@ ${OBJECTDIR}/src/msgserver.o: src/msgserver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/msgserver.o src/msgserver.cpp
+
+${OBJECTDIR}/src/navmath.o: src/navmath.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/navmath.o src/navmath.cpp
 
 ${OBJECTDIR}/src/stopwatch.o: src/stopwatch.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

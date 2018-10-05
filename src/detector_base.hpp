@@ -17,7 +17,7 @@ namespace terraclear
         unsigned int frame_count;    
         float distance_cm;
         
-        // < operator overload for sorting.
+        // < operator overload for sorting in Y (top to bottom)
         bool operator < (const bounding_box &compare_box) const 
         {
             return (y + height) < (compare_box.y + compare_box.height);

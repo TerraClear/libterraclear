@@ -50,8 +50,8 @@ namespace  terraclear
     {
         if (_isrunning)
         {
-            _elapsed_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - _lastmeasure).count();
             _isrunning = false;
+            update_clock();
         }
     }
 
@@ -61,13 +61,21 @@ namespace  terraclear
         _elapsed_us =_prev_elapsed_us = 0;
         _lap_times.clear();
         _lastmeasure = std::chrono::steady_clock::now();
+        update_clock();
         
     }
-
-    uint32_t stopwatch::lap()
+    
+    void stopwatch::update_clock()
     {
         _elapsed_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - _lastmeasure).count();        
         _lastmeasure = std::chrono::steady_clock::now();
+    }
+
+
+    uint32_t stopwatch::lap()
+    {
+        update_clock();
+        
         uint64_t lap_time = _elapsed_us - _prev_elapsed_us;
         
         laptime lt;
@@ -85,17 +93,19 @@ namespace  terraclear
 
     uint64_t stopwatch::get_elapsed_us()
     {
-        return 0;
+        //total time since last reset..
+        update_clock();
+        return  _elapsed_us;
     }
 
     uint64_t stopwatch::get_elapsed_ms()
     {
-        return get_elapsed_us() * 1000;
+        return get_elapsed_us() / 1000;
     }
 
     uint64_t stopwatch::get_elapsed_s()
     {
-        return get_elapsed_us() * 1000000;
+        return get_elapsed_us() / 1000000;
     }
 
 

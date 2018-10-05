@@ -40,6 +40,8 @@ namespace  terraclear
             void mutex_lock();
             void mutex_unlock();
 
+            bool isrunning();
+            
         protected:
             //pure virtual function for thread loop..
             virtual void thread_runloop() = 0;
@@ -47,9 +49,9 @@ namespace  terraclear
             void thread_stop();
 
         private:
+            bool _threadRunning = false;
             std::string _threadName = "thread_base";
             pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
-            bool _threadRunning = false;
             pthread_t _thread_main;
             
             static void* thread_run(void* thread_obj);

@@ -40,6 +40,7 @@ namespace terraclear
             int32_t getvalue_int(std::string setting_name, int32_t default_value = 0);
             uint32_t getvalue_uint(std::string setting_name, uint32_t default_value = 0);
             float getvalue_float(std::string setting_name, float default_value = 0.0f);
+            double getvalue_double(std::string setting_name, double default_value = 0.0f);
             std::string getvalue_string(std::string setting_name, std::string default_value = "s");
 
         private:

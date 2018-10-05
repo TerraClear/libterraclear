@@ -45,8 +45,6 @@ namespace  terraclear
         pthread_create(&_thread_main, NULL, thread_run, this);
 
         _threadRunning = true;
-
-        std::cout << ">>> STARTED THREAD: " << _threadName << std::endl;
     }
 
     void* thread_base::thread_run(void* thread_obj)
@@ -63,7 +61,6 @@ namespace  terraclear
 
     void thread_base::thread_stop() 
     {
-        std::cout << "Thread Stopping: " << _threadName << std::endl;        
         _threadRunning = false;
     }
 
@@ -82,6 +79,11 @@ namespace  terraclear
     void thread_base::mutex_unlock()
     {
        pthread_mutex_unlock(&_mutex);       
+    }
+
+    bool thread_base::isrunning()
+    {
+        return _threadRunning;
     }
 
 }

@@ -44,6 +44,9 @@ namespace terraclear
         int enable = 1;
         int retval = 0;
 
+        //bind to specific NIC
+        retval = setsockopt(_socket_fd, SOL_SOCKET, SO_BINDTODEVICE, _network_interface.c_str(), _network_interface.length());
+
         //allow re-use of adddress
         retval = setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int));
         if ( retval == -1 )   

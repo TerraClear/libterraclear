@@ -52,11 +52,13 @@ namespace  terraclear
             laptime get_lap_s(uint32_t lap_id);
             
         private:
-            std::chrono::steady_clock::time_point _lastmeasure;            
+            std::chrono::steady_clock::time_point _lastmeasure;              
             uint64_t _elapsed_us = 0;
             uint64_t _prev_elapsed_us = 0;
             std::vector<laptime> _lap_times;
             bool _isrunning = false;
+            
+            void update_clock();
 
     };
 }
