@@ -25,7 +25,12 @@
 #include <fstream>
 
 //jsoncpp https://linux.tips/programming/how-to-install-and-use-json-cpp-library-on-ubuntu-linux-os
-#include <jsoncpp/json/json.h>
+#ifdef __linux__
+    #include <jsoncpp/json/json.h>
+#else
+    #include <json/json.h>
+#endif
+
 
 namespace terraclear
 {
