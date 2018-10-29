@@ -46,6 +46,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
 	${OBJECTDIR}/src/error_base.o \
+	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
 	${OBJECTDIR}/src/msgserver.o \
 	${OBJECTDIR}/src/navmath.o \
@@ -131,6 +132,11 @@ ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/error_base.o src/error_base.cpp
+
+${OBJECTDIR}/src/filetools.o: src/filetools.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/filetools.o src/filetools.cpp
 
 ${OBJECTDIR}/src/hsvcalibration.o: src/hsvcalibration.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

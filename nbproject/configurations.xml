@@ -34,6 +34,10 @@
         <itemPath>src/error_base.cpp</itemPath>
         <itemPath>src/error_base.hpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f11" displayName="filetools" projectFiles="true">
+        <itemPath>src/filetools.cpp</itemPath>
+        <itemPath>src/filetools.hpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f7" displayName="iptools" projectFiles="true">
         <itemPath>src/msgserver.cpp</itemPath>
         <itemPath>src/msgserver.hpp</itemPath>
@@ -137,6 +141,10 @@
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/filetools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/filetools.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
@@ -221,6 +229,10 @@
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/filetools.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/filetools.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="0">
       </item>
