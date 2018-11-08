@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <unistd.h>
+
 #include "thread_base.hpp"
 
 namespace  terraclear
@@ -53,7 +55,23 @@ namespace  terraclear
         
         while (ctxt->_threadRunning)
         {
-            ctxt->thread_runloop();
+            if (!ctxt->_threadPaused)
+            {
+                try
+                {
+                    ctxt->thread_runloop();
+                }
+                catch (std::exception& e)
+                {
+                    std::cout << std::endl << " ****** " << ctxt->get_name() << " Exception caught : " << e.what() << std::endl;
+                    ctxt->thread_stop();
+                }
+
+            }
+            else
+            {
+                usleep(1000);// thread paused...
+            }
         }
         
         return nullptr;     
@@ -70,21 +88,57 @@ namespace  terraclear
         pthread_join(_thread_main, NULL);
     }
     
-    void thread_base::mutex_lock()
-    {
-        pthread_mutex_lock(&_mutex);
-        
-    }
-    
-    void thread_base::mutex_unlock()
-    {
-       pthread_mutex_unlock(&_mutex);       
-    }
-
     bool thread_base::isrunning()
     {
         return _threadRunning;
     }
 
+    void thread_base::thread_pause()
+    {
+        _threadPaused =_threadPaused = true;
+    }
+    
+    void thread_base::thread_resume()
+    {
+        _threadPaused =_threadPaused = false;        
+    }
+    
+    bool thread_base::ispaused()
+    {
+        return _threadPaused;
+    }
+            
+    std::string thread_base::get_name()
+    {
+        return _threadName;
+    }
+     
+    void thread_base::mutex_lock(pthread_mutex_t* lockable_mutex)
+    {
+        pthread_mutex_lock(lockable_mutex);
+        
+    }
+
+    void thread_base::mutex_lock()
+    {
+        mutex_lock(&_mutex);
+    }
+    
+    void thread_base::mutex_unlock(pthread_mutex_t* lockable_mutex)
+    {
+       pthread_mutex_unlock(lockable_mutex);       
+    }
+
+    void thread_base::mutex_unlock()
+    {
+        mutex_unlock(&_mutex);
+        
+    }
+
+    pthread_mutex_t* thread_base::get_mutex_ptr()
+    {
+        return &_mutex;
+                
+    }
 }
 

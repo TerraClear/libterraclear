@@ -64,7 +64,7 @@ namespace  terraclear
                 std::string entry_name = std::string(dir_entry->d_name);
                 //omit . and .. directories
                 if ((entry_name != ".") && (entry_name != "..")) 
-                    retval.push_back(entry_name);
+                    retval.push_back(path + "/" + entry_name);
             }
             closedir( dir_pointer );
 
@@ -108,7 +108,7 @@ namespace  terraclear
             for (int i = 0; i < ext_list.size(); i++)
             {                
                 //get file extension and convert to uppercase for non case sensitive compare.
-                std::string file_ext = get_extension(ext_list[i]);
+                std::string file_ext = ext_list[i];
                 std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), ::toupper); 
                 ext_list[i] = file_ext;                
             }            

@@ -17,7 +17,7 @@
 */
 
 #ifndef THREAD_BASE_HPP
-#define THREAD_HPP
+#define THREAD_BASE_HPP
 
 #include <stdio.h>
 #include <iostream>
@@ -35,21 +35,29 @@ namespace  terraclear
 
             void thread_start(std::string threadName);
             void thread_stopwait();
-            
-            //lock/unlock resources
-            void mutex_lock();
-            void mutex_unlock();
-
             bool isrunning();
             
+            void thread_pause();
+            void thread_resume();
+            bool ispaused();
+            
+            std::string get_name();
+            
+            //lock/unlock resources
+            pthread_mutex_t* get_mutex_ptr();
+            void mutex_lock();
+            static void mutex_unlock(pthread_mutex_t* lockable_mutex);
+            void mutex_unlock();
+            static void mutex_lock(pthread_mutex_t* lockable_mutex);
+
         protected:
             //pure virtual function for thread loop..
             virtual void thread_runloop() = 0;
-
             void thread_stop();
-
+            
         private:
             bool _threadRunning = false;
+            bool _threadPaused = false;
             std::string _threadName = "thread_base";
             pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
             pthread_t _thread_main;
