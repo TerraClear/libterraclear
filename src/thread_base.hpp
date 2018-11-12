@@ -21,9 +21,10 @@
 
 #include <stdio.h>
 #include <iostream>
-
-#include <pthread.h>
-#include <signal.h>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <unistd.h>
 
 namespace  terraclear
 {  
@@ -44,11 +45,9 @@ namespace  terraclear
             std::string get_name();
             
             //lock/unlock resources
-            pthread_mutex_t* get_mutex_ptr();
+            std::mutex* get_mutex_ptr();
             void mutex_lock();
-            static void mutex_unlock(pthread_mutex_t* lockable_mutex);
             void mutex_unlock();
-            static void mutex_lock(pthread_mutex_t* lockable_mutex);
 
         protected:
             //pure virtual function for thread loop..
@@ -59,10 +58,13 @@ namespace  terraclear
             bool _threadRunning = false;
             bool _threadPaused = false;
             std::string _threadName = "thread_base";
-            pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
-            pthread_t _thread_main;
+            std::mutex _mutex;
+            std::thread* _pthread_main = nullptr;
             
-            static void* thread_run(void* thread_obj);
+            std::condition_variable _internal_wait_lock;
+            std::mutex _internal_mutex;
+            
+            static void thread_run(thread_base* ctxt);
     };
    
 }
