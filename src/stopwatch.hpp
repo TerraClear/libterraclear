@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <chrono>
+#include <mutex>
 
 namespace  terraclear
 {
@@ -57,6 +58,7 @@ namespace  terraclear
             uint64_t _prev_elapsed_us = 0;
             std::vector<laptime> _lap_times;
             bool _isrunning = false;
+            std::mutex _mutex;
             
             void update_clock();
 

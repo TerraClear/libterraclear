@@ -40,8 +40,10 @@ namespace  terraclear
         //reset clock        
         if (!_isrunning)
         {
-            _lastmeasure = std::chrono::steady_clock::now();
-            _isrunning = true;
+            _mutex.lock();
+                _lastmeasure = std::chrono::steady_clock::now();
+                _isrunning = true;
+            _mutex.unlock();
         }
         
     }
@@ -50,7 +52,10 @@ namespace  terraclear
     {
         if (_isrunning)
         {
-            _isrunning = false;
+            _mutex.lock();
+                _isrunning = false;
+            _mutex.unlock();
+            
             update_clock();
         }
     }
@@ -58,15 +63,20 @@ namespace  terraclear
     void stopwatch::reset()
     {
         //reset clock 
-        _elapsed_us =_prev_elapsed_us = 0;
-        _lap_times.clear();
-        _lastmeasure = std::chrono::steady_clock::now();
-        update_clock();
+        _mutex.lock();
+            _elapsed_us =_prev_elapsed_us = 0;
+            _lap_times.clear();
+            _lastmeasure = std::chrono::steady_clock::now();
+        _mutex.unlock();
         
+        update_clock();
     }
     
     void stopwatch::update_clock()
     {
+        //lock and unlock when out of scope..
+        std::lock_guard<std::mutex> lk(_mutex); 
+
         _elapsed_us += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - _lastmeasure).count();        
         _lastmeasure = std::chrono::steady_clock::now();
     }
@@ -75,20 +85,23 @@ namespace  terraclear
     uint32_t stopwatch::lap()
     {
         update_clock();
-        
+
+        //lock and unlock when out of scope..
+        std::lock_guard<std::mutex> lk(_mutex); 
+ 
         uint64_t lap_time = _elapsed_us - _prev_elapsed_us;
-        
+
         laptime lt;
         lt.elapsed_time  = _prev_elapsed_us;
         lt.lap_time  = lap_time;
-        
+
         //reset for next lap..
         _prev_elapsed_us = _elapsed_us;
-        
+
         //add lap time to vector.
         _lap_times.push_back(lt);
-        
-        return _lap_times.size() - 1; //return laptime index ID.
+
+        return  _lap_times.size() - 1; //return laptime index ID.
     }
 
     uint64_t stopwatch::get_elapsed_us()
@@ -111,6 +124,9 @@ namespace  terraclear
 
     stopwatch::laptime stopwatch::get_lap_us(uint32_t lap_id)
     {
+        //lock and unlock when out of scope..
+        std::lock_guard<std::mutex> lk(_mutex); 
+
         laptime lt = _lap_times.at(lap_id);
         return lt;
     }
@@ -118,6 +134,10 @@ namespace  terraclear
     stopwatch::laptime stopwatch::get_lap_ms(uint32_t lap_id)
     {
         laptime lt = get_lap_us(lap_id);
+
+        //lock and unlock when out of scope..
+        std::lock_guard<std::mutex> lk(_mutex); 
+
         lt.elapsed_time /= 1000;
         lt.lap_time /= 1000;
 
@@ -127,6 +147,10 @@ namespace  terraclear
     stopwatch::laptime stopwatch::get_lap_s(uint32_t lap_id)
     {
         laptime lt = get_lap_us(lap_id);
+
+        //lock and unlock when out of scope..
+        std::lock_guard<std::mutex> lk(_mutex); 
+
         lt.elapsed_time /= 1000000;
         lt.lap_time /= 1000000;
 
