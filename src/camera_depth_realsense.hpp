@@ -19,6 +19,11 @@
  * 
 */
 
+//only compile for RealSense if required.. 
+//i.e you MUST #define TC_USE_REALSENSE or use GCC with -DTC_USE_REALSENSE
+
+#ifdef TC_USE_REALSENSE
+
 #include <cstdlib>
 #include <iostream>
 
@@ -55,3 +60,4 @@ namespace terraclear
 
 #endif /* CAMERA_DEPTH_REALSENSE_HPP */
 
+#endif
