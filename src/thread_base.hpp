@@ -19,12 +19,12 @@
 #ifndef THREAD_BASE_HPP
 #define THREAD_BASE_HPP
 
+#include <unistd.h>
 #include <stdio.h>
 #include <iostream>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
-#include <unistd.h>
 
 namespace  terraclear
 {  
