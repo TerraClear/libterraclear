@@ -11,6 +11,8 @@
         <itemPath>src/hsvcalibration.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="camera" projectFiles="true">
+        <itemPath>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp</itemPath>
+        <itemPath>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp</itemPath>
         <itemPath>src/camera_base.cpp</itemPath>
         <itemPath>src/camera_base.hpp</itemPath>
         <itemPath>src/camera_depth.cpp</itemPath>
@@ -97,6 +99,16 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">
@@ -186,6 +198,16 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">

@@ -51,7 +51,6 @@ namespace terraclear
 
     void camera_usb::update_frames()
     {
-        //get next frame;
-        _videofeed >> _frame_color;
+        _videofeed.read(_frame_color);
     }
 }

@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/cc787d41/camera_async.o \
 	${OBJECTDIR}/src/appsettings.o \
 	${OBJECTDIR}/src/basicserial.o \
 	${OBJECTDIR}/src/camera_base.o \
@@ -77,6 +78,11 @@ LDLIBSOPTIONS=`pkg-config --libs libserialport` `pkg-config --libs realsense2` `
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
+
+${OBJECTDIR}/_ext/cc787d41/camera_async.o: /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cc787d41/camera_async.o /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
 
 ${OBJECTDIR}/src/appsettings.o: src/appsettings.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

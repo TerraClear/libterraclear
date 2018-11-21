@@ -48,7 +48,7 @@ namespace terraclear
     {
         //get next frame;
         cv::Mat video_frame;
-        _videofeed >> video_frame;
+        _videofeed.read(video_frame);
         
 
         //Clip the left or right image if needed..
