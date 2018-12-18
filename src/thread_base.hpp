@@ -54,7 +54,6 @@ namespace  terraclear
             virtual void thread_runloop() = 0;
             void thread_stop();
             
-        private:
             bool _threadRunning = false;
             bool _threadPaused = false;
             std::string _threadName = "thread_base";
@@ -64,6 +63,7 @@ namespace  terraclear
             std::condition_variable _internal_wait_lock;
             std::mutex _internal_mutex;
             
+        private:
             static void thread_run(thread_base* ctxt);
     };
    

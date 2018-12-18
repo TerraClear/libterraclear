@@ -75,6 +75,15 @@ namespace  terraclear
         return retval;
     }
 
+    std::string filetools::get_filename(std::string file_path)
+    {
+        //find the last "/"
+        int path_pos = file_path.find_last_of("/");
+        int path_substr = (path_pos >= 0) ? path_pos+1 : 0;
+
+
+        return file_path.substr(path_substr, file_path.length() - path_pos);
+    }
 
     //get file extension.
     std::string filetools::get_extension(std::string file_name)
@@ -92,6 +101,19 @@ namespace  terraclear
         return file_ext;
     }
 
+    //swap extenstion
+    std::string filetools::replace_extension(std::string file_name, std::string new_extension)
+    {
+        //get current extension
+        std::string current_extension = get_extension(file_name);
+
+        //generate new file name
+        std::string new_file_name = file_name;
+        new_file_name.replace(file_name.length() - current_extension.length(), current_extension.length(), new_extension);
+
+        return new_file_name;
+    }
+    
     std::vector<std::string> filetools::filter_files(std::vector<std::string> file_list, std::string file_ext, bool case_sensitive)
     {
         std::vector<std::string> ext_list;
@@ -137,4 +159,37 @@ namespace  terraclear
         return retval;
     }
 
+    
+    //copy a file
+    void filetools::copy_file(std::string file_source, std::string file_target, bool replace_file)
+    {
+        //check if exists and delete if replaced
+        if (file_exists(file_target) && replace_file)
+            std::remove(file_target.c_str()); // delete file
+        
+        std::ifstream  src(file_source, std::ios::binary);
+        std::ofstream  dst(file_target, std::ios::binary);
+        dst << src.rdbuf();        
+        src.close();
+        dst.close();
+    }
+    
+    std::string filetools::path_append(std::string path_str, std::string append_str)
+    {
+        std::stringstream strstrm;
+
+        //see if there is a trailing "/"
+        int path_pos = path_str.find_last_of("/");
+        int path_substr = (path_pos > 0) ? path_pos : path_str.size();
+        std::string path_part = ((path_pos == 0) && (path_str.length() <= 1)) ? "" :  path_str.substr(0, path_substr);
+
+        //see if there is a leading "/"
+        int append_pos = append_str.find_first_of("/");
+        int append_substr = (append_pos == 0) ? 1 : 0;
+        std::string append_part = append_str.substr(append_substr, append_str.length() - append_substr);
+
+        strstrm << path_part << "/" << append_part ;
+
+        return strstrm.str();        
+    }
 }

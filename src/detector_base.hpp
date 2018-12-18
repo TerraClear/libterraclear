@@ -12,7 +12,8 @@ namespace terraclear
     struct bounding_box : cv::Rect
     {
         float confidence;                 
-        unsigned int class_id;        
+        unsigned int class_id; 
+        std::string class_string;
         unsigned int track_id;        
         unsigned int frame_count;    
         float distance_cm;

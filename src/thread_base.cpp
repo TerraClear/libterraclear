@@ -66,6 +66,7 @@ namespace  terraclear
         
         while (threadRunning)
         {
+
             if (!threadPaused)
             {
                 try
@@ -92,11 +93,14 @@ namespace  terraclear
                 ctxt->_internal_wait_lock.wait(pause_lock, [ctxt]{return !ctxt->_threadPaused;});
                 ctxt->_internal_mutex.unlock(); //should actually auto unlock when it goes out of scope?
             }
+
             
             ctxt->_internal_mutex.lock();
                 threadRunning = ctxt->_threadRunning;
                 threadPaused = ctxt->_threadPaused;
             ctxt->_internal_mutex.unlock();
+            
+            
         } 
     }
 
