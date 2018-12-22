@@ -22,6 +22,22 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/liblibterraclear.so
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
 CND_PACKAGE_NAME_Release=liblibterraclear.so.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/liblibterraclear.so.tar
+# Debug_RealSense configuration
+CND_PLATFORM_Debug_RealSense=GNU-Linux
+CND_ARTIFACT_DIR_Debug_RealSense=dist/Debug_RealSense/GNU-Linux
+CND_ARTIFACT_NAME_Debug_RealSense=libterraclear.so
+CND_ARTIFACT_PATH_Debug_RealSense=dist/Debug_RealSense/GNU-Linux/libterraclear.so
+CND_PACKAGE_DIR_Debug_RealSense=dist/Debug_RealSense/GNU-Linux/package
+CND_PACKAGE_NAME_Debug_RealSense=liblibterraclear.so.tar
+CND_PACKAGE_PATH_Debug_RealSense=dist/Debug_RealSense/GNU-Linux/package/liblibterraclear.so.tar
+# Debug_All configuration
+CND_PLATFORM_Debug_All=GNU-Linux
+CND_ARTIFACT_DIR_Debug_All=dist/Debug_All/GNU-Linux
+CND_ARTIFACT_NAME_Debug_All=libterraclear.so
+CND_ARTIFACT_PATH_Debug_All=dist/Debug_All/GNU-Linux/libterraclear.so
+CND_PACKAGE_DIR_Debug_All=dist/Debug_All/GNU-Linux/package
+CND_PACKAGE_NAME_Debug_All=liblibterraclear.so.tar
+CND_PACKAGE_PATH_Debug_All=dist/Debug_All/GNU-Linux/package/liblibterraclear.so.tar
 #
 # include compiler specific variables
 #

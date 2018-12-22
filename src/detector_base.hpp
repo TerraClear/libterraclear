@@ -4,8 +4,19 @@
 #include <vector>
 #include <map>
 
+//jsoncpp https://linux.tips/programming/how-to-install-and-use-json-cpp-library-on-ubuntu-linux-os
+#ifdef __linux__
+    #include <jsoncpp/json/json.h>
+#else
+    #include <json/json.h>
+#endif
+
 //OPENCV
 #include <opencv2/opencv.hpp>
+
+//internal includes
+#include "filetools.hpp"
+
 
 namespace terraclear
 {
@@ -48,6 +59,7 @@ namespace terraclear
             //pure virtual 
             virtual std::vector<bounding_box> detect_objects() = 0;
 
+            static void saveBoxesJSON(std::string image_file_name, uint32_t image_width, uint32_t image_height, std::list<bounding_box> bboxes);
        
         protected:
             cv::Mat _imgsrc;

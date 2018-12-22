@@ -127,9 +127,53 @@ namespace terraclear
         
      }    
     
-    
     cv::Rect detector_base::getIntersectRect(bounding_box b1, bounding_box b2)
     {
         return b1 & b2; // & returns rect intersect 
     }
+
+    //save all bounding boxes in standard format for training and validation..
+    void  detector_base::saveBoxesJSON(std::string image_file_name, uint32_t image_width, uint32_t image_height, std::list<bounding_box> bboxes)
+    {      
+        std::string json_file_name = filetools::replace_extension(image_file_name, "json");
+
+        //Generate JSON
+        Json::Value root_json;
+
+        root_json["image_name"] = image_file_name;
+        root_json["image-width"] = image_width;
+        root_json["image-height"] = image_height;
+
+        //array node for boxes                       
+        Json::Value bboxes_json(Json::arrayValue);
+
+        //iterate though all  boxes and add to array
+        for (auto bbox_tmp : bboxes)
+        {        
+                Json::Value bbox_json;
+                bbox_json["left"] = bbox_tmp.x;
+                bbox_json["top"] = bbox_tmp.y;
+                bbox_json["width"] = bbox_tmp.width;
+                bbox_json["height"] = bbox_tmp.height;
+
+                char tmpstr[100];
+                sprintf(tmpstr,"%.0f", bbox_tmp.confidence * 100 );
+                bbox_json["confidence"] = std::string(tmpstr);
+
+                bboxes_json.append(bbox_json);
+        }
+
+        //add array object into root.
+        if (bboxes.size() > 0)
+            root_json["bboxes"] = bboxes_json;
+
+        std::string json_string = root_json.toStyledString();
+
+        std::ofstream json_file(json_file_name);
+        json_file << json_string;    
+        json_file.close();
+
+    }
+
+
 }

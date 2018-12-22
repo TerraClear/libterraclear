@@ -93,8 +93,6 @@
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}</output>
           <linkerLibItems>
-            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
-            <linkerOptionItem>`pkg-config --libs realsense2`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
@@ -273,6 +271,203 @@
       <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/thread_base.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_RealSense" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <commandLine>-DTC_USE_REALSENSE</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}</output>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs realsense2`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/basicserial.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/basicserial.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_depth.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_depth.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_depth_realsense.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_depth_realsense.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_depth_zed.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_depth_zed.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_file.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_file.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/error_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/filetools.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/filetools.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/msgserver.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/navmath.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/navmath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/thread_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_All" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <commandLine>-DTC_USE_REALSENSE -DTC_USE_SERIAL</commandLine>
+        </ccTool>
+        <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}</output>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs realsense2`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/basicserial.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/basicserial.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_depth.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_depth.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_depth_realsense.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_depth_realsense.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_depth_zed.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_depth_zed.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_file.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_file.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/error_base.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/error_base.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/filetools.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/filetools.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/msgserver.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/navmath.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/navmath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/thread_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
       </item>

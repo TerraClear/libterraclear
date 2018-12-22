@@ -101,6 +101,19 @@ namespace  terraclear
         return file_ext;
     }
 
+    //get file extension.
+    std::string filetools::remove_extension(std::string file_name)
+    {
+        //get current extension
+        std::string current_extension = get_extension(file_name);
+
+        //generate new file name
+        uint16_t str_end = (file_name.length() > current_extension.length()) ? file_name.length() - (current_extension.length()+1) : current_extension.length();
+        std::string new_file_name = file_name.substr(0, str_end);
+
+        return new_file_name;
+    }
+    
     //swap extenstion
     std::string filetools::replace_extension(std::string file_name, std::string new_extension)
     {
@@ -179,9 +192,13 @@ namespace  terraclear
         std::stringstream strstrm;
 
         //see if there is a trailing "/"
-        int path_pos = path_str.find_last_of("/");
-        int path_substr = (path_pos > 0) ? path_pos : path_str.size();
-        std::string path_part = ((path_pos == 0) && (path_str.length() <= 1)) ? "" :  path_str.substr(0, path_substr);
+        std::string path_part = "";
+        if (path_str.length() > 0)
+        {
+            int path_pos = path_str.find_last_of("/");
+            int path_substr = (path_pos + 1 == path_str.size()) ? path_pos : path_str.size();
+            path_part = (path_pos == 0) ? "" :  path_str.substr(0, path_substr);
+        }
 
         //see if there is a leading "/"
         int append_pos = append_str.find_first_of("/");
@@ -192,4 +209,38 @@ namespace  terraclear
 
         return strstrm.str();        
     }
+
+    //generates a file name to prevent duplicates...
+    std::string filetools::generate_filename_seq(std::string file_name)
+    {
+        //get current extension
+        std::string file_ext = get_extension(file_name);
+        
+        int file_seq = 1;
+        int max_tries = 1000000;
+        std::string default_file = file_name;
+        std::string tmp_file = default_file;
+
+        do 
+        {
+            std::stringstream strstrm;
+            strstrm << remove_extension(file_name) <<  "_" << file_seq << "." << file_ext;
+            tmp_file = strstrm.str();
+
+            file_seq++;
+            max_tries --;
+
+            //max file sequence generation reached, use default and overwrite.
+            if (max_tries <= 0)
+            {
+                tmp_file = default_file;
+                break;
+            }
+
+        } while (file_exists(tmp_file));
+
+        return tmp_file;
+    }
+    
+    
 }

@@ -43,8 +43,10 @@ namespace  terraclear
             static bool         file_exists(const std::string  filename);
             static std::string  get_filename(std::string file_path);
             static std::string  get_extension(std::string file_name);
+            static std::string  remove_extension(std::string file_name);
             static std::string  replace_extension(std::string file_name, std::string new_extension);
             static std::string  path_append(std::string path_str, std::string append_str);
+            static std::string  generate_filename_seq(std::string file_name);
             
             static std::vector <std::string>    read_directory( const std::string path, bool sort_by_name = true);
             static std::vector <std::string>    filter_files(std::vector<std::string> file_list, std::string filex_ext, bool case_sensitive = true);
