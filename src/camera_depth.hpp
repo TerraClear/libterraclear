@@ -41,12 +41,18 @@ namespace terraclear
         public:            
             camera_depth();
             virtual ~camera_depth();
+            
+            //get colored depth map image.
+            cv::Mat             getDepthFrame();
 
             //pure virtual function for acquiring depth (Z) and specific X Y  
             virtual double      get_depth_cm(uint32_t x, uint32_t y) = 0;
-                    double      get_depth_inches(uint32_t x, uint32_t y);
-            private:
+                double      get_depth_inches(uint32_t x, uint32_t y);
 
+            protected:
+                cv::Mat     _depth_frame;
+
+            private:
     };    
 }
 

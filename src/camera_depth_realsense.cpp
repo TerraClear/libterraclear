@@ -22,7 +22,7 @@
 //only compile for RealSense if required.. 
 //i.e you MUST #define TC_USE_REALSENSE or use g++ with -DTC_USE_REALSENSE
 
-#ifdef TC_USE_REALSENSE
+//#ifdef TC_USE_REALSENSE
 
 #include "camera_depth_realsense.hpp"
 
@@ -31,11 +31,13 @@ namespace terraclear
     camera_depth_realsense::camera_depth_realsense() 
     {
         //enable RGB and Depth streams at 30FPS
-        //_pipe_config.enable_stream(RS2_STREAM_COLOR,1280,720,RS2_FORMAT_BGR8, 30);
         _pipe_config.enable_stream(RS2_STREAM_COLOR, 1920,1080,RS2_FORMAT_BGR8, 30);
-        _pipe_config.enable_stream(RS2_STREAM_DEPTH, 1280,720,RS2_FORMAT_ANY, 30);
-        
+        _pipe_config.enable_stream(RS2_STREAM_DEPTH, 1280,720,RS2_FORMAT_Z16, 30);
+
         _pipe.start(_pipe_config);
+        
+        //_depth_frame = cv::Mat(720, 1280, CV_8UC3);
+        
     }
 
     camera_depth_realsense::~camera_depth_realsense() 
@@ -44,11 +46,11 @@ namespace terraclear
     }
     double camera_depth_realsense::get_depth_internal(uint32_t x, uint32_t y)
     {
-        float yscale = _frame_depth->get_height() / _frame_color.rows;
-        float xscale = _frame_depth->get_width() / _frame_color.cols;
+        float yscale = _rls_frame_depth->get_height() / _frame_color.rows;
+        float xscale = _rls_frame_depth->get_width() / _frame_color.cols;
         
         //get distance, factor in scale between depth & color frames.
-        return _frame_depth->get_distance(x * xscale , y * yscale) * 100.00f;
+        return _rls_frame_depth->get_distance(x * xscale , y * yscale) * 100.00f;
     }
     
     double camera_depth_realsense::get_depth_cm(uint32_t x, uint32_t y)
@@ -91,19 +93,59 @@ namespace terraclear
 
         // align depth to the color stream
         rs2::align align(RS2_STREAM_COLOR);
-
         rs2::frameset processed = align.process(frames);
-
-        // get the data for the frame and display the image
-        _frame_depth = std::make_shared<rs2::depth_frame>(processed.first(RS2_STREAM_DEPTH));
 
         //grab RGB frame..
         rs2::video_frame cur_color_frame(processed.get_color_frame());
+    
+        //convert RGB frame to cv Mat
+        _frame_color = cv::Mat( cur_color_frame.get_height(), cur_color_frame.get_width(), CV_8UC3, (uchar*) cur_color_frame.get_data() );
 
-        //convert to cv Mat
-        _frame_color = cv::Mat( cur_color_frame.get_height(), cur_color_frame.get_width(), CV_8UC3, (uchar *) cur_color_frame.get_data() );
-            
+        //get depth frame..
+        rs2::frame dframe = processed.get_depth_frame();   
+
+        // make shared ptr to frame (i.e. retain ref)
+        _rls_frame_depth = std::make_shared<rs2::depth_frame>(dframe);
+
+//        //setup and apply decimation filter with default options
+//        rs2::decimation_filter decimation_filter;
+//        dframe = dframe.apply_filter(decimation_filter);
+//        
+//        //setup and apply spacial filter with default options
+//        rs2::spatial_filter spacial_filter;
+//        dframe = dframe.apply_filter(spacial_filter);
+//        
+//        //setup and apply temporal filter with default options..
+//        rs2::temporal_filter temporal_filter;
+//        dframe = dframe.apply_filter(temporal_filter);
+//        
+//        //setup and apply hole filling filter
+//        rs2::hole_filling_filter hole_filter;
+//        hole_filter.set_option(RS2_OPTION_HOLES_FILL, 2.0f); //0 0 = Fill From Left, 1 = Nearest, 2 = Furthest.
+//        dframe = dframe.apply_filter(hole_filter);
+        
+        //generate colorized depth image and apply filter
+        rs2::colorizer color_map;
+        color_map.set_option(RS2_OPTION_HISTOGRAM_EQUALIZATION_ENABLED, 1.0f);
+        color_map.set_option(RS2_OPTION_COLOR_SCHEME, 2.0f); // 0 = Jet, 1=  classic, 2 = White to Black        
+        
+        //setup and apply colorizer filter
+        color_map.colorize(dframe);
+        dframe = dframe.apply_filter(color_map);
+        
+        // Query depth frame size (width and height)
+        const int depth_w = dframe.as<rs2::video_frame>().get_width();
+        const int depth_h = dframe.as<rs2::video_frame>().get_height();
+        
+        // convert to opencv mat & copy to shared        
+       cv::Mat tmp_mat(depth_h, depth_w, CV_8UC3, (uchar*)dframe.get_data(), cv::Mat::AUTO_STEP);
+       tmp_mat.copyTo(_depth_frame);
+
+
     } 
+    
+
+
 }
 
-#endif
+//#endif

@@ -31,6 +31,11 @@ namespace terraclear
     {
     }
     
+    cv::Mat camera_depth::getDepthFrame()
+    {
+        return _depth_frame;
+    }
+
     double camera_depth::get_depth_inches(uint32_t x, uint32_t y)
     {
         //cm to inches

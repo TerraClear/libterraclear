@@ -48,11 +48,11 @@ namespace terraclear
             
             int         avgerage_square_pixels = 5;
         
-        private:
+    private:
             rs2::pipeline   _pipe;
             rs2::config     _pipe_config;
+            std::shared_ptr<rs2::depth_frame> _rls_frame_depth;
             
-            std::shared_ptr<rs2::depth_frame> _frame_depth;
             double get_depth_internal(uint32_t x, uint32_t y);
             
     };
