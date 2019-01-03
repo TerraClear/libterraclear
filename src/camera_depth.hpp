@@ -41,18 +41,39 @@ namespace terraclear
         public:            
             camera_depth();
             virtual ~camera_depth();
+
+            //helpers
+            double deg_to_rad(double degrees) {
+                return degrees / (180.0 / 3.141592653589793238463);
+            }
+
+            double rad_to_deg(double radians) {
+                return radians * (180.0 / 3.141592653589793238463);
+            }
+            
+            double cm_to_inches(double cm){
+                //cm to inches
+                return cm * INCHES_PER_CM;
+            }
+
+            double inches_to_cm(double inches){
+                //inches to cm
+                return inches / INCHES_PER_CM;
+            }            
             
             //get colored depth map image.
             cv::Mat             getDepthFrame();
 
             //pure virtual function for acquiring depth (Z) and specific X Y  
             virtual double      get_depth_cm(uint32_t x, uint32_t y) = 0;
-                double      get_depth_inches(uint32_t x, uint32_t y);
+            double              get_depth_inches(uint32_t x, uint32_t y);
+            virtual double      get_depth_center_cm() = 0;
+            virtual double      get_angle_center_rad(double camera_height_inches);
 
-            protected:
-                cv::Mat     _depth_frame;
+        protected:
+            cv::Mat     _depth_frame;
 
-            private:
+        private:
     };    
 }
 

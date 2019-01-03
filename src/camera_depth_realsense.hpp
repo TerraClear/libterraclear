@@ -22,7 +22,7 @@
 //only compile for RealSense if required.. 
 //i.e you MUST #define TC_USE_REALSENSE or use g++ with -DTC_USE_REALSENSE
 
-#ifdef TC_USE_REALSENSE
+//#ifdef TC_USE_REALSENSE
 
 #include <cstdlib>
 #include <iostream>
@@ -44,6 +44,7 @@ namespace terraclear
 
             //base class implementations.. 
             double      get_depth_cm(uint32_t x, uint32_t y);
+            double      get_depth_center_cm();
             void        update_frames();
             
             int         avgerage_square_pixels = 5;
@@ -58,6 +59,6 @@ namespace terraclear
     };
 }
 
-#endif /* CAMERA_DEPTH_REALSENSE_HPP */
+//#endif /* CAMERA_DEPTH_REALSENSE_HPP */
 
 #endif

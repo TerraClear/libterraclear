@@ -22,7 +22,7 @@
 //only compile for RealSense if required.. 
 //i.e you MUST #define TC_USE_REALSENSE or use g++ with -DTC_USE_REALSENSE
 
-#ifdef TC_USE_REALSENSE
+//#ifdef TC_USE_REALSENSE
 
 #include "camera_depth_realsense.hpp"
 
@@ -86,6 +86,44 @@ namespace terraclear
         return distance;
     }
     
+    double camera_depth_realsense::get_depth_center_cm()
+    {
+        //get mean distance of center of camera to ground plane across entire frame..
+        double distance = 0; 
+        std::vector<double> distances;
+        
+        // Query depth frame size (width and height)
+        const int depth_w = _frame_color.cols;
+        const int depth_h = _frame_color.rows;
+        
+        //center y of frame 
+        int y = depth_h / 2;
+        
+        //calculate median of center 33% of frame width
+        int x_start = depth_w * 0.333;
+        int x_end = x_start * 2;
+        for (int x = x_start; x < x_end; x++)
+        {
+            double dist = get_depth_internal(x, y);
+
+            //only use non zeros
+            if (dist > 0)
+                distances.push_back(dist);
+        }
+
+        //calculate median of center points.
+        if (distances.size() > 0)
+        {
+            //median
+            std::nth_element(distances.begin(), distances.begin() + distances.size()/2, distances.end());
+            distance = distances[distances.size()/2];
+        }
+        else
+        {
+            distance = 0;       
+        }
+    }
+    
     void camera_depth_realsense::update_frames()
     {
         // gathers the rgb image and the depth camera image
@@ -107,22 +145,22 @@ namespace terraclear
         // make shared ptr to frame (i.e. retain ref)
         _rls_frame_depth = std::make_shared<rs2::depth_frame>(dframe);
 
-//        //setup and apply decimation filter with default options
-//        rs2::decimation_filter decimation_filter;
-//        dframe = dframe.apply_filter(decimation_filter);
-//        
-//        //setup and apply spacial filter with default options
-//        rs2::spatial_filter spacial_filter;
-//        dframe = dframe.apply_filter(spacial_filter);
-//        
-//        //setup and apply temporal filter with default options..
-//        rs2::temporal_filter temporal_filter;
-//        dframe = dframe.apply_filter(temporal_filter);
-//        
-//        //setup and apply hole filling filter
-//        rs2::hole_filling_filter hole_filter;
-//        hole_filter.set_option(RS2_OPTION_HOLES_FILL, 2.0f); //0 0 = Fill From Left, 1 = Nearest, 2 = Furthest.
-//        dframe = dframe.apply_filter(hole_filter);
+        //setup and apply decimation filter with default options
+        rs2::decimation_filter decimation_filter;
+        dframe = dframe.apply_filter(decimation_filter);
+        
+        //setup and apply spacial filter with default options
+        rs2::spatial_filter spacial_filter;
+        dframe = dframe.apply_filter(spacial_filter);
+        
+        //setup and apply temporal filter with default options..
+        rs2::temporal_filter temporal_filter;
+        dframe = dframe.apply_filter(temporal_filter);
+        
+        //setup and apply hole filling filter
+        rs2::hole_filling_filter hole_filter;
+        hole_filter.set_option(RS2_OPTION_HOLES_FILL, 2.0f); //0 0 = Fill From Left, 1 = Nearest, 2 = Furthest.
+        dframe = dframe.apply_filter(hole_filter);
         
         //generate colorized depth image and apply filter
         rs2::colorizer color_map;
@@ -148,4 +186,4 @@ namespace terraclear
 
 }
 
-#endif
+//#endif

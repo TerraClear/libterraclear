@@ -35,11 +35,10 @@ namespace terraclear
     {
         return _depth_frame;
     }
-
-    double camera_depth::get_depth_inches(uint32_t x, uint32_t y)
+    
+    double camera_depth::get_angle_center_rad(double camera_height_cm)
     {
-        //cm to inches
-        return get_depth_cm(x, y) * INCHES_PER_CM;
+        return std::asin(camera_height_cm / get_depth_center_cm()); //calculate ground angle in radians
     }
 
 }
