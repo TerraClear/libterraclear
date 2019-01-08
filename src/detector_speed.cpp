@@ -1,4 +1,9 @@
+#include <ostream>
+
 #include "detector_speed.hpp"
+
+
+#include <iostream>
 
 namespace terraclear
 {
@@ -37,9 +42,8 @@ namespace terraclear
     bool detector_speed::update_speed(uint32_t item_id, float item_position)
     {
         bool retval = false;
-        //timeout check and remove any stale measurements from _items_positions       
-        //TODO - KOOS: Check front of queues for timeouts and remove..
-        
+         std::chrono::steady_clock::time_point time_update =  std::chrono::steady_clock::now();
+         
         //check if this item is already being measured?, if so, just add a measurement
         float last_position = 0.0f;
         int item_count = _items_positions.count(item_id);
@@ -52,28 +56,43 @@ namespace terraclear
         else 
         {
             //get last position
-            last_position =  _items_positions.at(item_id).front().position_check;
+            last_position =  _items_positions[item_id].front().position_check;
+
+            //pop and re-push all entires, skipping any time outs.
+            int checkpoint_count = _items_positions[item_id].size();
+            for (int i = 0; i < checkpoint_count; i++)
+            {
+                time_position tmp_item = _items_positions[item_id].back();
+                _items_positions[item_id].pop_back();
+
+                //check that item has not expired, re-add if not.
+                if (std::chrono::duration_cast<std::chrono::milliseconds>(time_update - tmp_item.time_check).count() < _reset_timeout_ms)
+                    _items_positions[item_id].push_front(tmp_item);
+
+
+            }        
         }
+
 
         //make sure measurement is within error bounds..
         if (abs(item_position - last_position) > _max_error)
         {
             // trim excess measurements..
-            if (_items_positions.at(item_id).size() >= _max_measures)
-                _items_positions.at(item_id).pop_back();
+            if (_items_positions[item_id].size() >= _max_measures)
+                _items_positions[item_id].pop_back();
 
             //add new  measurement
             time_position obj_dt;
             obj_dt.position_check = item_position;
-            obj_dt.time_check = std::chrono::steady_clock::now();
-            _items_positions.at(item_id).push_front(obj_dt);
+            obj_dt.time_check = time_update;
+            _items_positions[item_id].push_front(obj_dt);
 
             retval = true;
         }
         else
         {
             //just update time_check
-            _items_positions.at(item_id).front().time_check = std::chrono::steady_clock::now();
+            _items_positions.at(item_id).front().time_check = time_update;
         }
         
         return retval;
@@ -87,7 +106,7 @@ namespace terraclear
         if (_items_positions.count(item_id))
         {
             //get queue size
-            retval =  _items_positions.at(item_id).size();
+            retval =  _items_positions[item_id].size();
         }
         
         return retval;
@@ -97,7 +116,36 @@ namespace terraclear
     {
         float retval = 0.0f;
         
-        //TODO: KOOS - calculate speed of position/time measurements
+        //if item exists.. calculate avg speed for all measurements.
+        if (_items_positions.count(item_id))
+        {
+            if (_items_positions[item_id].size() > 1)
+            {
+                //start and min positiona and time windows
+                float position_start = std::numeric_limits<float>::max();
+                float position_end = std::numeric_limits<float>::min();
+                std::chrono::steady_clock::time_point time_end = std::chrono::steady_clock::time_point::min();
+                std::chrono::steady_clock::time_point time_start = std::chrono::steady_clock::time_point::max();
+
+                for (auto item_checkpoint : _items_positions[item_id])
+                {
+                    //get start and end time & positions
+                    position_start = std::min(position_start, item_checkpoint.position_check);
+                    position_end = std::max(position_end, item_checkpoint.position_check);
+                    time_start = std::min(time_start, item_checkpoint.time_check);
+                    time_end = std::max(time_end, item_checkpoint.time_check);
+                    
+                }
+
+                //total duration_ms & distance
+                float duration_s = (float)std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count() / 1000;     
+                float displacement = position_end - position_start;
+                
+                //calc speed
+                retval = displacement / duration_s;
+            }
+          
+        }
         
         return retval;
     }
