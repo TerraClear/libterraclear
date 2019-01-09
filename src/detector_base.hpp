@@ -49,7 +49,9 @@ namespace terraclear
         std::string class_string;
         unsigned int track_id;        
         unsigned int frame_count;    
-        float distance_cm;
+        float obj_distance;
+        float obj_speed_ups;
+        float eta_s;
         
         // < operator overload for sorting in Y (top to bottom)
         bool operator < (const bounding_box &compare_box) const 
