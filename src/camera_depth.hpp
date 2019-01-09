@@ -1,6 +1,6 @@
 /*
  * Base Depth Camera class 
- * Copyright (C) 2017 TerraClear, Inc.
+ * Copyright (C) 2019 TerraClear, Inc.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,13 +62,15 @@ namespace terraclear
             }            
             
             //get colored depth map image.
-            cv::Mat             getDepthFrame();
+            cv::Mat getDepthFrame();
 
-            //pure virtual function for acquiring depth (Z) and specific X Y  
-            virtual double      get_depth_cm(uint32_t x, uint32_t y) = 0;
-            double              get_depth_inches(uint32_t x, uint32_t y);
-            virtual double      get_depth_center_cm() = 0;
-            virtual double      get_angle_center_rad(double camera_height_inches);
+            // common calculations
+            double  get_distance_over_ground_cm(cv::Point a, cv::Point b, double camera_angle_rad);
+            double  get_angle_center_rad(double camera_height_cm);
+
+            //pure virtual function for acquiring depth  
+            virtual double  get_depth_cm(uint32_t x, uint32_t y) = 0;
+            virtual double  get_depth_center_cm() = 0;
 
         protected:
             cv::Mat     _depth_frame;

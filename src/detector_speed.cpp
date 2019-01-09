@@ -1,9 +1,25 @@
-#include <ostream>
+/*
+ * helper class for calculating average speed
+ * Copyright (C) 2019 TerraClear, Inc.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * CREATED BY: Koos du Preez - koos@terraclear.com
+ * 
+*/
 
 #include "detector_speed.hpp"
-
-
-#include <iostream>
 
 namespace terraclear
 {
@@ -121,7 +137,7 @@ namespace terraclear
         {
             if (_items_positions[item_id].size() > 1)
             {
-                //start and min positiona and time windows
+                //start and min positions and time windows
                 float position_start = std::numeric_limits<float>::max();
                 float position_end = std::numeric_limits<float>::min();
                 std::chrono::steady_clock::time_point time_end = std::chrono::steady_clock::time_point::min();
