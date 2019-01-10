@@ -53,7 +53,7 @@ namespace terraclear
         float obj_speed_ups;
         float eta_s;
         
-        // < operator overload for sorting in Y (top to bottom)
+        // < operator overload for sorting center box in Y (top to bottom)
         bool operator < (const bounding_box &compare_box) const 
         {
             return (y + height) < (compare_box.y + compare_box.height);
