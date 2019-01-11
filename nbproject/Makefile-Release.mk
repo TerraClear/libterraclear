@@ -46,14 +46,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
-	${OBJECTDIR}/src/detector_speed.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
 	${OBJECTDIR}/src/msgserver.o \
 	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
-	${OBJECTDIR}/src/thread_base.o
+	${OBJECTDIR}/src/thread_base.o \
+	${OBJECTDIR}/src/timed_averaging.o
 
 
 # C Compiler Flags
@@ -135,11 +135,6 @@ ${OBJECTDIR}/src/detector_hsv.o: src/detector_hsv.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_hsv.o src/detector_hsv.cpp
 
-${OBJECTDIR}/src/detector_speed.o: src/detector_speed.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_speed.o src/detector_speed.cpp
-
 ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -174,6 +169,11 @@ ${OBJECTDIR}/src/thread_base.o: src/thread_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/thread_base.o src/thread_base.cpp
+
+${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
 
 # Subprojects
 .build-subprojects:

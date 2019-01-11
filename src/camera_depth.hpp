@@ -74,7 +74,7 @@ namespace terraclear
 
         protected:
             cv::Mat     _depth_frame;
-
+            
         private:
     };    
 }

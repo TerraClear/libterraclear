@@ -38,6 +38,16 @@ namespace  terraclear
       return (bool)ifile;
     }
 
+    std::vector <std::string> filetools::sort_files(std::vector<std::string> file_list, bool ascending)
+    {
+        if (ascending)
+            std::sort(file_list.begin(), file_list.end(), std::greater<std::string>());
+        else
+            std::sort(file_list.begin(), file_list.end(), std::less<std::string>());
+
+        return file_list;
+    }
+
     //get all files in specific directory
     std::vector<std::string> filetools::read_directory( const std::string path, bool sort_by_name)
     {
@@ -85,6 +95,12 @@ namespace  terraclear
         return file_path.substr(path_substr, file_path.length() - path_pos);
     }
 
+    std::string filetools::get_base_path(std::string file_path)
+    {
+        std::string base_path = file_path.substr(0, file_path.length() - get_filename(file_path).length());
+        return base_path;
+    }
+    
     //get file extension.
     std::string filetools::get_extension(std::string file_name)
     {
@@ -126,6 +142,8 @@ namespace  terraclear
 
         return new_file_name;
     }
+    
+    
     
     std::vector<std::string> filetools::filter_files(std::vector<std::string> file_list, std::string file_ext, bool case_sensitive)
     {
@@ -172,7 +190,6 @@ namespace  terraclear
         return retval;
     }
 
-    
     //copy a file
     void filetools::copy_file(std::string file_source, std::string file_target, bool replace_file)
     {
@@ -242,5 +259,25 @@ namespace  terraclear
         return tmp_file;
     }
     
-    
+    //read lines from text file..
+    std::vector<std::string> filetools::read_lines(std::string txtfilepath)
+    {
+        std::vector<std::string> names_list;
+
+        //If names file exist, load them into vector..
+        if (file_exists(txtfilepath.c_str()))
+        {
+            // bounding boxes
+            std::ifstream infile(txtfilepath.c_str());
+
+            std::string class_name;
+            //read all names from file 
+            while (std::getline(infile, class_name))
+            {
+                names_list.push_back(class_name);
+            }
+        }//endif names file..
+
+        return names_list;
+    }    
 }

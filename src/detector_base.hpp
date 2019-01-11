@@ -81,9 +81,9 @@ namespace terraclear
             virtual ~detector_base();
 
             //pure virtual 
-            virtual std::vector<bounding_box> detect_objects() = 0;
+            virtual std::vector<bounding_box>   detect_objects() = 0;
 
-            static void saveBoxesJSON(std::string image_file_name, uint32_t image_width, uint32_t image_height, std::list<bounding_box> bboxes);
+            static void                         saveBoxesJSON(std::string image_file_name, uint32_t image_width, uint32_t image_height, std::list<bounding_box> bboxes);
        
         protected:
             cv::Mat _imgsrc;

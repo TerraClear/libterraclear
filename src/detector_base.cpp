@@ -32,7 +32,6 @@ namespace terraclear
     detector_base::~detector_base() 
     {
     }
-    
 
     void detector_base::mergeBoundingBoxes(std::vector<bounding_box> &object_boxes, uint32_t expand_pixels)
     {
