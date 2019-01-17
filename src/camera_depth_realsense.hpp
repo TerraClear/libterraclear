@@ -40,6 +40,7 @@ namespace terraclear
 
         public:
             camera_depth_realsense();
+            camera_depth_realsense(std::string bagfile_path);
             virtual ~camera_depth_realsense();
 
             //base class implementations.. 

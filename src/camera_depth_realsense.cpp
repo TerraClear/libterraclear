@@ -41,6 +41,14 @@ namespace terraclear
         
     }
 
+    camera_depth_realsense::camera_depth_realsense(std::string bagfile_path) 
+    {
+        _pipe_config.enable_device_from_file(bagfile_path);
+        
+        _pipe.start(_pipe_config);
+        
+    }
+    
     camera_depth_realsense::~camera_depth_realsense() 
     {
         _pipe.stop();
