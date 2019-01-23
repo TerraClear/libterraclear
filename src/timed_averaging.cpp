@@ -34,8 +34,6 @@ namespace terraclear
         _max_measures = max_measures;
         _reset_timeout_ms = reset_timeout_ms;
         _max_error = max_error;
-        
-        _last_time_measured = std::chrono::steady_clock::now();
     }
 
     timed_averaging::~timed_averaging() 
@@ -64,61 +62,71 @@ namespace terraclear
             return false;
         
         bool retval = false;
+        
+        //get current time
         std::chrono::steady_clock::time_point time_update =  std::chrono::steady_clock::now();
-         
-        //check if this item is already being measured?, if so, just add a measurement
-        float last_position = 0.0f;
-        int item_count = _items_measurements.count(item_id);
-        int pos_count = 0;
+
+        //intialize  previous time and value for this item
+        std::chrono::steady_clock::time_point last_update = time_update;
+        float last_measurement = measurement_value;
+
+        //update to the last stored value/time if any is available.
+        if (_item_previous_measurement.count(item_id) > 0)
+        {
+           last_update = _item_previous_measurement[item_id].measurement_time;
+           last_measurement = _item_previous_measurement[item_id].measurement_value;
+        }
+        
+        //check if any measurements have been made, if not add list
+        int item_count = _item_timed_measurements.count(item_id);
         if (item_count <= 0)
         {
             //not in list yet, add first one.
-            std::list<time_position> tmp_lst;
-            _items_measurements[item_id] = tmp_lst;
+            std::list<timed_measurement> tmp_lst;
+            _item_timed_measurements[item_id] = tmp_lst;
         }
         else 
         {
-            //get last position
-            pos_count =_items_measurements[item_id].size();
-            last_position =  (pos_count > 0) ? _items_measurements[item_id].front().measurement_value : 0;
+            //get count of measurements and remove any stale
+           int pos_count =_item_timed_measurements[item_id].size();
 
-            //pop and re-push all entires, skipping any time outs.
+            //pop and re-push all entries, skipping any time outs.
             for (int i = 0; i < pos_count; i++)
             {
-                time_position p_item = _items_measurements[item_id].back();
-                _items_measurements[item_id].pop_back();
+                timed_measurement p_item = _item_timed_measurements[item_id].back();
+                _item_timed_measurements[item_id].pop_back();
 
                 //check that item has not expired, re-add if alive or delete if expired.
-                if (std::chrono::duration_cast<std::chrono::milliseconds>(time_update - p_item.measurement_time).count() < _reset_timeout_ms)
-                    _items_measurements[item_id].push_front(p_item);
+                uint64_t time_lapased = std::chrono::duration_cast<std::chrono::milliseconds>(time_update - p_item.measurement.measurement_time).count();
+                if (time_lapased < _reset_timeout_ms)
+                    _item_timed_measurements[item_id].push_front(p_item);
+            }  
 
+        }            
 
-            }        
-        }
-
-
-        //make sure measurement is within error bounds..
-        pos_count =_items_measurements[item_id].size();
-        if (abs(measurement_value - last_position) > _max_error)
+        //make sure measurement is within error bounds OR its the first measurement..
+        if ((abs(last_measurement - measurement_value) > _max_error) || (_item_previous_measurement.count(item_id) == 0))
         {
             // trim excess measurements..
-            if (pos_count > _max_measures)
-                _items_measurements[item_id].pop_back();
-            
-            //add new  measurement
-            time_position p_timepos;
-            p_timepos.measurement_value = measurement_value;
-            p_timepos.measurement_time = time_update;
-            _items_measurements[item_id].push_front(p_timepos);
+            if (_item_timed_measurements[item_id].size() > _max_measures)
+                _item_timed_measurements[item_id].pop_back();
+
+            //create measurement new entry
+            timed_measurement tmp_shft;
+            tmp_shft.elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_update - last_update).count();
+            tmp_shft.change_units = last_measurement - measurement_value;
+            tmp_shft.measurement.measurement_time = time_update;
+            tmp_shft.measurement.measurement_value = measurement_value;
+
+            // add measurement
+            _item_timed_measurements[item_id].push_front(tmp_shft);
+
+            //update last measurement for this item_id
+            _item_previous_measurement[item_id] =  tmp_shft.measurement;
 
             retval = true;
         }
-        else if (pos_count > 0)
-        {
-            //just update last time_check
-            _items_measurements[item_id].front().measurement_time = time_update;
-        }
-        
+
         return retval;
     }
     
@@ -127,50 +135,34 @@ namespace terraclear
         uint16_t retval = 0;
 
         //if item exists.. get queue size
-        if (_items_measurements.count(item_id) > 0)
+        if (_item_timed_measurements.count(item_id) > 0)
         {
             //get queue size
-            retval =  _items_measurements[item_id].size();
+            retval =  _item_timed_measurements[item_id].size();
         }
         
         return retval;
     }
 
-    float timed_averaging::get_rate_of_change_sec(uint32_t item_id)
+    float timed_averaging::get_avg_rate_of_change(uint32_t item_id)
     {
         float retval = 0.0f;
-        
-        //if item exists.. calculate avg speed for all measurements.
-        if (_items_measurements.count(item_id) > 0)
+
+        //if item exists.. get avg integrated rate of change for all measurements.
+        if (_item_timed_measurements.count(item_id) > 0)
         {
-            if (_items_measurements[item_id].size() > 1)
+            float dislacement = 0.00f;
+            uint64_t ms_elapsed = 0;
+            for (auto item_measured : _item_timed_measurements[item_id])
             {
-                //start and min positions and time windows
-                float position_start = std::numeric_limits<float>::max();
-                float position_end = std::numeric_limits<float>::min();
-                std::chrono::steady_clock::time_point time_end = std::chrono::steady_clock::time_point::min();
-                std::chrono::steady_clock::time_point time_start = std::chrono::steady_clock::time_point::max();
-
-                for (auto item_checkpoint : _items_measurements[item_id])
-                {
-                    //get start and end time & positions
-                    position_start = std::min(position_start, item_checkpoint.measurement_value);
-                    position_end = std::max(position_end, item_checkpoint.measurement_value);
-                    time_start = std::min(time_start, item_checkpoint.measurement_time);
-                    time_end = std::max(time_end, item_checkpoint.measurement_time);
-                    
-                }
-
-                //total duration_ms & distance
-                float duration_s = (float)std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start).count() / 1000;     
-                float magnitude = position_end - position_start;
-                
-                //calc rate of change
-                retval = magnitude / duration_s;
+                dislacement += item_measured.change_units;
+                ms_elapsed += item_measured.elapsed_ms;
             }
-          
+            
+            retval = 1000 / ((float)ms_elapsed / dislacement);
         }
         
+
         return retval;
     }
 
@@ -179,13 +171,13 @@ namespace terraclear
         double retval = 0.0f;
 
         //if item exists.. calculate sum of all measurements.
-        if (_items_measurements.count(item_id) > 0)
+        if (_item_timed_measurements.count(item_id) > 0)
         {
-            if (_items_measurements[item_id].size() > 1)
+            if (_item_timed_measurements[item_id].size() > 0)
             {
-                for (auto item_checkpoint : _items_measurements[item_id])
+                for (auto item_checkpoint : _item_timed_measurements[item_id])
                 {
-                    retval += item_checkpoint.measurement_value;
+                    retval += item_checkpoint.measurement.measurement_value;
                 }
             }
         }
@@ -198,7 +190,7 @@ namespace terraclear
         float retval = 0.0f;
         double item_sum = get_item_sum(item_id);
 
-        retval = (item_sum > 0) ? item_sum / _items_measurements[item_id].size() : 0 ;
+        retval = (item_sum > 0) ? item_sum / _item_timed_measurements[item_id].size() : 0 ;
 
         return retval;
     }
@@ -207,18 +199,18 @@ namespace terraclear
     {
         float retval = 0.0f;
 
-        //if item exists.. calculate avg speed for all measurements.
-        if (_items_measurements.count(item_id) > 0)
+        //if item exists.. get median measurement for all measurements.
+        if (_item_timed_measurements.count(item_id) > 0)
         {
-            if (_items_measurements[item_id].size() > 1)
+            if (_item_timed_measurements[item_id].size() > 2) //need at least 3 for median..
             {
                 std::vector<float> measures;
-                for (auto item_checkpoint : _items_measurements[item_id])
-                    measures.push_back(item_checkpoint.measurement_value);
+                for (auto item_checkpoint : _item_timed_measurements[item_id])
+                    measures.push_back(item_checkpoint.measurement.measurement_value);
                 
                 //median
                  std::nth_element(measures.begin(), measures.begin() + measures.size()/2, measures.end());
-                 retval = measures[_items_measurements[item_id].size()/2];
+                 retval = measures[_item_timed_measurements[item_id].size()/2];
             }
         }
         

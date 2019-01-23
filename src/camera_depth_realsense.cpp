@@ -153,7 +153,7 @@ namespace terraclear
 
         // make shared ptr to frame (i.e. retain ref)
         _rls_frame_depth = std::make_shared<rs2::depth_frame>(dframe);
-
+/*
         //setup and apply decimation filter with default options
         rs2::decimation_filter decimation_filter;
         dframe = dframe.apply_filter(decimation_filter);
@@ -179,7 +179,7 @@ namespace terraclear
         //setup and apply colorizer filter
         color_map.colorize(dframe);
         dframe = dframe.apply_filter(color_map);
-        
+ */
         // Query depth frame size (width and height)
         const int depth_w = dframe.as<rs2::video_frame>().get_width();
         const int depth_h = dframe.as<rs2::video_frame>().get_height();

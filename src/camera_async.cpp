@@ -70,10 +70,10 @@ namespace  terraclear
         mutex_lock();
             _camerabuffer.copyTo(_imagebuffer);
             _fps_current = 1000 / _sw.get_elapsed_ms();
+            _sw.reset();
         mutex_unlock();
         
         //sleep for ms to match frame rate.
-        _sw.reset();
     }
 
 }

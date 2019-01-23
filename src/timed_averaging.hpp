@@ -22,6 +22,8 @@
 #include <map>
 #include <chrono>
 #include <algorithm>
+#include <iostream>
+
 
 #include <opencv2/core/hal/interface.h>
 
@@ -30,7 +32,20 @@
 
 namespace terraclear
 {
+    //struct to hold each time/distance measure
+    struct time_position
+    {
+        std::chrono::steady_clock::time_point   measurement_time;
+        float                                   measurement_value;
+    };
 
+    struct timed_measurement
+    {
+        uint64_t                                elapsed_ms;
+        float                                   change_units;
+        time_position                           measurement;
+    };
+            
     class timed_averaging
     {
         public:
@@ -50,7 +65,7 @@ namespace terraclear
             uint16_t get_queue_size(uint32_t item_id);
             
             //get rate of change in units per second.
-            float get_rate_of_change_sec(uint32_t item_id);
+            float get_avg_rate_of_change(uint32_t item_id);
 
             //get average for specific item
             float get_item_average(uint32_t item_id);
@@ -61,14 +76,7 @@ namespace terraclear
             //sum over time
             double get_item_sum(uint32_t item_id);
 
-            
         private:
-            //struct to hold each time/distance measure
-            struct time_position
-            {
-                std::chrono::steady_clock::time_point measurement_time;
-                float measurement_value;
-            };
 
             // max error to ignore and not update speed..
             float _max_error = 0.0f; 
@@ -79,11 +87,9 @@ namespace terraclear
             // milliseconds to assume measurement is stale and remove from map..
             uint64_t _reset_timeout_ms = 1000;
             
-            // last timeout check.
-            std::chrono::steady_clock::time_point _last_time_measured;
-             
             //dictionary to hold distances mesaures per unique_item
-            std::map<uint32_t, std::list<time_position>> _items_measurements;
+            std::map<uint32_t, time_position> _item_previous_measurement;
+            std::map<uint32_t, std::list<timed_measurement>> _item_timed_measurements;
     };
 }
 #endif /* TIMED_AVERAGING_HPP */
