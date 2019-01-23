@@ -22,10 +22,12 @@
 //only compile for RealSense if required.. 
 //i.e you MUST #define TC_USE_REALSENSE or use g++ with -DTC_USE_REALSENSE
 
+
 #ifdef TC_USE_REALSENSE
 
 #include <cstdlib>
 #include <iostream>
+#include <mutex>
 
 #include "camera_depth.hpp"
 #include <librealsense2/rs.hpp>
@@ -56,6 +58,11 @@ namespace terraclear
             std::shared_ptr<rs2::depth_frame> _rls_frame_depth;
             
             double get_depth_internal(uint32_t x, uint32_t y);
+
+            int     _depth_w = 0;
+            int     _depth_h = 0;
+            
+            std::mutex _rls_mutex;
             
     };
 }
