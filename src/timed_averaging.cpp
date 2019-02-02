@@ -162,7 +162,6 @@ namespace terraclear
             retval = 1000 / ((float)ms_elapsed / dislacement);
         }
         
-
         return retval;
     }
 

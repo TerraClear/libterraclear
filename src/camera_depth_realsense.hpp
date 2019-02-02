@@ -41,8 +41,23 @@ namespace terraclear
     {
 
         public:
+            
+            struct realsense_settings
+            {
+                int     color_w;
+                int     color_h;
+                int     color_fps;
+
+                bool    depth_enabled;
+                int     depth_w;
+                int     depth_h;
+                int     depth_fps;
+            };
+            
             camera_depth_realsense();
+            camera_depth_realsense(realsense_settings rls_settings);
             camera_depth_realsense(std::string bagfile_path);
+            camera_depth_realsense(std::string bagfile_path, realsense_settings rls_settings);
             virtual ~camera_depth_realsense();
 
             //base class implementations.. 
@@ -53,14 +68,15 @@ namespace terraclear
             int         avgerage_square_pixels = 5;
         
     private:
+            void init_defaults();
+            void start_pipe();
             rs2::pipeline   _pipe;
             rs2::config     _pipe_config;
             std::shared_ptr<rs2::depth_frame> _rls_frame_depth;
             
             double get_depth_internal(uint32_t x, uint32_t y);
 
-            int     _depth_w = 0;
-            int     _depth_h = 0;
+            realsense_settings _rls_settings;
             
             std::mutex _rls_mutex;
             
