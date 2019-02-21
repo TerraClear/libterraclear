@@ -11,7 +11,7 @@ Dependencies:
 ----------------
 - libcppjson-dev :  sudo apt-get install libjsoncpp-dev
 - libserialport (OPTIONAL - Compile with -DTC_USE_SERIAL): get from https://sigrok.org/wiki/Libserialport (requires autoconf and libtool install)
-- realsense2 libs  (OPTIONAL - Compile with -DTC_USE_REALSENSE): https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md
+- realsense2 libs  (OPTIONAL - Compile with -DTC_USE_REALSENSE): https://github.com/IntelRealSense/librealsense/blob/master/doc/installation.md
 
 Make Notes
 ----------
