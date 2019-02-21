@@ -34,7 +34,7 @@ namespace  terraclear
     //check if file exists..
     bool  filetools::file_exists(const std::string filename) 
     {
-      std::ifstream ifile(filename.c_str());
+      std::ifstream ifile(filename.c_str(), std::ifstream::in | std::ifstream::binary);
       return (bool)ifile;
     }
 

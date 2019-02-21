@@ -13,4 +13,9 @@ Dependencies:
 - libserialport (OPTIONAL - Compile with -DTC_USE_SERIAL): get from https://sigrok.org/wiki/Libserialport (requires autoconf and libtool install)
 - realsense2 libs  (OPTIONAL - Compile with -DTC_USE_REALSENSE): https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md
 
-*NOTES - Optional dependency support added by either an #include or compiler switch..
+Make Notes
+----------
+- standard "make" will NOT include Intel RealSense support.
+- use "make CONF=Debug_RealSense" to build with RealSense support & add compiler "-DTC_USE_REALSENSE" switch 
+- If making librealsense, ensure -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=true -DBUILD_WITH_CUDA=true -DBUILD_WITH_OPENMP=true
+

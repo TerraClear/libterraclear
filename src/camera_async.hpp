@@ -38,6 +38,7 @@ namespace  terraclear
 
             uint32_t get_fps();
             uint32_t get_fpsmax();
+            camera_base* get_basecam_ptr();
             cv::Mat get_ImageBuffer();
           
         protected:

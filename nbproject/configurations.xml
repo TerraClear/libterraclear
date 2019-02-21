@@ -27,6 +27,8 @@
         <itemPath>src/camera_depth_zed.hpp</itemPath>
         <itemPath>src/camera_file.cpp</itemPath>
         <itemPath>src/camera_file.hpp</itemPath>
+        <itemPath>src/camera_flir_blackfly.cpp</itemPath>
+        <itemPath>src/camera_flir_blackfly.hpp</itemPath>
         <itemPath>src/camera_usb.cpp</itemPath>
         <itemPath>src/camera_usb.hpp</itemPath>
       </logicalFolder>
@@ -139,6 +141,10 @@
       </item>
       <item path="src/camera_file.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
@@ -242,6 +248,10 @@
       </item>
       <item path="src/camera_file.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
@@ -343,6 +353,10 @@
       <item path="src/camera_file.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/camera_file.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -446,6 +460,10 @@
       <item path="src/camera_file.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/camera_file.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/camera_usb.cpp" ex="false" tool="1" flavor2="8">
       </item>

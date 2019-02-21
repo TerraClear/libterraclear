@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_depth_realsense.o \
 	${OBJECTDIR}/src/camera_depth_zed.o \
 	${OBJECTDIR}/src/camera_file.o \
+	${OBJECTDIR}/src/camera_flir_blackfly.o \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
@@ -119,6 +120,11 @@ ${OBJECTDIR}/src/camera_file.o: src/camera_file.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_file.o src/camera_file.cpp
+
+${OBJECTDIR}/src/camera_flir_blackfly.o: src/camera_flir_blackfly.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_flir_blackfly.o src/camera_flir_blackfly.cpp
 
 ${OBJECTDIR}/src/camera_usb.o: src/camera_usb.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

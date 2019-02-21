@@ -75,7 +75,7 @@ namespace  terraclear
                 }
                 catch (std::exception& e)
                 {
-                    std::cout << std::endl << " ****** " << ctxt->get_name() << " Exception caught : " << e.what() << std::endl;
+                    std::cout << std::endl << " ****** Thread " << ctxt->get_name() << ": Exception - " << e.what() << std::endl;
                     ctxt->thread_stop();
                 }
 
@@ -85,6 +85,8 @@ namespace  terraclear
                 //create lock vineer over existing mutex..
                 std::unique_lock<std::mutex> pause_lock(ctxt->_internal_mutex);
 
+                std::cout << "p1" << std::flush;
+
                 // 1. Wait for Notification, 
                 // 2. Then block while acquiring lock.. 
                 // 3. Then check func return value
@@ -92,6 +94,8 @@ namespace  terraclear
                 // 5. If return val = true, retain lock and move on..    
                 ctxt->_internal_wait_lock.wait(pause_lock, [ctxt]{return !ctxt->_threadPaused;});
                 ctxt->_internal_mutex.unlock(); //should actually auto unlock when it goes out of scope?
+                
+                std::cout << "p2" << std::flush;
             }
 
             

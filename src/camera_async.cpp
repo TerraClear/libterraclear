@@ -40,6 +40,11 @@ namespace  terraclear
     {
         
     }
+    
+    camera_base* camera_async::get_basecam_ptr()
+    {
+        return _pcam;
+    }
 
     uint32_t camera_async::get_fps()
     {
@@ -60,7 +65,7 @@ namespace  terraclear
     {
         //read frame...
         _pcam->update_frames(); 
-
+        
         int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
         
         //match requested frame rate..
