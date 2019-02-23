@@ -22,7 +22,7 @@
 
 //only compile for Lucid Triton if required.. 
 //i.e you MUST #define TC_USE_TRITON or use g++ with -DTC_USE_TRITON
-//#ifdef TC_USE_TRITON
+#ifdef TC_USE_TRITON
 
 #ifndef CAMERA_LUCID_TRITON_HPP
 #define CAMERA_LUCID_TRITON_HPP
@@ -66,4 +66,4 @@ namespace terraclear
 }
 #endif /* CAMERA_LUCID_TRITON_HPP */
 
-//#endif /* Conditional TRITON support */
+#endif /* Conditional TRITON support */

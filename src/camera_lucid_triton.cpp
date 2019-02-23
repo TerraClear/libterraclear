@@ -21,7 +21,7 @@
 
 #include "camera_lucid_triton.hpp"
 
-//#ifdef TC_USE_TRITON
+#ifdef TC_USE_TRITON
 
 namespace terraclear
 {  
@@ -156,4 +156,4 @@ namespace terraclear
 
 }
 
-//#endif //TC_USE_TRITON
+#endif //TC_USE_TRITON
