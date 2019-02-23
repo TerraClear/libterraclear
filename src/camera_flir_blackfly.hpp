@@ -20,7 +20,7 @@
 */
 
 
-//only compile for RealSense if required.. 
+//only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY
 #ifdef TC_USE_BLACKFLY
 
@@ -29,6 +29,8 @@
 
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
+//#include <spinnaker/Camera.h>
+
 
 #include "camera_base.hpp"
 #include "error_base.hpp"
@@ -67,7 +69,7 @@ namespace terraclear
             void init_flir_system();
             uint32_t get_camera_count();
             void init_camera(uint32_t camera_index);
-            std::string flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
+            const char* flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
             
 
     };

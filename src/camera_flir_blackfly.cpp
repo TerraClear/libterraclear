@@ -18,8 +18,6 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
-#include <spinnaker/Camera.h>
-
 #include "camera_flir_blackfly.hpp"
 
 #ifdef TC_USE_BLACKFLY
@@ -31,7 +29,7 @@ namespace terraclear
     {
         //defaults
         _flir_reverseY = true;
-        _flir_pixel_format = FLIR_PixelFormat::PixelFormat_YUV411Packed;
+        _flir_pixel_format = FLIR_PixelFormat::PixelFormat_BayerGB8;
         
         //init flir system
         init_flir_system();
@@ -176,7 +174,7 @@ namespace terraclear
                                 flir_api::CEnumEntryPtr ptrPixelFormatEntry = ptrPixelFormat->GetEntryByName(pixel_format_string.c_str());
                                 if (!flir_api::IsAvailable(ptrPixelFormatEntry) || (!flir_api::IsReadable(ptrPixelFormatEntry)))
                                 {
-                                    throw get_generic_error("Could verify '" + pixel_format_string + "' PixelFormat value is readable.");
+                                    throw get_generic_error("PixelFormat '" + pixel_format_string + "' not available.");
                                 }
                                 else
                                 {
@@ -239,103 +237,101 @@ namespace terraclear
         }
     }
     
-    std::string camera_flir_blackfly::flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format)
+    const char* camera_flir_blackfly::flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format)
     {
-        std::string retval = "UNKNOWN";
-        
         switch(flir_pixel_format)
         {
 
             case FLIR_PixelFormat::PixelFormat_Mono8:
-                retval = "Mono8";
-                break;
+                return "Mono8";
+                
             case FLIR_PixelFormat::PixelFormat_Mono16:
-                retval = "Mono16";
-                break;
+                return "Mono16";
+                
             case FLIR_PixelFormat::PixelFormat_RGB8Packed:
-                retval = "RGB8Packed";
-                break;
+                return "RGB8Packed";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGR8:
-                retval = "BayerGR8";
-                break;
+                return "BayerGR8";
+                
             case FLIR_PixelFormat::PixelFormat_BayerRG8:
-                retval = "BayerRG8";
-                break;
+                return "BayerRG8";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGB8:
-                retval = "BayerGB8";
-                break;
+                return "BayerGB8";
+                
             case FLIR_PixelFormat::PixelFormat_BayerBG8:
-                retval = "BayerBG8";
-                break;
+                return "BayerBG8";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGR16:
-                retval = "BayerGR16";
-                break;
+                return "BayerGR16";
+                
             case FLIR_PixelFormat::PixelFormat_BayerRG16:
-                retval = "BayerRG16";
-                break;
+                return "BayerRG16";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGB16:
-                retval = "BayerGB16";
-                break;
+                return "BayerGB16";
+                
             case FLIR_PixelFormat::PixelFormat_BayerBG16:
-                retval = "BayerBG16";
-                break;
+                return "BayerBG16";
+                
             case FLIR_PixelFormat::PixelFormat_Mono12Packed:
-                retval = "Mono12Packed";
-                break;
+                return "Mono12Packed";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGR12Packed:
-                retval = "BayerGR12Packed";
-                break;
+                return "BayerGR12Packed";
+                
             case FLIR_PixelFormat::PixelFormat_BayerRG12Packed:
-                retval = "BayerRG12Packed";
-                break;
+                return "BayerRG12Packed";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGB12Packed:
-                retval = "BayerGB12Packed";
-                break;
+                return "BayerGB12Packed";
+                
             case FLIR_PixelFormat::PixelFormat_BayerBG12Packed:
-                retval = "BayerBG12Packed";
-                break;
+                return "BayerBG12Packed";
+                
             case FLIR_PixelFormat::PixelFormat_YUV411Packed:
-                retval = "YUV411Packed";
-                break;
+                return "YUV411Packed";
+                
             case FLIR_PixelFormat::PixelFormat_YUV422Packed:
-                retval = "YUV422Packed";
-                break;
+                return "YUV422Packed";
+                
             case FLIR_PixelFormat::PixelFormat_YUV444Packed:
-                retval = "YUV444Packed";
-                break;
+                return "YUV444Packed";
+                
             case FLIR_PixelFormat::PixelFormat_Mono12p:
-                retval = "Mono12p";
-                break;
+                return "Mono12p";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGR12p:
-                retval = "BayerGR12p";
-                break;
+                return "BayerGR12p";
+                
             case FLIR_PixelFormat::PixelFormat_BayerRG12p:
-                retval = "BayerRG12p";
-                break;
+                return "BayerRG12p";
+                
             case FLIR_PixelFormat::PixelFormat_BayerGB12p:
-                retval = "BayerGB12p";
-                break;
+                return "BayerGB12p";
+                
             case FLIR_PixelFormat::PixelFormat_BayerBG12p:
-                retval = "BayerBG12p";
-                break;
+                return "BayerBG12p";
+                
             case FLIR_PixelFormat::PixelFormat_YCbCr8:
-                retval = "YCbCr8";
-                break;
+                return "YCbCr8";
+                
             case FLIR_PixelFormat::PixelFormat_YCbCr422_8:
-                retval = "YCbCr422_8";
-                break;
+                return "YCbCr422_8";
+                
             case FLIR_PixelFormat::PixelFormat_YCbCr411_8:
-                retval = "YCbCr411_8";
-                break;
+                return "YCbCr411_8";
+                
             case FLIR_PixelFormat::PixelFormat_BGR8:
-                retval = "BGR8";
-                break;
+                return "BGR8";
+                
             case FLIR_PixelFormat::PixelFormat_BGRa8:
-                retval = "BGRa8";
-                break;
+                return "BGRa8";
+                
         }
 
-        return retval;
+        return "UNKNOWN";
     }
 }
 
