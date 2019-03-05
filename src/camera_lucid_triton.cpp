@@ -20,7 +20,6 @@
 */
 
 #include "camera_lucid_triton.hpp"
-
 #ifdef TC_USE_TRITON
 
 namespace terraclear
@@ -99,6 +98,10 @@ namespace terraclear
                 //get camera at index 0
                 _lucid_cam = _lucid_system->CreateDevice(_lucid_camera_list[camera_index]);
 
+                // Set width and height to default
+                Arena::SetNodeValue<int64_t>(_lucid_cam->GetNodeMap(), "Width", (int64_t) LUCID_WIDTH); 
+                Arena::SetNodeValue<int64_t>(_lucid_cam->GetNodeMap(), "Height", (int64_t) LUCID_HEIGHT); 
+
                 //set acquisition mode.
                 Arena::SetNodeValue<GenICam::gcstring>(_lucid_cam->GetNodeMap(), "AcquisitionMode", "Continuous");
 
@@ -111,8 +114,39 @@ namespace terraclear
                 //set buffer mode newest only.
                 Arena::SetNodeValue<GenICam::gcstring>(_lucid_cam->GetTLStreamNodeMap(), "StreamBufferHandlingMode", "NewestOnly");
 
-                //Start Capture
-                _lucid_cam->StartStream();
+                // Set minimum packet delay StreamChannelPacketDelay
+                GenApi::CIntegerPtr pStreamChannelPacketDelay = _lucid_cam->GetNodeMap()->GetNode("GevSCPD");
+                pStreamChannelPacketDelay->SetValue(pStreamChannelPacketDelay->GetMin());
+                
+                // Set throughput reserve at 5%.
+                GenApi::CIntegerPtr pDeviceLinkThroughputReserve = _lucid_cam->GetNodeMap()->GetNode("DeviceLinkThroughputReserve");
+                uint64_t reserve_max = pDeviceLinkThroughputReserve->GetMax();
+                pDeviceLinkThroughputReserve->SetValue(reserve_max * 0.05);
+
+               // Set width and height to half
+                Arena::SetNodeValue<int64_t>(_lucid_cam->GetNodeMap(), "Width", (int64_t) LUCID_WIDTH/2); 
+                Arena::SetNodeValue<int64_t>(_lucid_cam->GetNodeMap(), "Height", (int64_t) LUCID_HEIGHT/2); 
+
+                // fps
+                double fps = 60;
+                bool set_fps = true;
+
+                //Force manual framerate - Default is: "Off"
+                Arena::SetNodeValue<bool> (_lucid_cam->GetNodeMap(), "AcquisitionFrameRateEnable", set_fps);
+                
+                if (set_fps)
+                    Arena::SetNodeValue<double>(_lucid_cam->GetNodeMap(), "AcquisitionFrameRate", fps);                 
+                
+                //Force AE Continuous - Default is: "Continuous"
+                Arena::SetNodeValue<GenICam::gcstring>(_lucid_cam->GetNodeMap(), "ExposureAuto", "Off");
+        	
+                //set exposure manually.
+                GenApi::CFloatPtr pExposureTime = _lucid_cam->GetNodeMap()->GetNode("ExposureTime");
+                pExposureTime->SetValue(990000/fps);
+                
+                
+                //Start Capture with 10 frame buffer.
+                _lucid_cam->StartStream(10);
             
             }
             catch (GenICam::GenericException& ge)
@@ -144,14 +178,13 @@ namespace terraclear
             
             //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
             cv::Mat tmp_mat = cv::Mat(height + ypad, width + xpad, CV_8UC3, (void*)img_converted_ptr->GetData());
-            
-            //copy to base camera frame
             tmp_mat.copyTo(_frame_color);
-            
-            //flush & queue same buffer
-            _lucid_cam->RequeueBuffer(image_ptr);
+            tmp_mat.release();
             
         }
+        //flush & queue same buffer
+        _lucid_cam->RequeueBuffer(image_ptr);
+
     }
 
 }

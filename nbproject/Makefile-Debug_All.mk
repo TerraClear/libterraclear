@@ -45,6 +45,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_file.o \
 	${OBJECTDIR}/src/camera_flir_blackfly.o \
 	${OBJECTDIR}/src/camera_lucid_triton.o \
+	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
@@ -131,6 +132,11 @@ ${OBJECTDIR}/src/camera_lucid_triton.o: src/camera_lucid_triton.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_lucid_triton.o src/camera_lucid_triton.cpp
+
+${OBJECTDIR}/src/camera_recorder.o: src/camera_recorder.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_recorder.o src/camera_recorder.cpp
 
 ${OBJECTDIR}/src/camera_usb.o: src/camera_usb.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -28,8 +28,8 @@ namespace terraclear
     camera_flir_blackfly::camera_flir_blackfly()
     {
         //defaults
-        _flir_reverseY = true;
-        _flir_pixel_format = FLIR_PixelFormat::PixelFormat_BayerGB8;
+        _flir_reverseY = false;
+        _flir_pixel_format = FLIR_PixelFormat::PixelFormat_BayerRG8;
         
         //init flir system
         init_flir_system();
@@ -136,6 +136,17 @@ namespace terraclear
                     }
                     else
                     {
+
+                        flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
+                        ptrBinH->SetValue(2);
+                        flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
+                        ptrBinW->SetValue(2);
+
+                        flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
+                        ptrWidth->SetValue( (uint64) FLIR_WIDTH/2);
+                        flir_api::CIntegerPtr ptrHeight = flir_nodemap.GetNode("Height");
+                        ptrHeight->SetValue((uint64) FLIR_HEIGHT/2);
+
                         // read integer value from entry node
                         int64_t value_continuous = pentry_continuous->GetValue();
 
@@ -152,8 +163,9 @@ namespace terraclear
                         else
                         {
                             //setting reverseY
-                            ptrReverseY->SetValue(true);
+                            ptrReverseY->SetValue(_flir_reverseY);
                         }
+                        
 
                         //get pixel format and change if needed..
                         flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
@@ -228,9 +240,8 @@ namespace terraclear
 
             //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
             cv::Mat tmp_mat = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
-            
-            //copy to base camera frame
             tmp_mat.copyTo(_frame_color);
+            tmp_mat.release();
             
             //release image buffers
             image_ptr->Release();

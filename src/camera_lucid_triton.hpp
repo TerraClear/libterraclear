@@ -33,6 +33,10 @@
 #include "camera_base.hpp"
 #include "error_base.hpp"
 
+// Width and height
+#define LUCID_WIDTH 1440
+#define LUCID_HEIGHT 1080
+
 namespace terraclear
 { 
     typedef PfncFormat_ LUCID_PixelFormat;
@@ -52,7 +56,7 @@ namespace terraclear
             const char* _base_errstr = "LUCID Triton Error - ";
             error_base get_generic_error(std::string);
 
-            uint32_t                        _timeout_ms = 2000;
+            uint32_t                        _timeout_ms = 4000;
             LUCID_PixelFormat               _lucid_pixel_format = LUCID_PixelFormat::BayerRG8;
             Arena::ISystem*                 _lucid_system = nullptr;
             std::vector<Arena::DeviceInfo>  _lucid_camera_list;

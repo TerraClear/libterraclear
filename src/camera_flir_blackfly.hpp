@@ -27,6 +27,10 @@
 #ifndef CAMERA_FLIR_BLACKFLY_HPP
 #define CAMERA_FLIR_BLACKFLY_HPP
 
+// Width and height
+#define FLIR_WIDTH 1440
+#define FLIR_HEIGHT 1080
+
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
 //#include <spinnaker/Camera.h>
