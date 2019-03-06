@@ -77,12 +77,12 @@ namespace  terraclear
     
     void camera_recorder::stop_recorder()
     {
-        if (_is_recording)
-        {
-            _is_recording = false;
-            _video_recorder.release();
-            thread_stopwait();
-        }
+        //stop writing to file, then release..
+        thread_stopwait();
+        
+        //thread stopped, end file..
+        _is_recording = false;
+        _video_recorder.release();
     }
 
     void camera_recorder::thread_runloop()
@@ -92,9 +92,9 @@ namespace  terraclear
         std::unique_lock<std::mutex> lk(_internal_mutex);
 
         // acquire lock, check condition
-        // if condition is not met, release lock and wait for notify or timeout..
-        // if notified, return value and re-lock and continue
-        // if timeout, return value and re-lock and continue
+        // if condition NOT met, release lock and wait for notify or timeoout
+        // if condition was not net and now waiting.. re-check condition on notify or timeout, re-lock and continue..
+        // if condition IS met, immediately return value and re-lock and continue
         // NOTE - unique lock will auto unlock if locked when out of scope.. 
         bool has_frames = _frame_notifier.wait_for(lk, std::chrono::milliseconds(250), [this]
         {

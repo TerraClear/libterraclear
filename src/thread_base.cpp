@@ -120,7 +120,12 @@ namespace  terraclear
     void thread_base::thread_stopwait()
     {
         thread_stop(); 
-        _pthread_main->join();
+        if (_pthread_main != nullptr)
+        {
+            _pthread_main->join();
+            delete _pthread_main;
+            _pthread_main = nullptr;
+        }
     }
     
     bool thread_base::isrunning()

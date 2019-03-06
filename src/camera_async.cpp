@@ -58,7 +58,13 @@ namespace  terraclear
     
     cv::Mat camera_async::get_ImageBuffer()
     {
-        return _imagebuffer;
+        cv::Mat tmp_img;
+    
+        mutex_lock();
+            _imagebuffer.copyTo(tmp_img);
+        mutex_unlock();
+
+        return tmp_img;
     }
     
     void camera_async::thread_runloop()
