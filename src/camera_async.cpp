@@ -53,7 +53,7 @@ namespace  terraclear
     
     uint32_t camera_async::get_fpsmax()
     {
-        uint32_t retval = _fps_max;
+        return _fps_max;
     }
     
     cv::Mat camera_async::get_ImageBuffer()
