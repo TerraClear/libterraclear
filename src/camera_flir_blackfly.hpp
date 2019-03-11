@@ -22,7 +22,7 @@
 
 //only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY
-#ifdef TC_USE_BLACKFLY
+//#ifdef TC_USE_BLACKFLY
 
 #ifndef CAMERA_FLIR_BLACKFLY_HPP
 #define CAMERA_FLIR_BLACKFLY_HPP
@@ -30,6 +30,8 @@
 // Width and height
 #define FLIR_WIDTH 1440
 #define FLIR_HEIGHT 1080
+#define BIN_SIZE 2
+
 
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
@@ -80,4 +82,4 @@ namespace terraclear
 }
 #endif /* CAMERA_FLIR_BLACKFLY_HPP */
 
-#endif /* Conditional BLACKFLY support */
+//#endif /* Conditional BLACKFLY support */

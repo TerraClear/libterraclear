@@ -18,9 +18,11 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
+#include <spinnaker/SpinGenApi/Pointer.h>
+
 #include "camera_flir_blackfly.hpp"
 
-#ifdef TC_USE_BLACKFLY
+//#ifdef TC_USE_BLACKFLY
 
 namespace terraclear
 {  
@@ -137,16 +139,6 @@ namespace terraclear
                     else
                     {
 
-                        flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
-                        ptrBinH->SetValue(2);
-                        flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
-                        ptrBinW->SetValue(2);
-
-                        flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
-                        ptrWidth->SetValue( (uint64) FLIR_WIDTH/2);
-                        flir_api::CIntegerPtr ptrHeight = flir_nodemap.GetNode("Height");
-                        ptrHeight->SetValue((uint64) FLIR_HEIGHT/2);
-
                         // read integer value from entry node
                         int64_t value_continuous = pentry_continuous->GetValue();
 
@@ -165,8 +157,35 @@ namespace terraclear
                             //setting reverseY
                             ptrReverseY->SetValue(_flir_reverseY);
                         }
+
+                        //Set Exposure Mode to Manual exposure
+                        flir_api::CEnumerationPtr exposureAuto = flir_nodemap.GetNode("ExposureAuto");
+                        exposureAuto->SetIntValue(exposureAuto->GetEntryByName("Off")->GetValue());
+
+                        //Set exposure time..
+                        flir_api::CFloatPtr exposureTime = flir_nodemap.GetNode("ExposureTime");
+                        exposureTime->SetValue(5000);
                         
 
+                        //set Image Width/Height
+                        flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
+                        ptrWidth->SetValue( (uint64) FLIR_WIDTH/BIN_SIZE);
+                        flir_api::CIntegerPtr ptrHeight = flir_nodemap.GetNode("Height");
+                        ptrHeight->SetValue((uint64) FLIR_HEIGHT/BIN_SIZE);
+
+                        //Enable Binning
+                        flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
+                        ptrBinH->SetValue(BIN_SIZE);
+                        flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
+                        ptrBinW->SetValue(BIN_SIZE);
+
+                        //Force Frame Rate
+                        flir_api::CBooleanPtr ptrFPSEnable = flir_nodemap.GetNode("AcquisitionFrameRateEnable");
+                        ptrFPSEnable->SetValue(true);
+                        flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
+                        ptrFPS->SetValue(125);
+                        
+                        
                         //get pixel format and change if needed..
                         flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
                         if (flir_format != _flir_pixel_format)
@@ -346,4 +365,4 @@ namespace terraclear
     }
 }
 
-#endif
+//#endif
