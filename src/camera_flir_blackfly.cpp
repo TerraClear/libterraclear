@@ -18,8 +18,6 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
-#include <spinnaker/SpinGenApi/Pointer.h>
-
 #include "camera_flir_blackfly.hpp"
 
 #ifdef TC_USE_BLACKFLY

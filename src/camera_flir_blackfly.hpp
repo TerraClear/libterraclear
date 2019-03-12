@@ -35,8 +35,6 @@
 
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
-//#include <spinnaker/Camera.h>
-
 
 #include "camera_base.hpp"
 #include "error_base.hpp"
