@@ -103,7 +103,6 @@ namespace terraclear
         
         // fps
         double fps = 125;
-        bool set_fps = true;
         float exposure_time = 987625/fps;
         
         if (get_camera_count() < camera_index)
@@ -170,7 +169,7 @@ namespace terraclear
 
                         //Set exposure time..
                         flir_api::CFloatPtr exposureTime = flir_nodemap.GetNode("ExposureTime");
-                        exposureTime->SetValue(15000);
+                        exposureTime->SetValue(exposure_time);
                         
                         //set Image Width/Height
                         flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
@@ -188,7 +187,7 @@ namespace terraclear
                         flir_api::CBooleanPtr ptrFPSEnable = flir_nodemap.GetNode("AcquisitionFrameRateEnable");
                         ptrFPSEnable->SetValue(true);
                         flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
-                        ptrFPS->SetValue(125);
+                        ptrFPS->SetValue(fps);
                         
                         
                         //get pixel format and change if needed..
