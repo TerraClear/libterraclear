@@ -128,21 +128,27 @@ namespace terraclear
                 Arena::SetNodeValue<int64_t>(_lucid_cam->GetNodeMap(), "Height", (int64_t) LUCID_HEIGHT/2); 
 
                 // fps
-                double fps = 60;
+                double fps = 125;
                 bool set_fps = true;
+                float exposure_time = 987625/fps;
+                std::cout << exposure_time << std::endl;
 
                 //Force manual framerate - Default is: "Off"
                 Arena::SetNodeValue<bool> (_lucid_cam->GetNodeMap(), "AcquisitionFrameRateEnable", set_fps);
                 
                 if (set_fps)
-                    Arena::SetNodeValue<double>(_lucid_cam->GetNodeMap(), "AcquisitionFrameRate", fps);                 
+                {
+                    GenApi::CFloatPtr pAcquisitionFrameRate = _lucid_cam->GetNodeMap()->GetNode("AcquisitionFrameRate");
+                    pAcquisitionFrameRate->SetValue(fps);
+                }                
                 
                 //Force AE Continuous - Default is: "Continuous"
                 Arena::SetNodeValue<GenICam::gcstring>(_lucid_cam->GetNodeMap(), "ExposureAuto", "Off");
         	
                 //set exposure manually.
                 GenApi::CFloatPtr pExposureTime = _lucid_cam->GetNodeMap()->GetNode("ExposureTime");
-                pExposureTime->SetValue(990000/fps);
+                //pExposureTime->SetValue();
+                pExposureTime->SetValue(exposure_time);
                 
                 
                 //Start Capture with 10 frame buffer.

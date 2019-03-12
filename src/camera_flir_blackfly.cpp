@@ -22,7 +22,7 @@
 
 #include "camera_flir_blackfly.hpp"
 
-//#ifdef TC_USE_BLACKFLY
+#ifdef TC_USE_BLACKFLY
 
 namespace terraclear
 {  
@@ -100,6 +100,12 @@ namespace terraclear
     
     void camera_flir_blackfly::init_camera(uint32_t camera_index)
     {
+        
+        // fps
+        double fps = 125;
+        bool set_fps = true;
+        float exposure_time = 987625/fps;
+        
         if (get_camera_count() < camera_index)
         {
             throw get_generic_error("Camera Index Out Of Range");
@@ -164,9 +170,8 @@ namespace terraclear
 
                         //Set exposure time..
                         flir_api::CFloatPtr exposureTime = flir_nodemap.GetNode("ExposureTime");
-                        exposureTime->SetValue(5000);
+                        exposureTime->SetValue(15000);
                         
-
                         //set Image Width/Height
                         flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
                         ptrWidth->SetValue( (uint64) FLIR_WIDTH/BIN_SIZE);
@@ -364,5 +369,4 @@ namespace terraclear
         return "UNKNOWN";
     }
 }
-
-//#endif
+#endif
