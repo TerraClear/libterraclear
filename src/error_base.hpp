@@ -36,6 +36,8 @@ namespace  terraclear
             error_base(std::string errmsg, int error_number);
             virtual const char* what() const throw();
             
+            static void stderr_redirect(std::string err_filename);
+            
         private:
             std::string _errmsg;
     };

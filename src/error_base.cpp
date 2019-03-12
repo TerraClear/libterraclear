@@ -38,4 +38,9 @@ namespace terraclear
     {
         return _errmsg.c_str();
     }
+    
+    void error_base::stderr_redirect(std::string err_filename)
+    {
+        freopen (err_filename.c_str(), "w", stderr);
+    }
 }
