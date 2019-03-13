@@ -22,7 +22,7 @@
 
 #include "camera_flir_blackfly.hpp"
 
-//#ifdef TC_USE_BLACKFLY
+#ifdef TC_USE_BLACKFLY
 
 namespace terraclear
 {  
@@ -421,4 +421,4 @@ namespace terraclear
         return "UNKNOWN";
     }
 }
-//#endif
+#endif
