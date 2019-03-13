@@ -22,7 +22,7 @@
 
 //only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY
-#ifdef TC_USE_BLACKFLY
+//#ifdef TC_USE_BLACKFLY
 
 #ifndef CAMERA_FLIR_BLACKFLY_HPP
 #define CAMERA_FLIR_BLACKFLY_HPP
@@ -32,6 +32,7 @@
 #define FLIR_HEIGHT 1080
 #define BIN_SIZE 2
 
+#define FLIR_ERR_STR "FLIR BlackFlyS Error - "
 
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
@@ -51,18 +52,21 @@ namespace terraclear
     {
         public:
             camera_flir_blackfly();
+            camera_flir_blackfly(uint32_t cam_index);
+            camera_flir_blackfly(std::string cam_serial);
             virtual ~camera_flir_blackfly();
 
             //pure virtual implementation..
             void update_frames();
+            
+            //get camera list
+            static std::vector<std::string> get_cameras();
 
         private:
-            bool _disposing = false;
-            
-            const char* _base_errstr = "FLIR BlackFlyS Error - ";
-            error_base get_flir_error(flir::Exception &e);
-            error_base get_generic_error(std::string);
+            static error_base get_flir_error(flir::Exception &e);
+            static error_base get_generic_error(std::string);
 
+            bool _disposing = false;
 
             FLIR_PixelFormat _flir_pixel_format = FLIR_PixelFormat::PixelFormat_YUV411Packed;
             bool _flir_reverseY = true;
@@ -72,7 +76,7 @@ namespace terraclear
 
             void init_flir_system();
             uint32_t get_camera_count();
-            void init_camera(uint32_t camera_index);
+            void init_camera();
             const char* flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
             
 
@@ -80,4 +84,4 @@ namespace terraclear
 }
 #endif /* CAMERA_FLIR_BLACKFLY_HPP */
 
-#endif /* Conditional BLACKFLY support */
+//#endif /* Conditional BLACKFLY support */

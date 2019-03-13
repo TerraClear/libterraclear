@@ -18,27 +18,48 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
+#include <spinnaker/CameraBase.h>
+
 #include "camera_flir_blackfly.hpp"
 
-#ifdef TC_USE_BLACKFLY
+//#ifdef TC_USE_BLACKFLY
 
 namespace terraclear
 {  
 
     camera_flir_blackfly::camera_flir_blackfly()
     {
-        //defaults
-        _flir_reverseY = false;
-        _flir_pixel_format = FLIR_PixelFormat::PixelFormat_BayerRG8;
-        
         //init flir system
         init_flir_system();
         
-        //init and start default camera 0
-        init_camera(0); 
+        //set camera to default..
+        _flir_cam = _flir_camera_list.GetByIndex(0);
+        init_camera(); 
+    }
+
+    camera_flir_blackfly::camera_flir_blackfly(uint32_t cam_index)
+    {
+        //init flir system
+        init_flir_system();
+        
+        //set camera to default..
+        _flir_cam = _flir_camera_list.GetByIndex(cam_index);
+        init_camera(); 
+        
+    }
+    
+    camera_flir_blackfly::camera_flir_blackfly(std::string cam_serial)
+    {
+        //init flir system
+        init_flir_system();
+        
+        //set camera to default..
+        _flir_cam = _flir_camera_list.GetBySerial(cam_serial);
+        init_camera(); 
         
     }
 
+            
     camera_flir_blackfly::~camera_flir_blackfly() 
     {
         if (!_disposing)
@@ -64,19 +85,59 @@ namespace terraclear
     error_base camera_flir_blackfly::get_flir_error(flir::Exception &e)
     {
         std::stringstream strstrm;
-        strstrm << _base_errstr << e.GetErrorMessage() << ":" << e.GetFunctionName();
+        strstrm << FLIR_ERR_STR << e.GetErrorMessage() << ":" << e.GetFunctionName();
         return error_base(strstrm.str(), e.GetError());
     }
     
     error_base camera_flir_blackfly::get_generic_error(std::string err_string)
     {
         std::stringstream strstrm;
-        strstrm << _base_errstr << err_string;
+        strstrm << FLIR_ERR_STR << err_string;
         return error_base(strstrm.str());
     }
     
+    std::vector<std::string> camera_flir_blackfly::get_cameras()
+    {
+        flir::SystemPtr flir_system = nullptr;
+        flir::CameraList flir_camera_list;        
+
+        std::vector<std::string> cam_list;
+                
+        try
+        {
+            //smartptr to dlir System..
+            flir_system = flir::System::GetInstance();
+
+            //get flir cameras attached to system
+            flir_camera_list = flir_system->GetCameras();  
+            uint32_t cam_count = flir_camera_list.GetSize();
+            for (uint32_t cam_index = 0; cam_index < cam_count; cam_index++)
+            {
+                std::string cam_serial = flir_camera_list.GetByIndex(cam_index)->GetUniqueID().c_str();
+                cam_list.push_back(cam_serial);
+            }
+
+            //clear cameras before releasing system instance..
+            flir_camera_list.Clear();
+            //release system
+            flir_system->ReleaseInstance();            
+
+        }
+        catch (flir::Exception &e)
+        {
+            throw get_flir_error(e);
+        }      
+        
+        return cam_list;
+        
+    }
+
     void camera_flir_blackfly::init_flir_system()
     {
+        //defaults
+        _flir_reverseY = false;
+        _flir_pixel_format = FLIR_PixelFormat::PixelFormat_BayerRG8;
+
         try
         {
             //smartptr to dlir System..
@@ -96,146 +157,140 @@ namespace terraclear
         return _flir_camera_list.GetSize();
     }
     
-    void camera_flir_blackfly::init_camera(uint32_t camera_index)
+    void camera_flir_blackfly::init_camera()
     {
         
         // fps
         double fps = 125;
         float exposure_time = 987625/fps;
         
-        if (get_camera_count() < camera_index)
+        try
         {
-            throw get_generic_error("Camera Index Out Of Range");
-        }
-        else
-        {
-            try
+            //if camera not acquired, acquire default 
+            if (_flir_cam == nullptr)
+                _flir_cam = _flir_camera_list.GetByIndex(0);
+
+            //init camera
+            _flir_cam->Init();
+
+            //get nodemaps
+            //flir_api::INodeMap& nmTL = pcam->GetTLDeviceNodeMap();
+            flir_api::INodeMap& flir_nodemap = _flir_cam->GetNodeMap();
+
+            //get camera in AcquisitionMode mode enumerator
+            flir_api::CEnumerationPtr penum_acquisition = flir_nodemap.GetNode("AcquisitionMode");
+
+            //check in acquisition mode enumerator available and writable..
+            if (!flir_api::IsAvailable(penum_acquisition) || (!flir_api::IsWritable(penum_acquisition)))
             {
-                //get camera ptr at index 0
-                _flir_cam = _flir_camera_list.GetByIndex(camera_index);
+                throw get_generic_error("Could verify 'Acquisition' node entry is writable.");
+            }
+            else
+            {
+                //get continuous capture mode entry.
+                flir_api::CEnumEntryPtr pentry_continuous = penum_acquisition->GetEntryByName("Continuous");
 
-                //init camera
-                _flir_cam->Init();
-                
-                //get nodemaps
-                //flir_api::INodeMap& nmTL = pcam->GetTLDeviceNodeMap();
-                flir_api::INodeMap& flir_nodemap = _flir_cam->GetNodeMap();
-                
-                //get camera in AcquisitionMode mode enumerator
-                flir_api::CEnumerationPtr penum_acquisition = flir_nodemap.GetNode("AcquisitionMode");
-
-                //check in acquisition mode enumerator available and writable..
-                if (!flir_api::IsAvailable(penum_acquisition) || (!flir_api::IsWritable(penum_acquisition)))
+                //check continuous entry is available and readable.
+                if (!flir_api::IsAvailable(pentry_continuous) || (!flir_api::IsReadable(pentry_continuous)))
                 {
-                    throw get_generic_error("Could verify 'Acquisition' node entry is writable.");
+                    throw get_generic_error("Could verify 'Continuous' Acquisition value is readable.");
                 }
                 else
                 {
-                    //get continuous capture mode entry.
-                    flir_api::CEnumEntryPtr pentry_continuous = penum_acquisition->GetEntryByName("Continuous");
 
-                    //check continuous entry is available and readable.
-                    if (!flir_api::IsAvailable(pentry_continuous) || (!flir_api::IsReadable(pentry_continuous)))
+                    // read integer value from entry node
+                    int64_t value_continuous = pentry_continuous->GetValue();
+
+                    // Set 'Continuous' value for Acquisition from on acquisition mode
+                    penum_acquisition->SetIntValue(value_continuous);    
+
+                    //get ptr to FlipY node item
+                    flir_api::CBooleanPtr ptrReverseY = flir_nodemap.GetNode("ReverseY");
+
+                    if (!flir_api::IsAvailable(ptrReverseY) || (!flir_api::IsWritable(ptrReverseY)))
                     {
-                        throw get_generic_error("Could verify 'Continuous' Acquisition value is readable.");
+                        throw get_generic_error("Could verify 'ReverseY' entry is writable.");
                     }
                     else
                     {
+                        //setting reverseY
+                        ptrReverseY->SetValue(_flir_reverseY);
+                    }
 
-                        // read integer value from entry node
-                        int64_t value_continuous = pentry_continuous->GetValue();
+                    //Set Exposure Mode to Manual exposure
+                    flir_api::CEnumerationPtr exposureAuto = flir_nodemap.GetNode("ExposureAuto");
+                    exposureAuto->SetIntValue(exposureAuto->GetEntryByName("Off")->GetValue());
 
-                        // Set 'Continuous' value for Acquisition from on acquisition mode
-                        penum_acquisition->SetIntValue(value_continuous);    
+                    //Set exposure time..
+                    flir_api::CFloatPtr exposureTime = flir_nodemap.GetNode("ExposureTime");
+                    exposureTime->SetValue(exposure_time);
 
-                        //get ptr to FlipY node item
-                        flir_api::CBooleanPtr ptrReverseY = flir_nodemap.GetNode("ReverseY");
+                    //set Image Width/Height
+                    flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
+                    ptrWidth->SetValue( (uint64) FLIR_WIDTH/BIN_SIZE);
+                    flir_api::CIntegerPtr ptrHeight = flir_nodemap.GetNode("Height");
+                    ptrHeight->SetValue((uint64) FLIR_HEIGHT/BIN_SIZE);
 
-                        if (!flir_api::IsAvailable(ptrReverseY) || (!flir_api::IsWritable(ptrReverseY)))
+                    //Enable Binning
+                    flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
+                    ptrBinH->SetValue(BIN_SIZE);
+                    flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
+                    ptrBinW->SetValue(BIN_SIZE);
+
+                    //Force Frame Rate
+                    flir_api::CBooleanPtr ptrFPSEnable = flir_nodemap.GetNode("AcquisitionFrameRateEnable");
+                    ptrFPSEnable->SetValue(true);
+                    flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
+                    ptrFPS->SetValue(fps);
+
+
+                    //get pixel format and change if needed..
+                    flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
+                    if (flir_format != _flir_pixel_format)
+                    {
+                        //get ptr to pixel format node item
+                        flir_api::CEnumerationPtr ptrPixelFormat = flir_nodemap.GetNode("PixelFormat");
+                        if (!flir_api::IsAvailable(ptrPixelFormat) || (!flir_api::IsWritable(ptrPixelFormat)))
                         {
-                            throw get_generic_error("Could verify 'ReverseY' entry is writable.");
+                            throw get_generic_error("Could verify 'PixelFormat' entry is writable.");
                         }
                         else
                         {
-                            //setting reverseY
-                            ptrReverseY->SetValue(_flir_reverseY);
-                        }
+                            //format string..
+                            std::string pixel_format_string = flir_pixel_format_to_string(_flir_pixel_format);
 
-                        //Set Exposure Mode to Manual exposure
-                        flir_api::CEnumerationPtr exposureAuto = flir_nodemap.GetNode("ExposureAuto");
-                        exposureAuto->SetIntValue(exposureAuto->GetEntryByName("Off")->GetValue());
-
-                        //Set exposure time..
-                        flir_api::CFloatPtr exposureTime = flir_nodemap.GetNode("ExposureTime");
-                        exposureTime->SetValue(exposure_time);
-                        
-                        //set Image Width/Height
-                        flir_api::CIntegerPtr ptrWidth = flir_nodemap.GetNode("Width");
-                        ptrWidth->SetValue( (uint64) FLIR_WIDTH/BIN_SIZE);
-                        flir_api::CIntegerPtr ptrHeight = flir_nodemap.GetNode("Height");
-                        ptrHeight->SetValue((uint64) FLIR_HEIGHT/BIN_SIZE);
-
-                        //Enable Binning
-                        flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
-                        ptrBinH->SetValue(BIN_SIZE);
-                        flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
-                        ptrBinW->SetValue(BIN_SIZE);
-
-                        //Force Frame Rate
-                        flir_api::CBooleanPtr ptrFPSEnable = flir_nodemap.GetNode("AcquisitionFrameRateEnable");
-                        ptrFPSEnable->SetValue(true);
-                        flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
-                        ptrFPS->SetValue(fps);
-                        
-                        
-                        //get pixel format and change if needed..
-                        flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
-                        if (flir_format != _flir_pixel_format)
-                        {
-                            //get ptr to pixel format node item
-                            flir_api::CEnumerationPtr ptrPixelFormat = flir_nodemap.GetNode("PixelFormat");
-                            if (!flir_api::IsAvailable(ptrPixelFormat) || (!flir_api::IsWritable(ptrPixelFormat)))
+                            // Retrieve the desired entry node from the enumeration node
+                            flir_api::CEnumEntryPtr ptrPixelFormatEntry = ptrPixelFormat->GetEntryByName(pixel_format_string.c_str());
+                            if (!flir_api::IsAvailable(ptrPixelFormatEntry) || (!flir_api::IsReadable(ptrPixelFormatEntry)))
                             {
-                                throw get_generic_error("Could verify 'PixelFormat' entry is writable.");
+                                throw get_generic_error("PixelFormat '" + pixel_format_string + "' not available.");
                             }
                             else
                             {
-                                //format string..
-                                std::string pixel_format_string = flir_pixel_format_to_string(_flir_pixel_format);
+                                // Retrieve the integer value from the entry node
+                                int64_t pixelFormatBGR8 = ptrPixelFormatEntry->GetValue();
 
-                                // Retrieve the desired entry node from the enumeration node
-                                flir_api::CEnumEntryPtr ptrPixelFormatEntry = ptrPixelFormat->GetEntryByName(pixel_format_string.c_str());
-                                if (!flir_api::IsAvailable(ptrPixelFormatEntry) || (!flir_api::IsReadable(ptrPixelFormatEntry)))
-                                {
-                                    throw get_generic_error("PixelFormat '" + pixel_format_string + "' not available.");
-                                }
-                                else
-                                {
-                                    // Retrieve the integer value from the entry node
-                                    int64_t pixelFormatBGR8 = ptrPixelFormatEntry->GetValue();
+                                // Set integer as new value for enumeration node
+                                ptrPixelFormat->SetIntValue(pixelFormatBGR8);
 
-                                    // Set integer as new value for enumeration node
-                                    ptrPixelFormat->SetIntValue(pixelFormatBGR8);
-                                    
-                                }// end pixelformat value readable  
-                                
-                            }// end pixelform entry writable
-                            
-                        }// end pixelformat change check
+                            }// end pixelformat value readable  
 
-                        // begin acquisition.
-                        _flir_cam->BeginAcquisition();
-                        
-                    }// end Continuous Acquisition mode value readable   
-                    
-                }// end Acquisition mode entry writable
-            
-            }
-            catch (flir::Exception &e)
-            {
-                throw get_flir_error(e);
-            }
-        }        
+                        }// end pixelform entry writable
+
+                    }// end pixelformat change check
+
+                    // begin acquisition.
+                    _flir_cam->BeginAcquisition();
+
+                }// end Continuous Acquisition mode value readable   
+
+            }// end Acquisition mode entry writable
+
+        }
+        catch (flir::Exception &e)
+        {
+            throw get_flir_error(e);
+        }          
     }
     
     void camera_flir_blackfly::update_frames()
@@ -366,4 +421,4 @@ namespace terraclear
         return "UNKNOWN";
     }
 }
-#endif
+//#endif
