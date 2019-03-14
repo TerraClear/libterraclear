@@ -33,7 +33,7 @@ namespace  terraclear
     class camera_async : public thread_base
     {
         public:
-            camera_async(camera_base* pcam, uint32_t max_fps = 30);
+            camera_async(camera_base* pcam, uint32_t max_fps = 30, bool delay_enabled = false);
             virtual ~camera_async();
 
             uint32_t get_fps();
@@ -46,6 +46,7 @@ namespace  terraclear
             virtual void thread_runloop();
             
         private:            
+            bool _delay_enabled = false;
             camera_base* _pcam = nullptr;
             uint32_t _fps_max = 30;
             uint32_t _fps_current = 0;

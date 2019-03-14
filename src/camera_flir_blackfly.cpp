@@ -59,6 +59,10 @@ namespace terraclear
         //set camera to specific serial..
         _flir_cam = _flir_camera_list.GetBySerial(cam_serial);
         init_camera(); 
+        
+        //validate serial number
+        if (_cam_serial.compare(cam_serial) != 0)
+            throw get_generic_error("FLIR Camera with Serial " + cam_serial + " not found!");
     }
 
             
@@ -172,6 +176,10 @@ namespace terraclear
             //flir_api::INodeMap& nmTL = pcam->GetTLDeviceNodeMap();
             flir_api::INodeMap& flir_nodemap = _flir_cam->GetNodeMap();
 
+            //Get Serial
+            flir_api::CStringPtr p_DeviceID = flir_nodemap.GetNode("DeviceID");
+            _cam_serial = p_DeviceID->GetValue();
+            
             //get camera in AcquisitionMode mode enumerator value
             flir_api::CEnumerationPtr pAcquisitionMode = flir_nodemap.GetNode("AcquisitionMode");
             int64_t acquisition_continuous = pAcquisitionMode->GetEntryByName("Continuous")->GetValue();

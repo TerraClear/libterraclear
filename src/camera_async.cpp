@@ -24,8 +24,9 @@
 namespace  terraclear
 {  
 
-    camera_async::camera_async(camera_base* pcam, uint32_t fps_max) 
+    camera_async::camera_async(camera_base* pcam, uint32_t fps_max, bool delay_enabled) 
     {
+        _delay_enabled = delay_enabled;
         _fps_max = fps_max;
         _pcam = pcam;
         
@@ -74,8 +75,9 @@ namespace  terraclear
         
         int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
         
-        //match requested frame rate..
-        if (ms_left > 0)
+        //match requested frame rate if delay enabled
+        //i.e. file based cameras.
+        if (_delay_enabled && (ms_left > 0))
             usleep(ms_left * 1000);
         
         mutex_lock();

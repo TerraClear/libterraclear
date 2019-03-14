@@ -83,6 +83,7 @@ namespace terraclear
             flir::SystemPtr _flir_system = nullptr;
             flir::CameraList _flir_camera_list;
             flir::CameraPtr _flir_cam = nullptr;
+            std::string _cam_serial;
 
             void init_flir_system();
             uint32_t get_camera_count();
