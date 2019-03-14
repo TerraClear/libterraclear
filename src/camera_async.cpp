@@ -82,7 +82,8 @@ namespace  terraclear
         
         mutex_lock();
             _camerabuffer.copyTo(_imagebuffer);
-            _fps_current = 1000 / _sw.get_elapsed_ms();
+            uint64_t ms_elapsed = _sw.get_elapsed_ms();
+            _fps_current = (ms_elapsed > 0) ? 1000 / ms_elapsed : _fps_current;
             _sw.reset();
         mutex_unlock();
         
