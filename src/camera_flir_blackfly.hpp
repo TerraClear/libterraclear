@@ -22,7 +22,7 @@
 
 //only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY
-#ifdef TC_USE_BLACKFLY
+//#ifdef TC_USE_BLACKFLY
 
 #ifndef CAMERA_FLIR_BLACKFLY_HPP
 #define CAMERA_FLIR_BLACKFLY_HPP
@@ -30,7 +30,6 @@
 // Width and height
 #define FLIR_WIDTH 1440
 #define FLIR_HEIGHT 1080
-#define BIN_SIZE 2
 
 #define FLIR_ERR_STR "FLIR BlackFlyS Error - "
 
@@ -51,9 +50,21 @@ namespace terraclear
     class camera_flir_blackfly : public camera_base
     {
         public:
-            camera_flir_blackfly();
-            camera_flir_blackfly(uint32_t cam_index);
-            camera_flir_blackfly(std::string cam_serial);
+            struct flir_settings
+            {
+                FLIR_PixelFormat pixel_format;
+                int     width;
+                int     height;
+                int     bin_vertical;
+                int     bin_horizontal;
+                bool    flip_y;
+                float   fps;
+                float   exposure_time;
+            };
+
+            camera_flir_blackfly(flir_settings cam_settings);
+            camera_flir_blackfly(flir_settings cam_settings, uint32_t cam_index);
+            camera_flir_blackfly(flir_settings cam_settings, std::string cam_serial);
             virtual ~camera_flir_blackfly();
 
             //pure virtual implementation..
@@ -67,9 +78,8 @@ namespace terraclear
             static error_base get_generic_error(std::string);
 
             bool _disposing = false;
-
-            FLIR_PixelFormat _flir_pixel_format = FLIR_PixelFormat::PixelFormat_YUV411Packed;
-            bool _flir_reverseY = true;
+            flir_settings _cam_settings;
+            
             flir::SystemPtr _flir_system = nullptr;
             flir::CameraList _flir_camera_list;
             flir::CameraPtr _flir_cam = nullptr;
@@ -84,4 +94,4 @@ namespace terraclear
 }
 #endif /* CAMERA_FLIR_BLACKFLY_HPP */
 
-#endif /* Conditional BLACKFLY support */
+//#endif /* Conditional BLACKFLY support */
