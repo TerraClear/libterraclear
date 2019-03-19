@@ -266,7 +266,7 @@ namespace terraclear
         if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR)
         {
             std::string img_status = std::to_string(image_ptr->GetImageStatus());
-            std::cout << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
+            std::cerr << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
         }
         else
         {

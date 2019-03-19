@@ -56,7 +56,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o \
-	${OBJECTDIR}/src/timed_averaging.o
+	${OBJECTDIR}/src/timed_averaging.o \
+	${OBJECTDIR}/src/vision_warp.o
 
 
 # C Compiler Flags
@@ -192,6 +193,11 @@ ${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
+
+${OBJECTDIR}/src/vision_warp.o: src/vision_warp.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/vision_warp.o src/vision_warp.cpp
 
 # Subprojects
 .build-subprojects:
