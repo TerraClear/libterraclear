@@ -42,37 +42,84 @@ namespace terraclear
         config_doc >> _settings;
         config_doc.close();
     }
+    
+    Json::Value appsettings::getsection(std::string section_name)
+    {
+        Json::Value retval;
+        
+        if (section_name.size() > 0)
+        {
+            retval = _settings[section_name];
+        }
+        else
+        {
+            retval = _settings;
+        }
+        
+        return retval;
+    }
 
     bool appsettings::getvalue_bool(std::string setting_name, bool default_value)
     {
-        return _settings.get(setting_name, default_value).asBool();
+       
+        return getvalue_bool("", setting_name, default_value);
+    }
+
+    bool appsettings::getvalue_bool(std::string section_name, std::string setting_name, bool default_value)
+    {
+       
+        return getsection(section_name).get(setting_name, default_value).asBool();
     }
 
     int32_t appsettings::getvalue_int(std::string setting_name, int default_value)
     {
-       return _settings.get(setting_name, default_value).asInt();
+       return getvalue_int("", setting_name, default_value);
+    }
+
+    int32_t appsettings::getvalue_int(std::string section_name, std::string setting_name, int default_value)
+    {
+       return getsection(section_name).get(setting_name, default_value).asInt();
     }
 
     uint32_t appsettings::getvalue_uint(std::string setting_name, uint32_t default_value)
     {
-       return _settings.get(setting_name, default_value).asUInt();
+       return getvalue_uint("", setting_name, default_value);
+    }
+
+    uint32_t appsettings::getvalue_uint(std::string section_name, std::string setting_name, uint32_t default_value)
+    {
+       return getsection(section_name).get(setting_name, default_value).asUInt();
     }
 
     float appsettings::getvalue_float(std::string setting_name, float default_value)
     {
-       return _settings.get(setting_name, default_value).asFloat();
+       return getvalue_float("", setting_name, default_value);
+    }
+
+    float appsettings::getvalue_float(std::string section_name, std::string setting_name, float default_value)
+    {
+       return getsection(section_name).get(setting_name, default_value).asFloat();
     }
 
     double appsettings::getvalue_double(std::string setting_name, double default_value)
     {
-       return _settings.get(setting_name, default_value).asDouble();
+       return getvalue_double("", setting_name, default_value);
+    }
+
+    double appsettings::getvalue_double(std::string section_name, std::string setting_name, double default_value)
+    {
+       return getsection(section_name).get(setting_name, default_value).asDouble();
     }
 
     std::string appsettings::getvalue_string(std::string setting_name, std::string default_value)
     {
-        return _settings.get(setting_name, default_value).asString();
+        return getvalue_string("", setting_name, default_value);
     }
 
+    std::string appsettings::getvalue_string(std::string section_name, std::string setting_name, std::string default_value)
+    {
+        return getsection(section_name).get(setting_name, default_value).asString();
+    }
 
     appsettings::~appsettings() 
     {

@@ -42,17 +42,29 @@ namespace terraclear
             virtual ~appsettings();
 
             bool getvalue_bool(std::string setting_name, bool default_value = false);
-            int32_t getvalue_int(std::string setting_name, int32_t default_value = 0);
-            uint32_t getvalue_uint(std::string setting_name, uint32_t default_value = 0);
-            float getvalue_float(std::string setting_name, float default_value = 0.0f);
-            double getvalue_double(std::string setting_name, double default_value = 0.0f);
-            std::string getvalue_string(std::string setting_name, std::string default_value = "s");
+            bool getvalue_bool(std::string section_name, std::string setting_name, bool default_value = false);
 
+            int32_t getvalue_int(std::string setting_name, int32_t default_value = 0);
+            int32_t getvalue_int(std::string section_name, std::string setting_name, int32_t default_value = 0);
+
+            uint32_t getvalue_uint(std::string setting_name, uint32_t default_value = 0);
+            uint32_t getvalue_uint(std::string section_name, std::string setting_name, uint32_t default_value = 0);
+
+            float getvalue_float(std::string setting_name, float default_value = 0.0f);
+            float getvalue_float(std::string section_name, std::string setting_name, float default_value = 0.0f);
+
+            double getvalue_double(std::string setting_name, double default_value = 0.0f);
+            double getvalue_double(std::string section_name, std::string setting_name, double default_value = 0.0f);
+
+            std::string getvalue_string(std::string setting_name, std::string default_value = "");           
+            std::string getvalue_string(std::string section_name, std::string setting_name, std::string default_value);           
+            
         private:
             Json::Value _settings;
 
             std::string _json_filename = "appsettings.json";
            void initfile();
+           Json::Value getsection(std::string section_name);
 
 
 
