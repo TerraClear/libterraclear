@@ -85,8 +85,6 @@ namespace  terraclear
                 //create lock vineer over existing mutex..
                 std::unique_lock<std::mutex> pause_lock(ctxt->_internal_mutex);
 
-                std::cout << "p1" << std::flush;
-
                 // 1. Wait for Notification, 
                 // 2. Then block while acquiring lock.. 
                 // 3. Then check func return value
@@ -94,8 +92,6 @@ namespace  terraclear
                 // 5. If return val = true, retain lock and move on..    
                 ctxt->_internal_wait_lock.wait(pause_lock, [ctxt]{return !ctxt->_threadPaused;});
                 ctxt->_internal_mutex.unlock(); //should actually auto unlock when it goes out of scope?
-                
-                std::cout << "p2" << std::flush;
             }
 
             
@@ -112,6 +108,7 @@ namespace  terraclear
     {
         _internal_mutex.lock();
             _threadRunning = false;
+            _threadPaused = false;
         _internal_mutex.unlock();        
 
         _internal_wait_lock.notify_all();
