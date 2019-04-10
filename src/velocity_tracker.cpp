@@ -3,25 +3,30 @@
 
 namespace terraclear
 {
-	velocity_tracker::velocity_tracker(uint32_t fps, uint32_t id)
+	velocity_tracker::velocity_tracker(int fps, int id)
 	{
 		_fps = fps;
 		_tracker_id = id;
 		_current_frame_number = 0;
 	}
 
-	uint32_t velocity_tracker::get_id()
+	int velocity_tracker::get_id()
 	{
 		return _tracker_id;
 	}
 
-	void velocity_tracker::update_position(uint32_t ypos)
+	void velocity_tracker::update_position(int ypos)
 	{
 		_frame_locations[_current_frame_number] = ypos;
+                for (auto elem : _frame_locations)
+                {
+                    std::cout << elem.first << " " << elem.second << std::endl;
+                }
+                std::cout << '\n' << std::endl;
 		_current_frame_number ++;
 	}
 
-	uint32_t velocity_tracker::find_velocity()
+	float velocity_tracker::find_velocity()
 	{
 		float count = 0.0;
 		float x_sum = 0.0;
@@ -46,8 +51,8 @@ namespace terraclear
 		{
 			x_minus_m = elem.first - m_x;
 			y_minus_m = elem.second - m_y;
-			s_x_sum += x_minus_m**2;
-			s_y_sum += y_minus_m**2;
+			s_x_sum += std::pow(x_minus_m, 2);
+			s_y_sum += std::pow(y_minus_m, 2);
 			xy_sum += (x_minus_m * y_minus_m);	
 		}
 
