@@ -60,7 +60,7 @@ namespace terraclear
 
         //Vector for all contours.
         std::vector<std::vector<cv::Point>> contours;
-        findContours(mat_filtered, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+        findContours(mat_filtered, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
         //create bounding boxes from contours
         int trackid = 0; //unique ID per bounding box..
