@@ -201,6 +201,9 @@ namespace terraclear
             pExposureTime->SetValue(_cam_settings.exposure_time);
 
             //Set Binning
+            //ensure at least bin 1
+            _cam_settings.bin_horizontal = std::max(_cam_settings.bin_horizontal, 1);            
+            _cam_settings.bin_vertical = std::max(_cam_settings.bin_vertical, 1);            
             flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
             ptrBinW->SetValue(_cam_settings.bin_horizontal);
             flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
