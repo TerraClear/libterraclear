@@ -49,6 +49,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
+	${OBJECTDIR}/src/detector_motion.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
@@ -153,6 +154,11 @@ ${OBJECTDIR}/src/detector_hsv.o: src/detector_hsv.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_hsv.o src/detector_hsv.cpp
+
+${OBJECTDIR}/src/detector_motion.o: src/detector_motion.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_motion.o src/detector_motion.cpp
 
 ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
