@@ -91,7 +91,8 @@ namespace  terraclear
                 // 4. If return val = false, release lock and wait again (go to step 1)
                 // 5. If return val = true, retain lock and move on..    
                 ctxt->_internal_wait_lock.wait(pause_lock, [ctxt]{return !ctxt->_threadPaused;});
-                ctxt->_internal_mutex.unlock(); //should actually auto unlock when it goes out of scope?
+                
+                //lock auto releases at end of scope..
             }
 
             

@@ -38,6 +38,9 @@ namespace terraclear
             //pure virtual implementation
             std::vector<bounding_box> detect_objects();
 
+            //debug mode
+            bool _debug_mode = false;
+            
         private:
             double _motion_threshold = 500;
             cv::Mat _imgsrc_old;

@@ -46,6 +46,8 @@ namespace  terraclear
             void start_recorder(std::string video_filename, int video_fps, cv::Size video_size);
             void add_frame(cv::Mat video_frame);
             void stop_recorder();
+            void pause_recorder();
+            void resume_recorder();
             
         protected:
             //pure virtual function implementation..

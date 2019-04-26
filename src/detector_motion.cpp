@@ -54,7 +54,7 @@ namespace terraclear
         {
             //get abs didd and threshold differences between new and old
             cv::absdiff(imgsrc_new, _imgsrc_old, imgsrc_worker);
-            cv::threshold(imgsrc_worker, imgsrc_worker, 20, 255, cv::THRESH_BINARY);
+            cv::threshold(imgsrc_worker, imgsrc_worker, 40, 255, cv::THRESH_BINARY);
             
             //Create element for morpj\h
             int morph_size = 20;  
@@ -69,6 +69,10 @@ namespace terraclear
             //find all outer contours around blobs.
             std::vector<std::vector<cv::Point>> contours;
             cv::findContours(imgsrc_worker, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);   
+            
+            //display motions window when in debug..
+            if (_debug_mode)
+                cv::imshow("motion_dbg", imgsrc_worker);
             
             int trackid = 0; //unique ID per bounding box..
             for(auto contour : contours)
