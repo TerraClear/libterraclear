@@ -54,10 +54,10 @@ namespace terraclear
         {
             //get abs didd and threshold differences between new and old
             cv::absdiff(imgsrc_new, _imgsrc_old, imgsrc_worker);
-            cv::threshold(imgsrc_worker, imgsrc_worker, 40, 255, cv::THRESH_BINARY);
+            cv::threshold(imgsrc_worker, imgsrc_worker, 30, 255, cv::THRESH_BINARY);
             
             //Create element for morpj\h
-            int morph_size = 20;  
+            int morph_size = 15;  
             cv::Mat element = getStructuringElement(cv::MORPH_RECT,
                    cv::Size(2 * morph_size + 1, 2 * morph_size + 1),
                    cv::Point(morph_size, morph_size) );
@@ -72,7 +72,11 @@ namespace terraclear
             
             //display motions window when in debug..
             if (_debug_mode)
-                cv::imshow("motion_dbg", imgsrc_worker);
+            {
+                char window_dbg[] = "window_dbg";
+                cv::namedWindow(window_dbg, cv::WINDOW_NORMAL | cv::WINDOW_KEEPRATIO);                
+                cv::imshow(window_dbg, imgsrc_worker);
+            }
             
             int trackid = 0; //unique ID per bounding box..
             for(auto contour : contours)
