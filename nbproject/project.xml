@@ -11,6 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src</sourceRootElem>
+                <sourceRootElem>/home/izzy/TerraClear/yolo-detect/libterraclear/src</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
