@@ -3,11 +3,15 @@
 
 namespace terraclear
 {
-	velocity_tracker::velocity_tracker(int fps, int id)
+	velocity_tracker::velocity_tracker(int id, int starting_ypos)
 	{
-		_fps = fps;
+                _frame_count = 0;
+                _fps_sum = 0;
 		_tracker_id = id;
-		_current_frame_number = 0;
+                _frame_locations[0] = starting_ypos;
+		_current_frame_number = 1;
+                _sw.start();
+                _sw.reset();
 	}
 
 	int velocity_tracker::get_id()
@@ -17,20 +21,23 @@ namespace terraclear
 
 	void velocity_tracker::update_position(int ypos)
 	{
+                // Adjust calc for how quickly we see new frames
+                _frame_count++;
+                _fps_sum = _fps_sum + (1.0 / (_sw.get_elapsed_ms() / 1000.0));
+//                std::cout << "avg fps: " << _fps_sum / _frame_count << std::endl;
+                
+                // Update pixel y position for nth frame seen since last reset;
+                //then increment n for next frame
 		_frame_locations[_current_frame_number] = ypos;
-                for (auto elem : _frame_locations)
-                {
-                    std::cout << elem.first << " " << elem.second << std::endl;
-                }
-                std::cout << '\n' << std::endl;
 		_current_frame_number ++;
+                _sw.reset();
 	}
 
-	float velocity_tracker::find_velocity()
+	float velocity_tracker::get_velocity()
 	{
-		float count = 0.0;
-		float x_sum = 0.0;
-		float y_sum = 0.0;
+		float count = 0.0;  //counter for number of frames
+		float x_sum = 0.0;  //sum of x values (frame numbers)
+		float y_sum = 0.0;  //sum of y values (y pixel locations)
 		for (auto elem: _frame_locations)
 		{
 			count++;
@@ -38,15 +45,15 @@ namespace terraclear
 			y_sum += elem.second;
 		}
 
-		float m_x = x_sum / count;
-	        float m_y = y_sum / count;	
+		float m_x = x_sum / count;  //mean x value
+	        float m_y = y_sum / count;  //mean y value
 
-		float s_x_sum = 0;
-		float s_y_sum = 0;
-		float xy_sum = 0;
+		float s_x_sum = 0;  //sum of (x-M_x)**2 values for S_x calc
+		float s_y_sum = 0;  //sum of (y-M_y)**2 values for S_y calc
+		float xy_sum = 0;   //sum of x*y values for r calc
 
-		float x_minus_m = 0;
-		float y_minus_m = 0;
+		float x_minus_m = 0;    //for intermediate calc step in loop
+		float y_minus_m = 0;    //for intermediate calc step in loop
 		for (auto elem : _frame_locations)
 		{
 			x_minus_m = elem.first - m_x;
@@ -56,20 +63,29 @@ namespace terraclear
 			xy_sum += (x_minus_m * y_minus_m);	
 		}
 
+                //Use sums to calculate S_x, S_y, and r values
 		float s_x = sqrt(s_x_sum / (count - 1));
 		float s_y = sqrt(s_y_sum / (count - 1));
 		float r = xy_sum / sqrt(s_x_sum * s_y_sum);
-
-		return r * (s_y / s_x);
+                
+                //Calc slope of regression (velocity) in pixels per frame
+                //then convert to pixels per second using frames per second
+                float pixels_per_frame_slope = r * (s_y / s_x);
+                float pixels_per_second = pixels_per_frame_slope * (_fps_sum / _frame_count);
+		return pixels_per_second;
 	}
 
 	void velocity_tracker::reset_anchor()
 	{
 		for (auto elem : _frame_locations)
 		{
+                        //If this round of tracking contained fewer frames
+                        //than the previous round, delete the residual frame
+                        //entries from the time before
 			if (elem.first > _current_frame_number)
 			       _frame_locations.erase(elem.first);	
 		}
+                //Reset to 0 frames seen since last reset
 		_current_frame_number = 0;
 	}
 }
