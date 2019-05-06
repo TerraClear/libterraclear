@@ -33,7 +33,6 @@ namespace terraclear
             std::vector<bbox_t> _track_boxes;
             terraclear::velocity_calculator* _calculator;
             Tracker_optflow* _tracker_engine;
-            void create_trackers(cv::Mat img);
             bool get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor);
     };
 }

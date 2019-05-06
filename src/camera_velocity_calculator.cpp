@@ -101,10 +101,6 @@ namespace terraclear
         return _calculator->get_average_velocity();
     }
     
-    void camera_velocity_calculator::create_trackers(cv::Mat img)
-    {
-    } 
-    
     bool camera_velocity_calculator::get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor)
     {
         bool retval = false;
