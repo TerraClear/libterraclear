@@ -65,6 +65,14 @@ namespace terraclear
             return (y + height) > (compare_box.y + compare_box.height);
         }
 
+        cv::Point get_center()
+        {
+            cv::Point centerpoint;
+            centerpoint.x = (width > 0) ? x + width / 2 : x;
+            centerpoint.y = (height > 0) ? y + height / 2 : y;
+            
+            return centerpoint;
+        }
     };
 
     struct bounding_box_cluster

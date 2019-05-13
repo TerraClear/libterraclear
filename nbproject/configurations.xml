@@ -3,8 +3,14 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f3" displayName="src" projectFiles="true">
       <logicalFolder name="f12" displayName="algorithms" projectFiles="true">
+        <itemPath>src/camera_velocity_calculator.cpp</itemPath>
+        <itemPath>src/camera_velocity_calculator.hpp</itemPath>
         <itemPath>src/timed_averaging.cpp</itemPath>
         <itemPath>src/timed_averaging.hpp</itemPath>
+        <itemPath>src/velocity_calculator.cpp</itemPath>
+        <itemPath>src/velocity_calculator.hpp</itemPath>
+        <itemPath>src/velocity_tracker.cpp</itemPath>
+        <itemPath>src/velocity_tracker.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="appsettings" projectFiles="true">
         <itemPath>src/appsettings.cpp</itemPath>
@@ -107,6 +113,9 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
+          <incDir>
+            <pElem>/data/sources</pElem>
+          </incDir>
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}</output>
@@ -169,6 +178,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -212,6 +225,14 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -292,6 +313,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -335,6 +360,14 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -414,6 +447,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -457,6 +494,14 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -537,6 +582,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -580,6 +629,14 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>

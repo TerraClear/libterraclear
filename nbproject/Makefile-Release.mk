@@ -47,6 +47,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_lucid_triton.o \
 	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
+	${OBJECTDIR}/src/camera_velocity_calculator.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
 	${OBJECTDIR}/src/detector_motion.o \
@@ -58,6 +59,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o \
 	${OBJECTDIR}/src/timed_averaging.o \
+	${OBJECTDIR}/src/velocity_calculator.o \
+	${OBJECTDIR}/src/velocity_tracker.o \
 	${OBJECTDIR}/src/vision_warp.o
 
 
@@ -145,6 +148,11 @@ ${OBJECTDIR}/src/camera_usb.o: src/camera_usb.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_usb.o src/camera_usb.cpp
 
+${OBJECTDIR}/src/camera_velocity_calculator.o: src/camera_velocity_calculator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_velocity_calculator.o src/camera_velocity_calculator.cpp
+
 ${OBJECTDIR}/src/detector_base.o: src/detector_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -199,6 +207,16 @@ ${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
+
+${OBJECTDIR}/src/velocity_calculator.o: src/velocity_calculator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/velocity_calculator.o src/velocity_calculator.cpp
+
+${OBJECTDIR}/src/velocity_tracker.o: src/velocity_tracker.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/velocity_tracker.o src/velocity_tracker.cpp
 
 ${OBJECTDIR}/src/vision_warp.o: src/vision_warp.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
