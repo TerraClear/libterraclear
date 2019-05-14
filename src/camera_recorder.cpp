@@ -20,6 +20,7 @@
 */
 
 #include "camera_recorder.hpp"
+#include "camera_file.hpp"
 
 namespace  terraclear
 {  
@@ -35,6 +36,12 @@ namespace  terraclear
             stop_recorder();
     }
 
+    std::string camera_recorder::get_filename()
+    {
+        return _video_filename;
+    }
+
+
     void camera_recorder::start_recorder(std::string video_filename, int video_fps, cv::Size video_size)
     {
         //generate filename with numeric sequence..
@@ -46,7 +53,7 @@ namespace  terraclear
         init_recorder();
         
         //start recorder thread..
-        thread_start(video_filename);
+        thread_start(_video_filename);
 
     }
     

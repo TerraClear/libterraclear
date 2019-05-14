@@ -49,6 +49,8 @@ namespace  terraclear
             void pause_recorder();
             void resume_recorder();
             
+            std::string get_filename();
+            
         protected:
             //pure virtual function implementation..
             virtual void thread_runloop();
