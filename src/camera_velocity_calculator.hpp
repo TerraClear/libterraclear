@@ -35,7 +35,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
-#include "velocity_calculator.hpp"
+#include "tracking_velocity_multi.hpp"
 
 namespace terraclear
 {

@@ -20,47 +20,47 @@
 */
 
 
-#include "velocity_tracker.hpp"
+#include "tracking_velocity.hpp"
 #include "math.h"
 
 namespace terraclear
 {
-	velocity_tracker::velocity_tracker(int id, int starting_pos)
+	tracking_velocity::tracking_velocity(int id, int starting_pos)
 	{
-                _frame_count = 0;
-                _fps_sum = 0;
+                _position_count = 0;
+                _positions_per_sec_sum = 0;
 		_tracker_id = id;
-                _frame_locations[0] = starting_pos;
-		_current_frame_number = 1;
+                _position_history[0] = starting_pos;
+		_last_position_index = 1;
                 _sw.start();
                 _sw.reset();
 	}
 
-	int velocity_tracker::get_id()
+	int tracking_velocity::get_id()
 	{
 		return _tracker_id;
 	}
 
-	void velocity_tracker::update_position(int current_pos)
+	void tracking_velocity::update_position(int current_pos)
 	{
                 // Adjust calc for how quickly we see new frames
-                _frame_count++;
-                _fps_sum = _fps_sum + (1.0 / (_sw.get_elapsed_ms() / 1000.0));
-//                std::cout << "avg fps: " << _fps_sum / _frame_count << std::endl;
+                _position_count++;
+                uint64_t ms = _sw.get_elapsed_ms();
+                _positions_per_sec_sum = (ms > 0) ? _positions_per_sec_sum + (1.0 / (ms / 1000.0)) : 0;
                 
-                // Update pixel y position for nth frame seen since last reset;
+                // Update position for nth frame seen since last reset;
                 //then increment n for next frame
-		_frame_locations[_current_frame_number] = current_pos;
-		_current_frame_number ++;
+		_position_history[_last_position_index] = current_pos;
+		_last_position_index ++;
                 _sw.reset();
 	}
 
-	float velocity_tracker::get_velocity()
+	float tracking_velocity::get_velocity()
 	{
-		float count = 0.0;  //counter for number of frames
-		float x_sum = 0.0;  //sum of x values (frame numbers)
+		float count = 0.0;  //counter for number of positional updates
+		float x_sum = 0.0;  //sum of x values (positional update numbers)
 		float y_sum = 0.0;  //sum of y values (y pixel locations)
-		for (auto elem: _frame_locations)
+		for (auto elem: _position_history)
 		{
 			count++;
 			x_sum += elem.first;
@@ -76,7 +76,7 @@ namespace terraclear
 
 		float x_minus_m = 0;    //for intermediate calc step in loop
 		float y_minus_m = 0;    //for intermediate calc step in loop
-		for (auto elem : _frame_locations)
+		for (auto elem : _position_history)
 		{
 			x_minus_m = elem.first - m_x;
 			y_minus_m = elem.second - m_y;
@@ -91,23 +91,24 @@ namespace terraclear
 		float r = xy_sum / sqrt(s_x_sum * s_y_sum);
                 
                 //Calc slope of regression (velocity) in pixels per frame
-                //then convert to pixels per second using frames per second
-                float pixels_per_frame_slope = r * (s_y / s_x);
-                float pixels_per_second = pixels_per_frame_slope * (_fps_sum / _frame_count);
+                //then convert to pixels per second using updates per second
+                float pixels_per_update_slope = r * (s_y / s_x);
+                float pixels_per_second = pixels_per_update_slope * (_positions_per_sec_sum / _position_count);
 		return pixels_per_second;
 	}
 
-	void velocity_tracker::reset_anchor()
+	void tracking_velocity::reset_position()
 	{
-		for (auto elem : _frame_locations)
+		for (auto elem : _position_history)
 		{
                         //If this round of tracking contained fewer frames
                         //than the previous round, delete the residual frame
                         //entries from the time before
-			if (elem.first > _current_frame_number)
-			       _frame_locations.erase(elem.first);	
+			if (elem.first > _last_position_index)
+			       _position_history.erase(elem.first);	
 		}
                 //Reset to 0 frames seen since last reset
-		_current_frame_number = 0;
+		_last_position_index = 0;
+                _positions_per_sec_sum = 0;
 	}
 }

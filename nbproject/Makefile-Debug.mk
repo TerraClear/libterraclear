@@ -59,8 +59,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o \
 	${OBJECTDIR}/src/timed_averaging.o \
-	${OBJECTDIR}/src/velocity_calculator.o \
-	${OBJECTDIR}/src/velocity_tracker.o \
+	${OBJECTDIR}/src/tracking_object.o \
+	${OBJECTDIR}/src/tracking_object_multi.o \
+	${OBJECTDIR}/src/tracking_position.o \
+	${OBJECTDIR}/src/tracking_velocity.o \
+	${OBJECTDIR}/src/tracking_velocity_multi.o \
 	${OBJECTDIR}/src/vision_warp.o
 
 
@@ -208,15 +211,30 @@ ${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
 
-${OBJECTDIR}/src/velocity_calculator.o: src/velocity_calculator.cpp
+${OBJECTDIR}/src/tracking_object.o: src/tracking_object.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/velocity_calculator.o src/velocity_calculator.cpp
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_object.o src/tracking_object.cpp
 
-${OBJECTDIR}/src/velocity_tracker.o: src/velocity_tracker.cpp
+${OBJECTDIR}/src/tracking_object_multi.o: src/tracking_object_multi.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/velocity_tracker.o src/velocity_tracker.cpp
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_object_multi.o src/tracking_object_multi.cpp
+
+${OBJECTDIR}/src/tracking_position.o: src/tracking_position.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_position.o src/tracking_position.cpp
+
+${OBJECTDIR}/src/tracking_velocity.o: src/tracking_velocity.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_velocity.o src/tracking_velocity.cpp
+
+${OBJECTDIR}/src/tracking_velocity_multi.o: src/tracking_velocity_multi.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_velocity_multi.o src/tracking_velocity_multi.cpp
 
 ${OBJECTDIR}/src/vision_warp.o: src/vision_warp.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

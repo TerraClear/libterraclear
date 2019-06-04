@@ -19,8 +19,8 @@
  * 
 */
 
-#ifndef VELOCITY_TRACKER_HPP
-#define VELOCITY_TRACKER_HPP
+#ifndef TRACKING_VELOCITY_HPP
+#define TRACKING_VELOCITY_HPP
 
 #include <map>
 #include <unistd.h>
@@ -30,22 +30,24 @@
 
 namespace terraclear
 {
-    class velocity_tracker
+    class tracking_velocity
     {
         public:
-            velocity_tracker(int id, int starting_pos);
+            tracking_velocity(int id, int starting_pos);
+
             int get_id();
             void update_position(int current_pos);
             float get_velocity();
-            void reset_anchor();
-        private:
-            std::map<int,int> _frame_locations;
+            void reset_position();
+
+    private:
+            std::map<int,int> _position_history;
             int _tracker_id;
-            float _fps_sum;
-            int _frame_count;
-            int _current_frame_number;
+            float _positions_per_sec_sum;
+            uint32_t _position_count;
+            int _last_position_index;
             terraclear::stopwatch _sw;
     };
 }
 
-#endif
+#endif //TRACKING_VELOCITY_HPP

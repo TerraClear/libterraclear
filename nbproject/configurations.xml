@@ -7,10 +7,6 @@
         <itemPath>src/camera_velocity_calculator.hpp</itemPath>
         <itemPath>src/timed_averaging.cpp</itemPath>
         <itemPath>src/timed_averaging.hpp</itemPath>
-        <itemPath>src/velocity_calculator.cpp</itemPath>
-        <itemPath>src/velocity_calculator.hpp</itemPath>
-        <itemPath>src/velocity_tracker.cpp</itemPath>
-        <itemPath>src/velocity_tracker.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="appsettings" projectFiles="true">
         <itemPath>src/appsettings.cpp</itemPath>
@@ -43,6 +39,18 @@
       <logicalFolder name="f3" displayName="threading" projectFiles="true">
         <itemPath>src/thread_base.cpp</itemPath>
         <itemPath>src/thread_base.hpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="tracking" projectFiles="true">
+        <itemPath>src/tracking_object.cpp</itemPath>
+        <itemPath>src/tracking_object.hpp</itemPath>
+        <itemPath>src/tracking_object_multi.cpp</itemPath>
+        <itemPath>src/tracking_object_multi.hpp</itemPath>
+        <itemPath>src/tracking_position.cpp</itemPath>
+        <itemPath>src/tracking_position.hpp</itemPath>
+        <itemPath>src/tracking_velocity.cpp</itemPath>
+        <itemPath>src/tracking_velocity.hpp</itemPath>
+        <itemPath>src/tracking_velocity_multi.cpp</itemPath>
+        <itemPath>src/tracking_velocity_multi.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f13" displayName="vision" projectFiles="true">
         <logicalFolder name="f8" displayName="calibration" projectFiles="true">
@@ -226,13 +234,25 @@
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -361,13 +381,25 @@
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -495,13 +527,25 @@
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -630,13 +674,25 @@
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>

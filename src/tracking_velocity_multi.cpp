@@ -1,5 +1,5 @@
 /*
- * helper class for tracking velocity of pixels in pixels per second 
+ * helper class for average velocity of multiple objects in pixels per second 
  * Copyright (C) 2019 TerraClear, Inc.
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -19,18 +19,18 @@
  * 
 */
 
-#include "velocity_calculator.hpp"
+#include "tracking_velocity_multi.hpp"
 
 namespace terraclear
 {
-    velocity_calculator::velocity_calculator(int start_fps)
+    velocity_calculator::velocity_calculator()
     {
-        _starting_fps = start_fps;
+
     }
     
     void velocity_calculator::add_tracker(int id, int starting_pos)
     {
-        velocity_tracker* new_tracker = new velocity_tracker(id, starting_pos);
+        tracking_velocity* new_tracker = new tracking_velocity(id, starting_pos);
         _trackers[id] = new_tracker;
     }
     
@@ -49,7 +49,7 @@ namespace terraclear
     void velocity_calculator::reset_tracker_anchor(int id)
     {
         if (_trackers.count(id) > 0)
-            _trackers[id]->reset_anchor();
+            _trackers[id]->reset_position();
     }
     
     float velocity_calculator::get_average_velocity()
@@ -61,7 +61,6 @@ namespace terraclear
         for (auto elem: _trackers)
         {
             velocity_sum = velocity_sum + elem.second->get_velocity();
-//            std::cout << "Vel: " << elem.second->get_velocity() << std::endl;
         }
         
         // Compute and return average velocity across all _trackers in pixels
