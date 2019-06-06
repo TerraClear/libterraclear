@@ -60,6 +60,7 @@ namespace terraclear
     void tracking_object::update(bounding_box bbox)
     {
         _bbox = bbox;
+        _bbox.predicted = false;
 
         //update velocity tracker for center points
         _x_tracker.update(_bbox.get_center().x);
@@ -99,28 +100,32 @@ namespace terraclear
         _sw.reset();
     }
 
-    bounding_box tracking_object::get_current()
+    bounding_box tracking_object::get_object()
     {
         return _bbox;
     }   
     
-    bounding_box tracking_object::get_predicted()
+    void tracking_object::predict()
     {
-        //time passed since previous update.
+        //time passed since previous update / predict
         float dT =  1000.0f / (float) _sw.get_elapsed_ms();
 
-        //update next prediction..
-        _bbox_next = _bbox;
-
-//** TODO fix X tracking.. IGNORE X FOR NOW
-        //predict new center position based on velocity
-        int new_center_x = _bbox.get_center().x;// + (_x_v / dT);
-        int new_center_y = _bbox.get_center().y + (_y_v / dT);
+//        //predict new center position based on velocity
+////IGNORE X - TODO        
+//        int new_center_x = _bbox.get_center().x;// + (_x_v / dT);
+//        int new_center_y = _bbox.get_center().y + (_y_v / dT);
         
-        _bbox_next.x = new_center_x - (_bbox_next.width / 2);
-        _bbox_next.y = new_center_y - (_bbox_next.height / 2);
+        _bbox.x += (_x_v / dT);// new_center_x - (_bbox.width / 2);
+        _bbox.y += (_y_v / dT);// new_center_y - (_bbox.height / 2);
         
-        return _bbox_next;
+        //set as predicted
+        _bbox.predicted = true;
+        
+        //increase position tracked..
+        _position_count++;
+                
+        //reset update/predict intervals.
+        _sw.reset();
     }
 
     int tracking_object::get_list_median(std::list<int> value_list)

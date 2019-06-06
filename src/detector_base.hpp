@@ -44,15 +44,19 @@ namespace terraclear
 {
     struct bounding_box : cv::Rect
     {
-        float confidence;                 
-        uint32_t class_id; 
+        float       confidence;                 
+        uint32_t    class_id; 
         std::string class_string;
-        uint32_t track_id;        
-        uint32_t frame_count;    
-        float obj_distance;
-        float velocity_x;
-        float velocity_y;
-        float eta_s;
+        uint32_t    track_id;        
+        uint32_t    frame_count;    
+        float       obj_distance;
+        float       velocity_x;
+        float       velocity_y;
+        float       eta_s;
+                
+        bool        predicted;
+        bool        tracked;
+        bool        detected;
         
         // < operator overload for sorting center box in Y (top to bottom)
         bool operator < (const bounding_box &compare_box) const 

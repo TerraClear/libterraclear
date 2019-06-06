@@ -38,7 +38,6 @@ namespace terraclear
 	tracking_position::tracking_info tracking_position::get_tracking_info()
 	{
                 float stable_position = 0.0f;
-                float pixels_per_second = 0.0f;
                 
 		float count = _positions.size();  //counter for number of frames
 		float x_sum = 0.0;  //sum of x values (frame numbers)
@@ -86,7 +85,7 @@ namespace terraclear
 
                     //calculate velocity in pixels per second.if at least 1ms has elapsed.
                     float updates_per_second = 1000.0f / ((float)_interval_sum / (float)_intervals_ms.size());
-                    pixels_per_second = (_interval_sum < 1) ? 0 : position_slope * updates_per_second;
+                    _pixels_per_second = (_interval_sum < 1) ? 0 : position_slope * updates_per_second;
 
                     float distances_intercept = (y_sum - position_slope * x_sum) / _positions.size();
                     stable_position = position_slope * (_positions.size() - 1) + distances_intercept;
@@ -94,7 +93,7 @@ namespace terraclear
 
                 tracking_info retval;
                 retval.position = stable_position;
-                retval.velocity = pixels_per_second;
+                retval.velocity = _pixels_per_second;
                 
 		return retval;
 	}

@@ -27,9 +27,9 @@ namespace terraclear
             
             void reset();
             void update(bounding_box bbox);
+            void predict();
 
-            bounding_box get_current();
-            bounding_box get_predicted();
+            bounding_box get_object();
 
             //max amount of history to consider..
             int _max_history = 10;
@@ -39,7 +39,6 @@ namespace terraclear
             uint32_t _position_count = 0;
             stopwatch _sw;
             bounding_box _bbox;
-            bounding_box _bbox_next;
             tracking_position _x_tracker;
             tracking_position _y_tracker;
 

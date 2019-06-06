@@ -22,7 +22,7 @@ namespace terraclear
 //            delete keypair.second;
     }
 
-    std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, bool remove_missing)
+    std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, bool remove_missing, uint32_t min_abs_x_v, uint32_t min_abs_y_v)
     {
         std::vector<bounding_box> tracked_list;
         std::vector<uint32_t> tracked_keys;
@@ -43,7 +43,7 @@ namespace terraclear
                 _tracking_list[bbox.track_id].obj_ptr->update(bbox);
                 
                 //start using regressed positions when at least max tracked positions updated
-                if (bbox.frame_count > _max_sample_queue)
+                if (bbox.frame_count > _min_track_history)
                 {
                     //bbox = _tracking_list[bbox.track_id].obj_ptr->get_current();
                     bbox.velocity_x =  _tracking_list[bbox.track_id].obj_ptr->get_velocity_x();
@@ -68,35 +68,33 @@ namespace terraclear
         //isolate missing objects and if required reomve or predict....        
         for (auto keypair : _tracking_list)
         {
-            //check if item present in current list
+            //check if item NOT present in current list
             if (std::find(tracked_keys.begin(), tracked_keys.end(), keypair.first) == tracked_keys.end())
             {
                 //remove if force remove enabled or max predictions reached or not enough history present..
+                //or min velocity not reached.
                 if (    (remove_missing) || 
                         (keypair.second.obj_lost_count >= _max_missing_predictions) || 
-                        (_tracking_list[keypair.first].obj_found_count < _min_track_history))
+                        (_tracking_list[keypair.first].obj_found_count < _min_track_history) || 
+                        (abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
+                        (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
                     _tracking_list.erase(keypair.first);
                 }
                 else
                 {
-                    //get prediction
-                    bounding_box predicted_box =  _tracking_list[keypair.first].obj_ptr->get_predicted();
-
+                    //predict nxt position
+                     _tracking_list[keypair.first].obj_ptr->predict();
+                    
+                     //get prediction 
+                     bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
+                     
                     //increment counts & update
                      _tracking_list[keypair.first].obj_lost_count ++;
                      _tracking_list[keypair.first].obj_found_count++;
                      
-                     //update position using predicted location..
-                     _tracking_list[keypair.first].obj_ptr->update(predicted_box);
-
                     //add prediction to tracked list..
                     tracked_list.push_back(predicted_box);  
-                    
-//                    std::cout << "[" << keypair.first << "-" << _tracking_list[keypair.first].obj_found_count;
-//                    std::cout << ",x_v=" << _tracking_list[keypair.first].obj_ptr->get_velocity_x();
-//                    std::cout << ",y_v=" << _tracking_list[keypair.first].obj_ptr->get_velocity_y();
-//                    std::cout <<  "]" << std::endl <<  std::flush;
                 }               
             } 
             
@@ -108,7 +106,7 @@ namespace terraclear
         return tracked_list;
     }
 
-    bounding_box tracking_object_multi::predict(int bbox_id)
+    bounding_box tracking_object_multi::predictX(int bbox_id)
     {        
         bounding_box bbox;
         bbox.x = bbox.y = bbox.width = bbox.height = 0;
@@ -116,7 +114,8 @@ namespace terraclear
         //ensure its tracked
         if (_tracking_list.count(bbox_id) > 0)
         {
-            bbox = _tracking_list.at(bbox_id).obj_ptr->get_predicted();
+            _tracking_list.at(bbox_id).obj_ptr->predict();
+            bbox = _tracking_list.at(bbox_id).obj_ptr->get_object();
         } 
         
         return bbox;
