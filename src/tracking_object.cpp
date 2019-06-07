@@ -110,12 +110,10 @@ namespace terraclear
         //time passed since previous update / predict
         float dT =  1000.0f / (float) _sw.get_elapsed_ms();
 
-//        //predict new center position based on velocity
-////IGNORE X - TODO        
-//        int new_center_x = _bbox.get_center().x;// + (_x_v / dT);
-//        int new_center_y = _bbox.get_center().y + (_y_v / dT);
         
-        _bbox.x += (_x_v / dT);// new_center_x - (_bbox.width / 2);
+//        //predict new position based on velocity
+////IGNORE X - TODO to smooth this out..       
+//        _bbox.x += (_x_v / dT);// new_center_x - (_bbox.width / 2);
         _bbox.y += (_y_v / dT);// new_center_y - (_bbox.height / 2);
         
         //set as predicted
