@@ -5,25 +5,24 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
+#include "regression_base.hpp"
 #include "stopwatch.hpp"
 
 namespace terraclear
 {
-    class velocity_tracker
+    class velocity_tracker: public regression_base
     {
         public:
-            velocity_tracker(int id, int starting_ypos);
-            int get_id();
-            void update_position(int ypos);
+            velocity_tracker(int id, int queue_size, int starting_pos, float time_reset_thresh, int dist_reset_thresh);
+            void update_position(int pos);
             float get_velocity();
             void reset_anchor();
+            
         private:
-            std::map<int,int> _frame_locations;
-            int _tracker_id;
-            float _fps_sum;
-            int _frame_count;
-            int _current_frame_number;
-            terraclear::stopwatch _sw;
+            int _previous_position;
+            int _position_sum;
+            int _anchor_pos;
+            int _dist_reset_thresh;
     };
 }
 

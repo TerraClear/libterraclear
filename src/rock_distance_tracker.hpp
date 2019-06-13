@@ -4,23 +4,20 @@
 #include <map>
 #include <unistd.h>
 #include <stdio.h>
-#include <iostream>
-#include <deque>     
+#include <iostream>   
+#include "regression_base.hpp"
 #include "stopwatch.hpp"
 
 namespace terraclear
 {
-    class rock_distance_tracker
+    class rock_distance_tracker: public regression_base
     {
         public:
-            rock_distance_tracker(int starting_ypos, int dest_ypos, int queue_size);
-            void update_position(int ypos);
+            rock_distance_tracker(int id, int queue_size, int starting_pos, int dest_pos, float time_reset_thresh);
+            void update_position(int pos);
             float get_distance();
         private:
-            std::deque<int> _distances;
-            int _queue_size;
-            float _fps_sum;
-            int _dest_ypos;
+            int _dest_pos;
     };
 }
 

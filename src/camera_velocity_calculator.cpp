@@ -2,7 +2,7 @@
 
 namespace terraclear
 {
-    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size)
+    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int dist_reset_thresh)
     {
         _track_xy_size = track_xy_size;
         _track_max_travel = track_max_travel;
@@ -13,7 +13,7 @@ namespace terraclear
         uint32_t    box_x = track_offset_x;
         uint32_t    box_y = track_start_y;
         
-        _calculator = new velocity_calculator(0);
+        _calculator = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
         
         for (uint32_t t = 0; t < track_count; t++ )
         {
@@ -30,7 +30,7 @@ namespace terraclear
             box_y += track_offset_y;
 
             //Add tracker with bbox ID to collection for averaging velocity
-            _calculator->add_tracker(tmp_box.track_id, tmp_box.y);
+            _calculator->add_tracker(tmp_box.track_id, 30, tmp_box.y);
 
             //start with anchor boxes
             _tracker_engine->update_cur_bbox_vec(_track_anchors);

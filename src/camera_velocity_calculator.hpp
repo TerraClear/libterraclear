@@ -22,7 +22,7 @@ namespace terraclear
     class camera_velocity_calculator
     {
         public:
-            camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size);
+            camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh);
             cv::Mat update_tracking(cv::Mat new_img);
             float get_frame_velocity();
 
