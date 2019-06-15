@@ -26,6 +26,7 @@ namespace  terraclear
             cv::Size        _target_size;
 
             void    init_transform();
+            cv::Mat get_transfor_matrix();
             cv::Mat transform_image(cv::Mat img_src);
 
         private:            

@@ -21,13 +21,30 @@ namespace terraclear
 //        for (auto const& keypair : _tracking_list)
 //            delete keypair.second;
     }
+    
+    bool tracking_object_multi::boxes_contain_point(cv::Point source_point, std::vector<bounding_box> target_boxes)
+    {
+        bool found_box = false;
+
+        //check if point within a bounding pox collection
+        for (auto tmp_box : target_boxes)
+        {
+            if (tmp_box.contains(source_point))
+            {
+                found_box = true;
+                break;
+            }
+        }
+        
+        return found_box;
+    }    
 
     std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, bool remove_missing, uint32_t min_abs_x_v, uint32_t min_abs_y_v)
     {
         std::vector<bounding_box> tracked_list;
         std::vector<uint32_t> tracked_keys;
         
-        //add all new objects and remove or predict missing.
+        //add all new objects 
         for (auto bbox : objects)
         {
             // if it exists, just update it else create new tracker and add to tracker list,.        
@@ -65,19 +82,25 @@ namespace terraclear
             tracked_keys.push_back(bbox.track_id);
         }
         
-        //isolate missing objects and if required reomve or predict....        
+        //isolate missing objects and if required remove or predict....        
         for (auto keypair : _tracking_list)
         {
             //check if item NOT present in current list
             if (std::find(tracked_keys.begin(), tracked_keys.end(), keypair.first) == tracked_keys.end())
             {
+                
+                
                 //remove if force remove enabled or max predictions reached or not enough history present..
-                //or min velocity not reached.
+                //or min velocity not reached or duplicate object, but different ID..
+                if ((boxes_contain_point(keypair.second.obj_ptr->get_object().get_center(), tracked_list)))
+                {
+                    _tracking_list.erase(keypair.first);
+                }
                 if (    (remove_missing) || 
                         (keypair.second.obj_lost_count >= _max_missing_predictions) || 
-                        (_tracking_list[keypair.first].obj_found_count < _min_track_history) || 
-                        (abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
-                        (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
+                        (_tracking_list[keypair.first].obj_found_count < _min_track_history))// || 
+//                        (abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
+//                        (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
                     _tracking_list.erase(keypair.first);
                 }
@@ -106,20 +129,6 @@ namespace terraclear
         return tracked_list;
     }
 
-    bounding_box tracking_object_multi::predictX(int bbox_id)
-    {        
-        bounding_box bbox;
-        bbox.x = bbox.y = bbox.width = bbox.height = 0;
-        
-        //ensure its tracked
-        if (_tracking_list.count(bbox_id) > 0)
-        {
-            _tracking_list.at(bbox_id).obj_ptr->predict();
-            bbox = _tracking_list.at(bbox_id).obj_ptr->get_object();
-        } 
-        
-        return bbox;
-    }
     
 }
 

@@ -23,7 +23,6 @@ namespace terraclear
             virtual ~tracking_object_multi();
             
             std::vector<bounding_box> track(std::vector<bounding_box> objects, bool remove_missing = true, uint32_t min_abs_x_v = 0, uint32_t min_abs_y_v = 0);
-            bounding_box predictX(int bbox_id);
             
         private:
             struct object_meta
@@ -39,6 +38,8 @@ namespace terraclear
             float _min_track_velocity = 0.0f;
             int _max_missing_predictions = 10;
 
+            bool boxes_contain_point(cv::Point source_point, std::vector<bounding_box> target_boxes);
+            
     };
 }
 #endif /* TRACKING_POSITION_MULTI_HPP */
