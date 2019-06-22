@@ -108,17 +108,16 @@ namespace terraclear
     void tracking_object::predict()
     {
         //time passed since previous update / predict
-        float dT =  1000.0f / (float) _sw.get_elapsed_ms();
+        float dT =  std::round(1000.0f / (float) _sw.get_elapsed_ms());
 
-        float dy =  round (_y_v / dT);
-        float dx =  round (_x_v / dT);
+        float dy =  std::round (_y_v / dT);
+        float dx =  std::round (_x_v / dT);
 
         //predict pos.
-        _bbox.x  = (_bbox.get_center().x + dx) - _bbox.width / 2;
-        _bbox.y = (_bbox.get_center().y + dy) - _bbox.height / 2;
+        _bbox.x = (_bbox.get_center().x + dx) - _bbox.width / 2;
+        _bbox.y = (_bbox.get_center().y + dy) -  _bbox.height / 2;
         
-        //set as predicted
-        _bbox.predicted = true;
+        _bbox.predicted = true;      
         
         //increase position tracked..
         _position_count++;

@@ -58,7 +58,7 @@ namespace  terraclear
         private:            
             //default is MP4 video at 99% quality
             std::string _video_filename = "outfile.mp4";
-            int _video_format =  cv::VideoWriter::fourcc('M', 'P', '4', 'V');
+            int _video_format =  cv::VideoWriter::fourcc('X', '2', '6', '4');
             float _video_quality = 99.0f;
             int _video_fps = 30;
             cv::Size _video_size;
