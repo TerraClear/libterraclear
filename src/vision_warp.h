@@ -5,6 +5,8 @@
 #include <opencv2/imgproc.hpp>
 #include "opencv2/calib3d.hpp"
 
+#include "stopwatch.hpp"
+
 namespace  terraclear
 {
     class vision_warp 
@@ -28,10 +30,12 @@ namespace  terraclear
             void    init_transform();
             cv::Mat get_transfor_matrix();
             cv::Mat transform_image(cv::Mat img_src);
+            cv::Mat transform_image_gpu(cv::Mat img_src);
+            uint64_t _elapsed_us; 
 
         private:            
             cv::Mat _transform_matrix;
-
+            stopwatch _sw;
     };
 }
 
