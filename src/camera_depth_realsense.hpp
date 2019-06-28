@@ -61,7 +61,7 @@ namespace terraclear
             //base class implementations.. 
             double      get_depth_cm(uint32_t x, uint32_t y);
             double      get_depth_center_cm();
-            void        update_frames();
+            bool        update_frames();
             
             int         avgerage_square_pixels = 5;
         

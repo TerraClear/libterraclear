@@ -178,7 +178,7 @@ namespace terraclear
         return distance;
     }
     
-    void camera_depth_realsense::update_frames()
+    bool camera_depth_realsense::update_frames()
     {
         // gathers the rgb image and the depth camera image
         rs2::frameset frames = _pipe.wait_for_frames();
@@ -242,6 +242,7 @@ namespace terraclear
             
         _rls_mutex.unlock();
 
+        return true;
     } 
     
 

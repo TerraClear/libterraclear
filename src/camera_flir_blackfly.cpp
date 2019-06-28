@@ -18,6 +18,7 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
+
 #ifdef TC_USE_BLACKFLY
 
 #include "camera_flir_blackfly.hpp"
@@ -191,14 +192,24 @@ namespace terraclear
             flir_api::CBooleanPtr pReverseY = flir_nodemap.GetNode("ReverseY");
             pReverseY->SetValue(_cam_settings.flip_y);
 
-            //Set Exposure Mode to Manual exposure (Values are "Off", "Continuous", "Once")
+            //Set Exposure Mode (Values are "Off", "Continuous", "Once")
             flir_api::CEnumerationPtr pExposureAuto = flir_nodemap.GetNode("ExposureAuto");
-            int exposure_off = pExposureAuto->GetEntryByName("Off")->GetValue();
-            pExposureAuto->SetIntValue(exposure_off);
+            int exposure_val = pExposureAuto->GetEntryByName("Continuous")->GetValue();
 
-            //Set exposure time..
-            flir_api::CFloatPtr pExposureTime = flir_nodemap.GetNode("ExposureTime");
-            pExposureTime->SetValue(_cam_settings.exposure_time);
+            if (_cam_settings.exposure_auto)
+            {
+                pExposureAuto->SetIntValue(exposure_val);
+
+            }
+            else
+            {
+                exposure_val = pExposureAuto->GetEntryByName("Off")->GetValue();
+                pExposureAuto->SetIntValue(exposure_val);
+
+                //Set exposure time..
+                flir_api::CFloatPtr pExposureTime = flir_nodemap.GetNode("ExposureTime");
+                pExposureTime->SetValue(_cam_settings.exposure_time);
+            }
 
             //Set Binning
             //ensure at least bin 1
@@ -260,16 +271,26 @@ namespace terraclear
         }          
     }
     
-    void camera_flir_blackfly::update_frames()
-    {        
+    bool camera_flir_blackfly::update_frames()
+    {   
+        bool success = false;
+        
+        _flir_mutex.lock();
+        
         //acquire image
         flir::ImagePtr image_ptr = _flir_cam->GetNextImage();
 
         //check if image was complete on grab..
-        if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR)
+        if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR) 
         {
             std::string img_status = std::to_string(image_ptr->GetImageStatus());
-            std::cerr << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
+            std::stringstream strstrm;
+            strstrm << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
+            _last_error = strstrm.str();
+        }
+        else if (image_ptr->IsIncomplete())
+        {
+            _last_error = "GetNextImage Error with FLIR ImageStatus=INCOMPLETE";
         }
         else
         {
@@ -278,17 +299,29 @@ namespace terraclear
             uint32_t width = image_ptr->GetWidth();
             uint32_t height = image_ptr->GetHeight();
 
-            //convert yuv to bgr8
+            //convert bgr8
             flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8);
-
-            //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
-            cv::Mat tmp_mat = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
-            tmp_mat.copyTo(_frame_color);
-            tmp_mat.release();
             
-            //release image buffers
-            image_ptr->Release();
+            //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
+            _buffer_camera = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
+                        
+// <<<<<<   FLIR DRIVER BUG WORK-AROUND TO SKIP BLANK OR PARTIALL BLANK FRAMES RETURNED BY API....
+            
+            //check if rows are blank.
+            cv::Scalar sum_channels = cv::sum(_buffer_camera(cv::Rect(0, _buffer_camera.rows-3, _buffer_camera.cols, 2)));
+            if (sum_channels[0] + sum_channels[1] +  sum_channels[2] > 0)
+            {
+                _buffer_camera.copyTo(_frame_color);
+                success = true;
+            }
         }
+
+        //release image buffers
+        image_ptr->Release();
+        
+        _flir_mutex.unlock();
+        
+        return success;
     }
     
     const char* camera_flir_blackfly::flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format)

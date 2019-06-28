@@ -19,7 +19,6 @@
  * 
 */
 
-
 //only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY
 #ifdef TC_USE_BLACKFLY
@@ -59,6 +58,7 @@ namespace terraclear
                 int     bin_horizontal;
                 bool    flip_y;
                 float   fps;
+                bool    exposure_auto;
                 float   exposure_time;
             };
 
@@ -68,12 +68,14 @@ namespace terraclear
             virtual ~camera_flir_blackfly();
 
             //pure virtual implementation..
-            void update_frames();
+            bool update_frames();
             
             //get camera list
             static std::vector<std::string> get_cameras();
 
         private:
+            cv::Mat _buffer_camera;
+
             static error_base get_flir_error(flir::Exception &e);
             static error_base get_generic_error(std::string);
 
@@ -90,7 +92,8 @@ namespace terraclear
             void init_camera();
             const char* flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
             
-
+            std::mutex _flir_mutex;
+            
     };
 }
 #endif /* CAMERA_FLIR_BLACKFLY_HPP */

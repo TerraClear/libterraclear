@@ -48,7 +48,7 @@ namespace terraclear
             virtual ~camera_lucid_triton();
 
             //pure virtual implementation..
-            void update_frames();
+            bool update_frames();
 
         private:
             bool _disposing = false;

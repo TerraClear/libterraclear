@@ -162,7 +162,7 @@ namespace terraclear
         }        
     }
     
-    void camera_lucid_triton::update_frames()
+    bool camera_lucid_triton::update_frames()
     {        
         //acquire image
         Arena::IImage* image_ptr = _lucid_cam->GetImage(_timeout_ms);
@@ -191,6 +191,7 @@ namespace terraclear
         //flush & queue same buffer
         _lucid_cam->RequeueBuffer(image_ptr);
 
+        return true;
     }
 
 }

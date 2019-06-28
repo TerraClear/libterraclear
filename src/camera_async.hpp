@@ -24,6 +24,7 @@
 #include "stopwatch.hpp"
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/hal/interface.h>
 
 #ifndef CAMERA_ASYNC_HPP
 #define CAMERA_ASYNC_HPP
@@ -41,17 +42,24 @@ namespace  terraclear
             camera_base* get_basecam_ptr();
             cv::Mat get_ImageBuffer();
           
+            uint64_t get_lost_frames();
+            void reset_lost_frames();
+            
         protected:
             //pure virtual function implementation..
             virtual void thread_runloop();
             
-        private:            
+        private:         
+            uint64_t _lost_frames = 0;
+            
             bool _delay_enabled = false;
             camera_base* _pcam = nullptr;
             uint32_t _fps_max = 30;
             uint32_t _fps_current = 0;
-            cv::Mat _camerabuffer;
-            cv::Mat _imagebuffer;
+            
+            cv::Mat _buffer_camera;
+            cv::Mat _buffer_back;
+            cv::Mat _buffer_front;
             
             stopwatch _sw;
     };
