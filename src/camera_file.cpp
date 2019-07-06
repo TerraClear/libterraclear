@@ -38,10 +38,12 @@ namespace terraclear
         _videofeed.release();
     }
     
-    bool camera_file::update_frames()
+    bool camera_file::frame_update()
     {
-        //get next frame;
-        _videofeed.read(_frame_color);
+        mutex_lock();
+            _videofeed.read(_frame_color);
+        mutex_unlock();
+        
         return true;
     }
     

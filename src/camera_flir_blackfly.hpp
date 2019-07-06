@@ -30,6 +30,8 @@
 #define FLIR_WIDTH 1440
 #define FLIR_HEIGHT 1080
 
+#define FLIR_PIXEL_FORMAT Spinnaker::PixelFormatEnums::PixelFormat_BayerRG8
+
 #define FLIR_ERR_STR "FLIR BlackFlyS Error - "
 
 #include "Spinnaker.h"
@@ -67,8 +69,10 @@ namespace terraclear
             camera_flir_blackfly(flir_settings cam_settings, std::string cam_serial);
             virtual ~camera_flir_blackfly();
 
+            std::string get_serial();
+
             //pure virtual implementation..
-            bool update_frames();
+            bool frame_update();
             
             //get camera list
             static std::vector<std::string> get_cameras();
@@ -91,8 +95,6 @@ namespace terraclear
             uint32_t get_camera_count();
             void init_camera();
             const char* flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
-            
-            std::mutex _flir_mutex;
             
     };
 }

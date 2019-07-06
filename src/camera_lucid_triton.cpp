@@ -162,7 +162,7 @@ namespace terraclear
         }        
     }
     
-    bool camera_lucid_triton::update_frames()
+    bool camera_lucid_triton::frame_update()
     {        
         //acquire image
         Arena::IImage* image_ptr = _lucid_cam->GetImage(_timeout_ms);

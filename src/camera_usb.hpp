@@ -34,7 +34,7 @@ namespace terraclear
             virtual ~camera_usb();
             
             //pure virtual implementation..
-            bool update_frames();
+            bool frame_update();
                         
         private:
             cv::VideoCapture _videofeed;

@@ -31,11 +31,8 @@ namespace  terraclear
         _pcam = pcam;
         
         //get at least 1 frame and set camera frame ref.
-        _pcam->update_frames();
+        _pcam->frame_update();
         _buffer_camera = pcam->getRGBFrame();
-        
-        //set camera mutex to use for frame updates
-        _pcam->set_mutex_ptr(&_mutex);
         
         _sw.start();
     }
@@ -85,7 +82,7 @@ namespace  terraclear
     void camera_async::thread_runloop()
     {
         //read frame...
-        if (_pcam->update_frames())
+        if (_pcam->frame_update())
         {
             int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
 
@@ -95,11 +92,19 @@ namespace  terraclear
                 usleep(ms_left * 1000);
 
             mutex_lock();
-                uint64_t ms_elapsed = _sw.get_elapsed_ms();
-                uint32_t fps_tmp = (ms_elapsed > 0) ? 1000 / ms_elapsed : _fps_current;
-                _sw.reset();
-                _buffer_camera.copyTo(_buffer_back);
-                _fps_current = fps_tmp;
+                //update FPS every 1sec
+                _ms_elapsed += _sw.get_elapsed_ms();
+                _frame_count ++;
+                if (_ms_elapsed  >= 1000)
+                {
+                    _fps_current =  std::round((float)_frame_count * ( 1000 / (float)_ms_elapsed));
+                    _frame_count = _ms_elapsed = 0;
+                }
+
+            //copy current camera frame to back buffer.
+            _buffer_camera.copyTo(_buffer_back);
+
+            _sw.reset();
             mutex_unlock();            
         }
         else

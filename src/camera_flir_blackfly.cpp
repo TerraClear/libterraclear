@@ -73,18 +73,29 @@ namespace terraclear
         {
             _disposing = true;
             
-        //stop & cleanup camera resources..
-        _flir_cam->EndAcquisition();
-        _flir_cam->DeInit();
+            //stop & cleanup camera resources..
+            try
+            {
+                _flir_cam->EndAcquisition();
+                _flir_cam->DeInit();
 
-        //clear cameras before releasing system instance..
-        _flir_camera_list.Clear();
+                //clear cameras before releasing system instance..
+                _flir_camera_list.Clear();
 
-        //de-ref camera..
-        _flir_cam = nullptr;
-        
-        //release system
-        _flir_system->ReleaseInstance();
+                //de-ref camera..
+                _flir_cam = nullptr;
+                
+                //release system
+                            //release system
+            if (!_flir_system->IsInUse())
+                _flir_system->ReleaseInstance();
+                
+            }
+            catch (flir::Exception &e)
+            {
+                std::cerr << _cam_serial << ": " << e.GetErrorMessage() << " @ " << e.GetFunctionName() << std::endl;
+            }
+                
         
         }
     }
@@ -126,8 +137,10 @@ namespace terraclear
 
             //clear cameras before releasing system instance..
             flir_camera_list.Clear();
+            
             //release system
-            flir_system->ReleaseInstance();            
+            if (!flir_system->IsInUse())
+                flir_system->ReleaseInstance();            
 
         }
         catch (flir::Exception &e)
@@ -266,61 +279,70 @@ namespace terraclear
 
         }
         catch (flir::Exception &e)
-        {
+        {         
             throw get_flir_error(e);
         }          
     }
     
-    bool camera_flir_blackfly::update_frames()
+    std::string camera_flir_blackfly::get_serial()
+    {
+        return _cam_serial;
+    }
+    
+    bool camera_flir_blackfly::frame_update()
     {   
         bool success = false;
         
-        _flir_mutex.lock();
-        
-        //acquire image
-        flir::ImagePtr image_ptr = _flir_cam->GetNextImage();
+        try
+        {
+            //acquire image
+            flir::ImagePtr image_ptr = _flir_cam->GetNextImage();
 
-        //check if image was complete on grab..
-        if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR) 
-        {
-            std::string img_status = std::to_string(image_ptr->GetImageStatus());
-            std::stringstream strstrm;
-            strstrm << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
-            _last_error = strstrm.str();
-        }
-        else if (image_ptr->IsIncomplete())
-        {
-            _last_error = "GetNextImage Error with FLIR ImageStatus=INCOMPLETE";
-        }
-        else
-        {
-            uint32_t xpad = image_ptr->GetXPadding();
-            uint32_t ypad = image_ptr->GetYPadding();
-            uint32_t width = image_ptr->GetWidth();
-            uint32_t height = image_ptr->GetHeight();
-
-            //convert bgr8
-            flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8);
-            
-            //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
-            _buffer_camera = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
-                        
-// <<<<<<   FLIR DRIVER BUG WORK-AROUND TO SKIP BLANK OR PARTIALL BLANK FRAMES RETURNED BY API....
-            
-            //check if rows are blank.
-            cv::Scalar sum_channels = cv::sum(_buffer_camera(cv::Rect(0, _buffer_camera.rows-3, _buffer_camera.cols, 2)));
-            if (sum_channels[0] + sum_channels[1] +  sum_channels[2] > 0)
+            //check if image was complete on grab..
+            if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR) 
             {
-                _buffer_camera.copyTo(_frame_color);
-                success = true;
+                std::string img_status = std::to_string(image_ptr->GetImageStatus());
+                std::stringstream strstrm;
+                strstrm << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
+                _last_error = strstrm.str();
             }
-        }
+            else if (image_ptr->IsIncomplete())
+            {
+                _last_error = "GetNextImage Error with FLIR ImageStatus=INCOMPLETE";
+            }
+            else
+            {
+                uint32_t xpad = image_ptr->GetXPadding();
+                uint32_t ypad = image_ptr->GetYPadding();
+                uint32_t width = image_ptr->GetWidth();
+                uint32_t height = image_ptr->GetHeight();
 
-        //release image buffers
-        image_ptr->Release();
-        
-        _flir_mutex.unlock();
-        
+                //convert bgr8
+                flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8);
+
+                //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
+                _buffer_camera = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
+
+    // <<<<<<   FLIR DRIVER BUG WORK-AROUND TO SKIP BLANK OR PARTIAL BLANK FRAMES RETURNED BY API....
+                //check if rows are blank.
+                cv::Scalar sum_channels = cv::sum(_buffer_camera(cv::Rect(0, _buffer_camera.rows-3, _buffer_camera.cols, 2)));
+                if (sum_channels[0] + sum_channels[1] +  sum_channels[2] > 0)
+                {
+                    mutex_lock();
+                        _buffer_camera.copyTo(_frame_color);
+                        success = true;
+                    mutex_unlock();
+                }
+            }
+
+            //release image buffers
+            image_ptr->Release();            
+        }
+        catch (flir::Exception &e)
+        {
+            std::cerr << _cam_serial << ": " << e.GetErrorMessage() << " @ " << e.GetFunctionName() << std::endl;
+        }        
+
         return success;
     }
     

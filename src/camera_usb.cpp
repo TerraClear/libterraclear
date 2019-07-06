@@ -49,9 +49,11 @@ namespace terraclear
         _videofeed.release();
     }
 
-    bool camera_usb::update_frames()
+    bool camera_usb::frame_update()
     {
+        mutex_lock();
         _videofeed.read(_frame_color);
+        mutex_unlock();
         
         return true;
     }

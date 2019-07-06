@@ -38,7 +38,7 @@ namespace terraclear
 
             //base class implementations.. 
             double      get_depth_cm(uint32_t x, uint32_t y);
-            void        update_frames();
+            void        frame_update();
 
         private:
             CameraPosition _selected_camera = CameraPosition::Both;

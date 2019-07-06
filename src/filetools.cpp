@@ -279,5 +279,19 @@ namespace  terraclear
         }//endif names file..
 
         return names_list;
+    }  
+
+    //split delimeted string into vector of parts..
+    std::vector<std::string> filetools::split_string(const std::string& in_string, char delimiter)
+    {
+       std::vector<std::string> tokens;
+       std::string token;
+       std::istringstream tokenStream(in_string);
+
+       while (std::getline(tokenStream, token, delimiter))
+       {
+          tokens.push_back(token);
+       }
+       return tokens;
     }    
 }

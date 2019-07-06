@@ -57,7 +57,7 @@ namespace  terraclear
             static void copy_file(std::string file_source, std::string file_target, bool replace_file = true);
             
             static std::vector<std::string>     read_lines(std::string txtfilepath);
-            
+            static std::vector<std::string>     split_string(const std::string& in_string, char delimiter);
     
         private:
     };

@@ -57,6 +57,9 @@ namespace  terraclear
             uint32_t _fps_max = 30;
             uint32_t _fps_current = 0;
             
+            uint64_t _ms_elapsed = 0;
+            uint32_t _frame_count = 0;
+            
             cv::Mat _buffer_camera;
             cv::Mat _buffer_back;
             cv::Mat _buffer_front;
