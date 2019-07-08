@@ -28,6 +28,7 @@ namespace terraclear
             void reset();
             void update(bounding_box bbox);
             void predict();
+            void predict_zero();
 
             bounding_box get_object();
 
