@@ -126,6 +126,21 @@ namespace terraclear
         _sw.reset();
     }
 
+    void tracking_object::predict_zero()
+        {
+        //predict pos.
+        _bbox.x = _bbox.get_center().x - _bbox.width / 2;
+        _bbox.y = _bbox.get_center().y -  _bbox.height / 2;
+        
+        _bbox.predicted = true;      
+        
+        _bbox.confidence = _bbox.confidence * 0.9;
+        //increase position tracked..
+        _position_count++;
+                
+        //reset update/predict intervals.
+        _sw.reset();
+    }
     int tracking_object::get_list_median(std::list<int> value_list)
     {
         int retval = 0;
