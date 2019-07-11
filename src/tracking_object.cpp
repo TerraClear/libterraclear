@@ -112,7 +112,7 @@ namespace terraclear
 
         float dy =  std::round (_y_v / dT);
         float dx =  std::round (_x_v / dT);
-
+        
         //predict pos.
         _bbox.x = (_bbox.get_center().x + dx) - _bbox.width / 2;
         _bbox.y = (_bbox.get_center().y + dy) -  _bbox.height / 2;
@@ -136,6 +136,9 @@ namespace terraclear
         
         //increase position tracked..
         _position_count++;
+        
+        // We don't want these predictions exist forever if not redetected
+        _bbox.confidence *= .80;
                 
         //reset update/predict intervals.
         _sw.reset();
