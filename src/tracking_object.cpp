@@ -134,7 +134,6 @@ namespace terraclear
         
         _bbox.predicted = true;      
         
-        _bbox.confidence = _bbox.confidence * 0.9;
         //increase position tracked..
         _position_count++;
                 
