@@ -72,6 +72,8 @@
           <itemPath>src/camera_file.hpp</itemPath>
           <itemPath>src/camera_flir_blackfly.cpp</itemPath>
           <itemPath>src/camera_flir_blackfly.hpp</itemPath>
+          <itemPath>src/camera_flir_blackfly_system.cpp</itemPath>
+          <itemPath>src/camera_flir_blackfly_system.hpp</itemPath>
           <itemPath>src/camera_lucid_triton.cpp</itemPath>
           <itemPath>src/camera_lucid_triton.hpp</itemPath>
           <itemPath>src/camera_recorder.cpp</itemPath>
@@ -173,6 +175,16 @@
       <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -321,6 +333,16 @@
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.hpp" ex="false" tool="3" flavor2="0">
@@ -466,6 +488,16 @@
       <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -613,6 +645,16 @@
       <item path="src/camera_flir_blackfly.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>

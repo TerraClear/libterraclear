@@ -44,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_depth_zed.o \
 	${OBJECTDIR}/src/camera_file.o \
 	${OBJECTDIR}/src/camera_flir_blackfly.o \
+	${OBJECTDIR}/src/camera_flir_blackfly_system.o \
 	${OBJECTDIR}/src/camera_lucid_triton.o \
 	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
@@ -135,6 +136,11 @@ ${OBJECTDIR}/src/camera_flir_blackfly.o: src/camera_flir_blackfly.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_flir_blackfly.o src/camera_flir_blackfly.cpp
+
+${OBJECTDIR}/src/camera_flir_blackfly_system.o: src/camera_flir_blackfly_system.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_flir_blackfly_system.o src/camera_flir_blackfly_system.cpp
 
 ${OBJECTDIR}/src/camera_lucid_triton.o: src/camera_lucid_triton.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
