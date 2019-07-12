@@ -112,7 +112,7 @@ namespace terraclear
 
         float dy =  std::round (_y_v / dT);
         float dx =  std::round (_x_v / dT);
-
+        
         //predict pos.
         _bbox.x = (_bbox.get_center().x + dx) - _bbox.width / 2;
         _bbox.y = (_bbox.get_center().y + dy) -  _bbox.height / 2;
@@ -126,6 +126,23 @@ namespace terraclear
         _sw.reset();
     }
 
+    void tracking_object::predict_zero()
+        {
+        //predict pos.
+        _bbox.x = _bbox.get_center().x - _bbox.width / 2;
+        _bbox.y = _bbox.get_center().y -  _bbox.height / 2;
+        
+        _bbox.predicted = true;      
+        
+        //increase position tracked..
+        _position_count++;
+        
+        // We don't want these predictions exist forever if not redetected
+        _bbox.confidence *= .80;
+                
+        //reset update/predict intervals.
+        _sw.reset();
+    }
     int tracking_object::get_list_median(std::list<int> value_list)
     {
         int retval = 0;

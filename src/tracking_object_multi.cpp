@@ -77,7 +77,6 @@ namespace terraclear
                         bbox.velocity_x = 0;
                         bbox.velocity_y = 0;
                     }  
-
                 }            
                 else
                 {
@@ -112,21 +111,31 @@ namespace terraclear
                 }
                 //remove if we dont have enough history to predict.
                 else if (_tracking_list[keypair.first].obj_found_count < _min_track_history)
-                {
-                    _tracking_list.erase(keypair.first);
+                {                  
+                    //predict next position
+                    _tracking_list[keypair.first].obj_ptr->predict_zero();
+                    bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
+                    //add prediction to tracked list..
+                    tracked_list.push_back(predicted_box);  
+
                 }
-                //remove if we dont have enough velocity required to predict.
+                // Predict a velocity of zero if threshold not reached. 
                 else if ((abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
                         (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
-                    _tracking_list.erase(keypair.first);
+                    //predict next position
+                     _tracking_list[keypair.first].obj_ptr->predict_zero();
+                    //get prediction box
+                    bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
+                    //add prediction to tracked list..
+                    tracked_list.push_back(predicted_box); 
+                  
                 }
                 //predict!
                 else
                 {
                     //get current box
                     bounding_box current_box = _tracking_list[keypair.first].obj_ptr->get_object();
-                    
                     //predict next position
                      _tracking_list[keypair.first].obj_ptr->predict();
                     
@@ -134,7 +143,7 @@ namespace terraclear
                      bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
                      
                      //calculate and increment linear traveled distance
-                     int linear_distance = sqrt(abs(pow(current_box.x - predicted_box.x, 2)) + abs(pow(current_box.y - predicted_box.y, 2)));
+                     int linear_distance = sqrt(pow(current_box.x - predicted_box.x, 2) + pow(current_box.y - predicted_box.y, 2));
                      
                     //increment counts & update
                     _tracking_list[keypair.first].obj_predict_distance += linear_distance;              
@@ -145,7 +154,6 @@ namespace terraclear
                     tracked_list.push_back(predicted_box);  
                 }               
             } 
-            
         }
         
         return tracked_list;
