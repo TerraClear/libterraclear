@@ -33,7 +33,6 @@ namespace  terraclear
         target_points.bottom_right.y = _target_size.height;
         target_points.bottom_left.x = 0;
         target_points.bottom_left.y = _target_size.height;
-
         
         std::vector<cv::Point2f> points_dst;
         points_dst.push_back(target_points.top_left);        
