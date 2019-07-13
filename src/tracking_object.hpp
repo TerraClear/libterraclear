@@ -38,6 +38,7 @@ namespace terraclear
         private:
             uint32_t _history_depth = 10;
             uint32_t _position_count = 0;
+            uint32_t _vel0_count = 0;
             stopwatch _sw;
             bounding_box _bbox;
             tracking_position _x_tracker;

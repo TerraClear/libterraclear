@@ -122,12 +122,15 @@ namespace terraclear
         //increase position tracked..
         _position_count++;
                 
+        _vel0_count = 0;
+        _bbox.vel0_count = _vel0_count;
+        
         //reset update/predict intervals.
         _sw.reset();
     }
 
     void tracking_object::predict_zero()
-        {
+    {
         //predict pos.
         _bbox.x = _bbox.get_center().x - _bbox.width / 2;
         _bbox.y = _bbox.get_center().y -  _bbox.height / 2;
@@ -137,9 +140,8 @@ namespace terraclear
         //increase position tracked..
         _position_count++;
         
-        // We don't want these predictions exist forever if not redetected
-        _bbox.confidence *= .80;
-                
+        _vel0_count++;
+        _bbox.vel0_count = _vel0_count;
         //reset update/predict intervals.
         _sw.reset();
     }

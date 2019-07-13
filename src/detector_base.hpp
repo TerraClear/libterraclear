@@ -53,6 +53,7 @@ namespace terraclear
         float       velocity_x;
         float       velocity_y;
         float       eta_s;
+        uint32_t    vel0_count;
                 
         bool        predicted;
         bool        tracked;
