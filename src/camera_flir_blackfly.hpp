@@ -57,16 +57,17 @@ namespace terraclear
         public:
             struct flir_settings
             {
-                FLIR_PixelFormat pixel_format;
-                int     width;
-                int     height;
-                int     bin_vertical;
-                int     bin_horizontal;
-                bool    flip_y;
-                float   fps;
-                bool    exposure_auto;
-                float   exposure_time;
-                int     device_link_limit;
+                FLIR_PixelFormat    pixel_format        = FLIR_PIXEL_FORMAT;
+                int                 width               = FLIR_WIDTH;
+                int                 height              = FLIR_HEIGHT;
+                int                 bin_vertical        = 1;
+                int                 bin_horizontal      = 1;
+                bool                flip_y              = false;
+                float               fps                 = 70;
+                bool                exposure_auto       = true;
+                float               exposure_time       = 987625;
+                int                 device_link_limit   = FLIR_DEVICE_LINK_LIMIT;
+                int                 buffer_size         = 10;
             };
 
             camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings);

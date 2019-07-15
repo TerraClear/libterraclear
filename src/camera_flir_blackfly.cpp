@@ -151,11 +151,16 @@ namespace terraclear
             flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
             ptrFPS->SetValue(_cam_settings.fps);
 
-//            //force DeviceLinkThroughputLimit
-//            _flir_cam->DeviceLinkThroughputLimitMode.SetValue(flir::DeviceLinkThroughputLimitMode_On);
-//            _flir_cam->DeviceLinkThroughputLimit.SetValue(_cam_settings.device_link_limit);
+            //force DeviceLinkThroughputLimit
+            flir_api::CIntegerPtr ptrDeviceLinkThroughputLimit = flir_nodemap.GetNode("DeviceLinkThroughputLimit");
+            if (IsAvailable(ptrDeviceLinkThroughputLimit) && IsWritable(ptrDeviceLinkThroughputLimit))
+                ptrDeviceLinkThroughputLimit->SetValue(_cam_settings.device_link_limit);
             
-
+            //set buffer size
+            flir_api::CIntegerPtr ptrStreamBufferCount = flir_nodemap.GetNode("StreamDefaultBufferCount");
+            if (IsAvailable(ptrStreamBufferCount) && IsWritable(ptrStreamBufferCount))
+                ptrStreamBufferCount->SetValue(_cam_settings.buffer_size);            
+            
             //get current pixel format and change if needed..
             flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
             if (flir_format != _cam_settings.pixel_format)
