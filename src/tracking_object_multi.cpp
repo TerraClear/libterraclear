@@ -61,10 +61,10 @@ namespace terraclear
 
                     //update seen count..
                     bbox.frame_count = _tracking_list[bbox.track_id].obj_found_count;
-
+                    
                     //update object position & get regressed linear velocity
                     _tracking_list[bbox.track_id].obj_ptr->update(bbox);
-
+                    bbox.vel0_count = 0;
                     //start using regressed positions when at least max tracked positions updated
                     if (bbox.frame_count > _min_track_history)
                     {
@@ -84,7 +84,8 @@ namespace terraclear
                     object_meta obj;
                     obj.obj_ptr = new tracking_object(bbox, _max_sample_queue);
                     obj.obj_found_count = bbox.frame_count = 1; //tracker has seen it for the first time..
-                   _tracking_list[bbox.track_id] = obj;
+                    bbox.vel0_count = 0;
+                    _tracking_list[bbox.track_id] = obj;
                 }
 
                 //add to tracked list..
