@@ -8,7 +8,7 @@ namespace terraclear
         _track_max_travel = track_max_travel;
         _tracker_engine = new Tracker_optflow(0, 21, 6, 8000, -1);
         
-        uint32_t    track_count = (track_end_y - track_start_y) / (track_max_travel - track_offset_y);
+        uint32_t    track_count = 1.5 * (track_end_y - track_start_y) / (track_max_travel - track_offset_y);
         uint32_t    track_offset_x = dst_size.width / (track_count + 1);
         uint32_t    box_x = track_offset_x;
         uint32_t    box_y = track_start_y;
@@ -39,7 +39,7 @@ namespace terraclear
         
     }
     
-    cv::Mat camera_velocity_calculator::update_tracking(cv::Mat new_img)
+    void camera_velocity_calculator::update_tracking(cv::Mat new_img, bool draw_tracking_info)
     {
         //do tracking of boxes
         _track_boxes = _tracker_engine->tracking_flow(new_img);
@@ -60,7 +60,6 @@ namespace terraclear
                     track_boxes_new.push_back(tmp_bbox);
 
                     _calculator->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
-
                 }
                 else
                 {
@@ -68,7 +67,6 @@ namespace terraclear
                     track_boxes_new.push_back(anchor);
                     _calculator->reset_tracker_anchor(tmp_bbox.track_id);
                 }
-
             }
             else
             {
@@ -78,22 +76,24 @@ namespace terraclear
 
             //update tracker engine with corrected box positions..
             _tracker_engine->update_cur_bbox_vec(track_boxes_new);
+            // Draw tracking if configured
+            if (draw_tracking_info)
+            {
+                //draw the anchor start and end lines
+                cv::Point bbox_start(anchor.x + anchor.h / 2, anchor.y + anchor.w / 2);
+                cv::Point bbox_end(bbox_start.x, bbox_start.y + _track_max_travel);
+                line(new_img, bbox_start, bbox_end, cv::Scalar(0, 0xff, 0x00), 2);
 
-            //draw the anchor start and end lines
-            cv::Point bbox_start(anchor.x + anchor.h / 2, anchor.y + anchor.w / 2);
-            cv::Point bbox_end(bbox_start.x, bbox_start.y + _track_max_travel);
-            line(new_img, bbox_start, bbox_end, cv::Scalar(0, 0xff, 0x00), 2);
-
-            //draw tracked areas..
-            cv::Rect bbox_rect;
-            bbox_rect.x = tmp_bbox.x;
-            bbox_rect.y = tmp_bbox.y;
-            bbox_rect.width = tmp_bbox.w;
-            bbox_rect.height = tmp_bbox.h;
-            cv::rectangle(new_img, bbox_rect, cv::Scalar(0x00, 0xff, 0xff), 2);
-        }
-        
-        return new_img;
+                //draw tracked areas..
+                cv::Rect bbox_rect;
+                bbox_rect.x = tmp_bbox.x;
+                bbox_rect.y = tmp_bbox.y;
+                bbox_rect.width = tmp_bbox.w;
+                bbox_rect.height = tmp_bbox.h;
+                cv::rectangle(new_img, bbox_rect, cv::Scalar(255,255,255), 2);
+            }
+        }    
+        return;
     }
     
     float camera_velocity_calculator::get_frame_velocity()

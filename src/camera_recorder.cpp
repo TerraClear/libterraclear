@@ -20,6 +20,7 @@
 */
 
 #include "camera_recorder.hpp"
+#include "camera_file.hpp"
 
 namespace  terraclear
 {  
@@ -35,6 +36,12 @@ namespace  terraclear
             stop_recorder();
     }
 
+    std::string camera_recorder::get_filename()
+    {
+        return _video_filename;
+    }
+
+
     void camera_recorder::start_recorder(std::string video_filename, int video_fps, cv::Size video_size)
     {
         //generate filename with numeric sequence..
@@ -46,7 +53,7 @@ namespace  terraclear
         init_recorder();
         
         //start recorder thread..
-        thread_start(video_filename);
+        thread_start(_video_filename);
 
     }
     
@@ -58,20 +65,25 @@ namespace  terraclear
     
     void camera_recorder::add_frame(cv::Mat video_frame)
     {
-        //if not running, auto start with default values..
-        if (!_is_recording)
+        //dont accept any frames for buffer if paused..
+        if (!ispaused())
         {
-            init_recorder();
-            thread_start(_video_filename);
-        }
-        
-        //lock buffer list - AUTO unlock when out of scope..
-        std::lock_guard<std::mutex> guard(_internal_mutex);
+            //if not running, auto start with default values..
+            if (!_is_recording)
+            {
+                init_recorder();
+                thread_start(_video_filename);
+            }
 
-        cv::Mat tmp_frame(video_frame.rows, video_frame.cols, CV_8UC3);
-        video_frame.copyTo(tmp_frame);
-        _video_frames.push_front(tmp_frame);
-        _frame_notifier.notify_one();
+            //lock buffer list - AUTO unlock when out of scope..
+            std::lock_guard<std::mutex> guard(_internal_mutex);
+
+            cv::Mat tmp_frame(video_frame.rows, video_frame.cols, CV_8UC3);
+            video_frame.copyTo(tmp_frame);
+            _video_frames.push_front(tmp_frame);
+            _frame_notifier.notify_one();            
+        }
+
 
     }
     
@@ -83,6 +95,16 @@ namespace  terraclear
         //thread stopped, end file..
         _is_recording = false;
         _video_recorder.release();
+    }
+
+    void camera_recorder::pause_recorder()
+    {
+        thread_pause();
+    }
+    
+    void camera_recorder::resume_recorder()
+    {
+        thread_resume();        
     }
 
     void camera_recorder::thread_runloop()

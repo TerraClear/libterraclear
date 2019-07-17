@@ -46,6 +46,10 @@ namespace  terraclear
             void start_recorder(std::string video_filename, int video_fps, cv::Size video_size);
             void add_frame(cv::Mat video_frame);
             void stop_recorder();
+            void pause_recorder();
+            void resume_recorder();
+            
+            std::string get_filename();
             
         protected:
             //pure virtual function implementation..
@@ -54,7 +58,7 @@ namespace  terraclear
         private:            
             //default is MP4 video at 99% quality
             std::string _video_filename = "outfile.mp4";
-            int _video_format = CV_FOURCC('m', 'p', '4', 'v');
+            int _video_format =  cv::VideoWriter::fourcc('X', '2', '6', '4');
             float _video_quality = 99.0f;
             int _video_fps = 30;
             cv::Size _video_size;

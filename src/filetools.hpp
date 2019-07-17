@@ -47,7 +47,7 @@ namespace  terraclear
             static std::string  remove_extension(std::string file_name);
             static std::string  replace_extension(std::string file_name, std::string new_extension);
             static std::string  path_append(std::string path_str, std::string append_str);
-            static std::string  generate_filename_seq(std::string file_name);
+            static std::string  generate_filename_seq(std::string file_name, std::string extra = "");
             
             static std::vector <std::string>    read_directory( const std::string path, bool sort_by_name = true);
             static std::vector <std::string>    sort_files(std::vector<std::string> file_list, bool ascending = true);
@@ -57,7 +57,7 @@ namespace  terraclear
             static void copy_file(std::string file_source, std::string file_target, bool replace_file = true);
             
             static std::vector<std::string>     read_lines(std::string txtfilepath);
-            
+            static std::vector<std::string>     split_string(const std::string& in_string, char delimiter);
     
         private:
     };

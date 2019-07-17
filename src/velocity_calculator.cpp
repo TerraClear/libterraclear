@@ -28,7 +28,7 @@ namespace terraclear
     float velocity_calculator::get_average_velocity()
     {
         float num_trackers = _trackers.size();
-        float velocity_sum = 0;
+        float velocity_sum = 0.0f;
         
         // Add velocity calculations for each individual object in _trackers
         for (auto elem: _trackers)

@@ -18,157 +18,77 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
+
 #include "camera_flir_blackfly.hpp"
 
 #ifdef TC_USE_BLACKFLY
 
 namespace terraclear
 {  
-    camera_flir_blackfly::camera_flir_blackfly(flir_settings cam_settings)
+    camera_flir_blackfly::camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings)
     {        
         _cam_settings = cam_settings;
         
-        //init flir system
-        init_flir_system();
-        
         //set camera to default..
-        _flir_cam = _flir_camera_list.GetByIndex(0);
+        _flir_cam = flir_system_ptr->get_camera(0);
         init_camera(); 
     }
 
-    camera_flir_blackfly::camera_flir_blackfly(flir_settings cam_settings, uint32_t cam_index)
+    camera_flir_blackfly::camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings, uint32_t cam_index)
     {
         _cam_settings = cam_settings;
-
-        //init flir system
-        init_flir_system();
         
         //set camera to specific index..
-        _flir_cam = _flir_camera_list.GetByIndex(cam_index);
+        _flir_cam = flir_system_ptr->get_camera(cam_index);
         init_camera(); 
         
     }
     
-    camera_flir_blackfly::camera_flir_blackfly(flir_settings cam_settings, std::string cam_serial)
+    camera_flir_blackfly::camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings, std::string cam_serial)
     {
         _cam_settings = cam_settings;
 
-        //init flir system
-        init_flir_system();
-        
         //set camera to specific serial..
-        _flir_cam = _flir_camera_list.GetBySerial(cam_serial);
+        _flir_cam = flir_system_ptr->get_camera(cam_serial);
         init_camera(); 
         
         //validate serial number
         if (_cam_serial.compare(cam_serial) != 0)
-            throw get_generic_error("FLIR Camera with Serial " + cam_serial + " not found!");
+            throw camera_flir_blackfly_system::get_generic_error("FLIR Camera with Serial " + cam_serial + " not found!");
     }
 
-            
-    camera_flir_blackfly::~camera_flir_blackfly() 
+    void camera_flir_blackfly::release()
     {
         if (!_disposing)
         {
             _disposing = true;
             
-        //stop & cleanup camera resources..
-        _flir_cam->EndAcquisition();
-        _flir_cam->DeInit();
-
-        //clear cameras before releasing system instance..
-        _flir_camera_list.Clear();
-
-        //de-ref camera..
-        _flir_cam = nullptr;
-        
-        //release system
-        _flir_system->ReleaseInstance();
-        
-        }
-    }
-    
-    error_base camera_flir_blackfly::get_flir_error(flir::Exception &e)
-    {
-        std::stringstream strstrm;
-        strstrm << FLIR_ERR_STR << e.GetErrorMessage() << ":" << e.GetFunctionName();
-        return error_base(strstrm.str(), e.GetError());
-    }
-    
-    error_base camera_flir_blackfly::get_generic_error(std::string err_string)
-    {
-        std::stringstream strstrm;
-        strstrm << FLIR_ERR_STR << err_string;
-        return error_base(strstrm.str());
-    }
-    
-    std::vector<std::string> camera_flir_blackfly::get_cameras()
-    {
-        flir::SystemPtr flir_system = nullptr;
-        flir::CameraList flir_camera_list;        
-
-        std::vector<std::string> cam_list;
-                
-        try
-        {
-            //smartptr to dlir System..
-            flir_system = flir::System::GetInstance();
-
-            //get flir cameras attached to system
-            flir_camera_list = flir_system->GetCameras();  
-            uint32_t cam_count = flir_camera_list.GetSize();
-            for (uint32_t cam_index = 0; cam_index < cam_count; cam_index++)
+            //stop & cleanup camera resources..
+            try
             {
-                std::string cam_serial = flir_camera_list.GetByIndex(cam_index)->GetUniqueID().c_str();
-                cam_list.push_back(cam_serial);
+                _flir_cam->EndAcquisition();
+                _flir_cam->DeInit();
+
+                //de-ref camera..
+                _flir_cam = nullptr;
             }
-
-            //clear cameras before releasing system instance..
-            flir_camera_list.Clear();
-            //release system
-            flir_system->ReleaseInstance();            
-
-        }
-        catch (flir::Exception &e)
-        {
-            throw get_flir_error(e);
-        }      
-        
-        return cam_list;
-        
-    }
-    
-    void camera_flir_blackfly::init_flir_system()
-    {
-        //defaults
-        try
-        {
-            //smartptr to dlir System..
-            _flir_system = flir::System::GetInstance();
-
-            //get flir cameras attached to system
-            _flir_camera_list = _flir_system->GetCameras();            
-        }
-        catch (flir::Exception &e)
-        {
-            throw get_flir_error(e);
+            catch (flir::Exception &e)
+            {
+                std::cerr << _cam_serial << ": " << e.GetErrorMessage() << " @ " << e.GetFunctionName() << std::endl;
+            }
         }        
     }
-
-    uint32_t camera_flir_blackfly::get_camera_count()
+            
+    camera_flir_blackfly::~camera_flir_blackfly() 
     {
-        return _flir_camera_list.GetSize();
+        release();
     }
-    
+
     void camera_flir_blackfly::init_camera()
     {
         
         try
         {
-            //if camera not acquired, acquire default 
-            if (_flir_cam == nullptr)
-                _flir_cam = _flir_camera_list.GetByIndex(0);
-
             //init camera
             _flir_cam->Init();
 
@@ -191,16 +111,29 @@ namespace terraclear
             flir_api::CBooleanPtr pReverseY = flir_nodemap.GetNode("ReverseY");
             pReverseY->SetValue(_cam_settings.flip_y);
 
-            //Set Exposure Mode to Manual exposure (Values are "Off", "Continuous", "Once")
+            //Set Exposure Mode (Values are "Off", "Continuous", "Once")
             flir_api::CEnumerationPtr pExposureAuto = flir_nodemap.GetNode("ExposureAuto");
-            int exposure_off = pExposureAuto->GetEntryByName("Off")->GetValue();
-            pExposureAuto->SetIntValue(exposure_off);
+            int exposure_val = pExposureAuto->GetEntryByName("Continuous")->GetValue();
 
-            //Set exposure time..
-            flir_api::CFloatPtr pExposureTime = flir_nodemap.GetNode("ExposureTime");
-            pExposureTime->SetValue(_cam_settings.exposure_time);
+            if (_cam_settings.exposure_auto)
+            {
+                pExposureAuto->SetIntValue(exposure_val);
+
+            }
+            else
+            {
+                exposure_val = pExposureAuto->GetEntryByName("Off")->GetValue();
+                pExposureAuto->SetIntValue(exposure_val);
+
+                //Set exposure time..
+                flir_api::CFloatPtr pExposureTime = flir_nodemap.GetNode("ExposureTime");
+                pExposureTime->SetValue(_cam_settings.exposure_time);
+            }
 
             //Set Binning
+            //ensure at least bin 1
+            _cam_settings.bin_horizontal = std::max(_cam_settings.bin_horizontal, 1);            
+            _cam_settings.bin_vertical = std::max(_cam_settings.bin_vertical, 1);            
             flir_api::CIntegerPtr ptrBinW = flir_nodemap.GetNode("BinningVertical");
             ptrBinW->SetValue(_cam_settings.bin_horizontal);
             flir_api::CIntegerPtr ptrBinH = flir_nodemap.GetNode("BinningHorizontal");
@@ -218,6 +151,10 @@ namespace terraclear
             flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
             ptrFPS->SetValue(_cam_settings.fps);
 
+//            //force DeviceLinkThroughputLimit
+//            _flir_cam->DeviceLinkThroughputLimitMode.SetValue(flir::DeviceLinkThroughputLimitMode_On);
+//            _flir_cam->DeviceLinkThroughputLimit.SetValue(_cam_settings.device_link_limit);
+            
 
             //get current pixel format and change if needed..
             flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
@@ -233,7 +170,7 @@ namespace terraclear
                 flir_api::CEnumEntryPtr ptrPixelFormatEntry = ptrPixelFormat->GetEntryByName(pixel_format_string.c_str());
                 if (!flir_api::IsAvailable(ptrPixelFormatEntry) || (!flir_api::IsReadable(ptrPixelFormatEntry)))
                 {
-                    throw get_generic_error("PixelFormat '" + pixel_format_string + "' not available.");
+                    throw camera_flir_blackfly_system::get_generic_error("PixelFormat '" + pixel_format_string + "' not available.");
                 }
                 else
                 {
@@ -249,46 +186,80 @@ namespace terraclear
 
             // begin acquisition.
             _flir_cam->BeginAcquisition();
-
+            
         }
         catch (flir::Exception &e)
-        {
-            throw get_flir_error(e);
+        {         
+            throw camera_flir_blackfly_system::get_flir_error(e);
         }          
     }
     
-    void camera_flir_blackfly::update_frames()
-    {        
-        //acquire image
-        flir::ImagePtr image_ptr = _flir_cam->GetNextImage();
-
-        //check if image was complete on grab..
-        if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR)
-        {
-            std::string img_status = std::to_string(image_ptr->GetImageStatus());
-            std::cerr << "GetNextImage Error with FLIR ImageStatus=" + img_status << std::endl;
-        }
-        else
-        {
-            uint32_t xpad = image_ptr->GetXPadding();
-            uint32_t ypad = image_ptr->GetYPadding();
-            uint32_t width = image_ptr->GetWidth();
-            uint32_t height = image_ptr->GetHeight();
-
-            //convert yuv to bgr8
-            flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8);
-
-            //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
-            cv::Mat tmp_mat = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
-            tmp_mat.copyTo(_frame_color);
-            tmp_mat.release();
-            
-            //release image buffers
-            image_ptr->Release();
-        }
+    std::string camera_flir_blackfly::get_serial()
+    {
+        return _cam_serial;
     }
     
-    const char* camera_flir_blackfly::flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format)
+    bool camera_flir_blackfly::frame_update()
+    {   
+        bool success = false;
+        
+        try
+        {
+            //acquire image
+            flir::ImagePtr image_ptr = _flir_cam->GetNextImage();
+
+            //check if image was complete on grab..
+            if (image_ptr->GetImageStatus() !=  flir::ImageStatus::IMAGE_NO_ERROR) 
+            {
+                std::stringstream strstrm;
+                strstrm << "GetNextImage Error with FLIR ImageStatus=" << flir_imgstatus_to_string(image_ptr->GetImageStatus());
+                _last_error = strstrm.str();
+            }
+            else if (image_ptr->IsIncomplete())
+            {
+                _last_error = "GetNextImage Error with FLIR ImageStatus=INCOMPLETE";
+            }
+            else
+            {
+                uint32_t xpad = image_ptr->GetXPadding();
+                uint32_t ypad = image_ptr->GetYPadding();
+                uint32_t width = image_ptr->GetWidth();
+                uint32_t height = image_ptr->GetHeight();
+
+                //convert bgr8
+                flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8);
+
+                //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
+                _buffer_camera = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
+
+    // <<<<<<   FLIR DRIVER BUG WORK-AROUND TO SKIP BLANK OR PARTIAL BLANK FRAMES RETURNED BY API....
+                //check if rows are blank.
+                cv::Scalar sum_channels = cv::sum(_buffer_camera(cv::Rect(0, _buffer_camera.rows-3, _buffer_camera.cols, 2)));
+                if (sum_channels[0] + sum_channels[1] +  sum_channels[2] > 0)
+                {
+                    mutex_lock();
+                        _buffer_camera.copyTo(_frame_color);
+                        success = true;
+                    mutex_unlock();
+                }
+                else
+                {
+                    _last_error = "FLIR ImageStatus=BLANK";
+                }
+            }
+
+            //release image buffers
+            image_ptr->Release();            
+        }
+        catch (flir::Exception &e)
+        {
+            std::cerr << _cam_serial << ": " << e.GetErrorMessage() << " @ " << e.GetFunctionName() << std::endl;
+        }        
+
+        return success;
+    }
+    
+    std::string camera_flir_blackfly::flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format)
     {
         switch(flir_pixel_format)
         {
@@ -384,5 +355,59 @@ namespace terraclear
 
         return "UNKNOWN";
     }
+    
+    std::string camera_flir_blackfly::flir_imgstatus_to_string(FLIR_ImageStatus flir_image_status)
+    {
+        switch(flir_image_status)
+        {
+
+            case FLIR_ImageStatus::IMAGE_UNKNOWN_ERROR:
+                return "IMAGE_UNKNOWN_ERROR";
+                
+            case FLIR_ImageStatus::IMAGE_NO_ERROR:
+                return "IMAGE_NO_ERROR";
+                
+            case FLIR_ImageStatus::IMAGE_CRC_CHECK_FAILED:
+                return "IMAGE_CRC_CHECK_FAILED";
+                
+            case FLIR_ImageStatus::IMAGE_DATA_OVERFLOW:
+                return "IMAGE_DATA_OVERFLOW";
+                
+            case FLIR_ImageStatus::IMAGE_MISSING_PACKETS:
+                return "IMAGE_MISSING_PACKETS";
+                
+            case FLIR_ImageStatus::IMAGE_LEADER_BUFFER_SIZE_INCONSISTENT:
+                return "IMAGE_LEADER_BUFFER_SIZE_INCONSISTENT";
+                
+            case FLIR_ImageStatus::IMAGE_TRAILER_BUFFER_SIZE_INCONSISTENT:
+                return "IMAGE_TRAILER_BUFFER_SIZE_INCONSISTENT";
+                
+            case FLIR_ImageStatus::IMAGE_PACKETID_INCONSISTENT:
+                return "IMAGE_PACKETID_INCONSISTENT";
+                
+            case FLIR_ImageStatus::IMAGE_MISSING_LEADER:
+                return "IMAGE_MISSING_LEADER";
+                
+            case FLIR_ImageStatus::IMAGE_MISSING_TRAILER:
+                return "IMAGE_MISSING_TRAILER";
+                
+            case FLIR_ImageStatus::IMAGE_DATA_INCOMPLETE:
+                return "IMAGE_DATA_INCOMPLETE";
+                
+            case FLIR_ImageStatus::IMAGE_INFO_INCONSISTENT:
+                return "IMAGE_INFO_INCONSISTENT";
+                                       
+            case FLIR_ImageStatus::IMAGE_CHUNK_DATA_INVALID:
+                return "IMAGE_CHUNK_DATA_INVALID";
+                                        
+            case FLIR_ImageStatus::IMAGE_NO_SYSTEM_RESOURCES:
+                return "IMAGE_NO_SYSTEM_RESOURCES";
+                                
+        }
+
+        return "UNKNOWN";
+        
+    }
+    
 }
 #endif

@@ -16,7 +16,6 @@ namespace terraclear
 	{
             regression_result slope_intercept = regression_base::get_regression();
             float stable_position = slope_intercept.slope * (_position_history.back().time) + slope_intercept.intercept;
-            std::cout << _position_history.back().time << std::endl;
             return stable_position;
 	}
 }

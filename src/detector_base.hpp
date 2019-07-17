@@ -44,14 +44,19 @@ namespace terraclear
 {
     struct bounding_box : cv::Rect
     {
-        float confidence;                 
-        unsigned int class_id; 
+        float       confidence;                 
+        uint32_t    class_id; 
         std::string class_string;
-        unsigned int track_id;        
-        unsigned int frame_count;    
-        float obj_distance;
-        float obj_speed_ups;
-        float eta_s;
+        uint32_t    track_id;        
+        uint32_t    frame_count;    
+        float       obj_distance;
+        float       velocity_x;
+        float       velocity_y;
+        float       eta_s;
+                
+        bool        predicted;
+        bool        tracked;
+        bool        detected;
         
         // < operator overload for sorting center box in Y (top to bottom)
         bool operator < (const bounding_box &compare_box) const 
@@ -65,6 +70,26 @@ namespace terraclear
             return (y + height) > (compare_box.y + compare_box.height);
         }
 
+        // == operator overload for comparing.
+        bool operator == (const bounding_box &compare_box) const 
+        {
+            // if tracked, ID will be > 0 and id's should be the same
+            // if not tracked, ID = 0 and compare actual location & size
+            if (track_id > 0) 
+                return (track_id == compare_box.track_id);
+            else
+                return ((x == compare_box.x) && (y == compare_box.y) && 
+                        (width == compare_box.width) &&( height == compare_box.height));
+        }
+
+        cv::Point get_center()
+        {
+            cv::Point centerpoint;
+            centerpoint.x = (width > 0) ? x + (float) width / 2 : x;
+            centerpoint.y = (height > 0) ? y + (float) height / 2 : y;
+            
+            return centerpoint;
+        }
     };
 
     struct bounding_box_cluster
@@ -87,8 +112,8 @@ namespace terraclear
        
         protected:
             cv::Mat _imgsrc;
-            void mergeBoundingBoxes(std::vector<bounding_box> &object_boxes, uint32_t expand_pixels = 0);
-            cv::Rect getIntersectRect(bounding_box b1, bounding_box b2);   
+            static void mergeBoundingBoxes(std::vector<bounding_box> &object_boxes, uint32_t expand_pixels = 0);
+            static cv::Rect getIntersectRect(bounding_box b1, bounding_box b2);   
            
     };
 

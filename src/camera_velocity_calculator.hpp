@@ -9,7 +9,7 @@
 #define OPENCV
 #define TRACK_OPTFLOW
 #define GPU
-#include </home/izzy/ml/darknet/src/yolo_v2_class.hpp>
+#include <darknet/include/yolo_v2_class.hpp>
 
 #include <map>
 #include <unistd.h>
@@ -22,9 +22,15 @@ namespace terraclear
     class camera_velocity_calculator
     {
         public:
+            struct velocity_vec
+            {
+                float x;
+                float y;
+            };
             camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh);
-            cv::Mat update_tracking(cv::Mat new_img);
+            void update_tracking(cv::Mat new_img, bool draw_tracking_info);
             float get_frame_velocity();
+            velocity_vec get_frame_velocity_vec();
 
         private:
             int _track_xy_size;

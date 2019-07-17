@@ -228,7 +228,7 @@ namespace  terraclear
     }
 
     //generates a file name to prevent duplicates...
-    std::string filetools::generate_filename_seq(std::string file_name)
+    std::string filetools::generate_filename_seq(std::string file_name, std::string extra)
     {
         //get current extension
         std::string file_ext = get_extension(file_name);
@@ -241,7 +241,7 @@ namespace  terraclear
         do 
         {
             std::stringstream strstrm;
-            strstrm << remove_extension(file_name) <<  "_" << file_seq << "." << file_ext;
+            strstrm << remove_extension(file_name) << extra <<  "_" << file_seq << "." << file_ext;
             tmp_file = strstrm.str();
 
             file_seq++;
@@ -279,5 +279,19 @@ namespace  terraclear
         }//endif names file..
 
         return names_list;
+    }  
+
+    //split delimeted string into vector of parts..
+    std::vector<std::string> filetools::split_string(const std::string& in_string, char delimiter)
+    {
+       std::vector<std::string> tokens;
+       std::string token;
+       std::istringstream tokenStream(in_string);
+
+       while (std::getline(tokenStream, token, delimiter))
+       {
+          tokens.push_back(token);
+       }
+       return tokens;
     }    
 }

@@ -20,6 +20,8 @@ namespace terraclear
             
         private:
             int _previous_position;
+            int _previous_x;
+            int _previous_y;
             int _position_sum;
             int _anchor_pos;
             int _dist_reset_thresh;

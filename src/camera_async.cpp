@@ -31,8 +31,8 @@ namespace  terraclear
         _pcam = pcam;
         
         //get at least 1 frame and set camera frame ref.
-        _pcam->update_frames();
-        _camerabuffer = pcam->getRGBFrame();
+        _pcam->frame_update();
+        _buffer_camera = pcam->getRGBFrame();
         
         _sw.start();
     }
@@ -59,35 +59,60 @@ namespace  terraclear
     
     cv::Mat camera_async::get_ImageBuffer()
     {
-        cv::Mat tmp_img;
-    
         mutex_lock();
-            _imagebuffer.copyTo(tmp_img);
+           _buffer_back.copyTo(_buffer_front);
         mutex_unlock();
 
-        return tmp_img;
+        return _buffer_front;
+    }
+    
+    void camera_async::reset_lost_frames()
+    { 
+        mutex_lock();
+        _lost_frames = 0;
+         mutex_unlock();
+    }
+    
+    uint64_t camera_async::get_lost_frames()
+    {
+        
+        return _lost_frames;
     }
     
     void camera_async::thread_runloop()
     {
         //read frame...
-        _pcam->update_frames(); 
-        
-        int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
-        
-        //match requested frame rate if delay enabled
-        //i.e. file based cameras.
-        if (_delay_enabled && (ms_left > 0))
-            usleep(ms_left * 1000);
-        
-        mutex_lock();
-            _camerabuffer.copyTo(_imagebuffer);
-            uint64_t ms_elapsed = _sw.get_elapsed_ms();
-            _fps_current = (ms_elapsed > 0) ? 1000 / ms_elapsed : _fps_current;
+        if (_pcam->frame_update())
+        {
+            int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
+
+            //match requested frame rate if delay enabled
+            //i.e. file based cameras.
+            if (_delay_enabled && (ms_left > 0))
+                usleep(ms_left * 1000);
+
+            mutex_lock();
+                //update FPS every 1sec
+                _ms_elapsed += _sw.get_elapsed_ms();
+                _frame_count ++;
+                if (_ms_elapsed  >= 1000)
+                {
+                    _fps_current =  std::round((float)_frame_count * ( 1000 / (float)_ms_elapsed));
+                    _frame_count = _ms_elapsed = 0;
+                }
+
+            //copy current camera frame to back buffer.
+            _buffer_camera.copyTo(_buffer_back);
+
             _sw.reset();
-        mutex_unlock();
-        
-        //sleep for ms to match frame rate.
+            mutex_unlock();            
+        }
+        else
+        {
+            mutex_lock();
+                _lost_frames++;
+             mutex_unlock();
+        }
     }
 
 }

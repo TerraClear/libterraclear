@@ -180,6 +180,8 @@ namespace terraclear
                 sprintf(tmpstr,"%.0f", bbox_tmp.confidence * 100 );
                 bbox_json["confidence"] = std::string(tmpstr);
 
+                bbox_json["label"] = bbox_tmp.class_string;
+
                 bboxes_json.append(bbox_json);
         }
 

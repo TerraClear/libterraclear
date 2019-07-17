@@ -35,7 +35,7 @@ namespace terraclear
             virtual ~camera_file();
            
             //pure virtual implementation..
-            void update_frames();
+            bool frame_update();
                         
         private:
             cv::VideoCapture _videofeed;

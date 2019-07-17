@@ -21,7 +21,6 @@ namespace terraclear
 
 	void regression_base::update_position(int pos)
 	{
-            
             position_time current_pos;
             _time_sum = _time_sum + _sw.get_elapsed_ms() / 1000.0;
             _sw.reset();

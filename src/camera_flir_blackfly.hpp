@@ -19,6 +19,7 @@
  * 
 */
 
+//#define TC_USE_BLACKFLY
 
 //only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY
@@ -31,11 +32,14 @@
 #define FLIR_WIDTH 1440
 #define FLIR_HEIGHT 1080
 
-#define FLIR_ERR_STR "FLIR BlackFlyS Error - "
+#define FLIR_DEVICE_LINK_LIMIT 114825323
+
+#define FLIR_PIXEL_FORMAT Spinnaker::PixelFormatEnums::PixelFormat_BayerRG8
 
 #include "Spinnaker.h"
 #include "SpinGenApi/SpinnakerGenApi.h"
 
+#include "camera_flir_blackfly_system.hpp"
 #include "camera_base.hpp"
 #include "error_base.hpp"
 
@@ -46,6 +50,7 @@ namespace flir_icam = Spinnaker::GenICam;
 namespace terraclear
 { 
     typedef flir::PixelFormatEnums FLIR_PixelFormat;
+    typedef flir::ImageStatus FLIR_ImageStatus;
     
     class camera_flir_blackfly : public camera_base
     {
@@ -59,38 +64,36 @@ namespace terraclear
                 int     bin_horizontal;
                 bool    flip_y;
                 float   fps;
+                bool    exposure_auto;
                 float   exposure_time;
+                int     device_link_limit;
             };
 
-            camera_flir_blackfly(flir_settings cam_settings);
-            camera_flir_blackfly(flir_settings cam_settings, uint32_t cam_index);
-            camera_flir_blackfly(flir_settings cam_settings, std::string cam_serial);
+            camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings);
+            camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings, uint32_t cam_index);
+            camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings, std::string cam_serial);
             virtual ~camera_flir_blackfly();
 
-            //pure virtual implementation..
-            void update_frames();
-            
-            //get camera list
-            static std::vector<std::string> get_cameras();
+            std::string get_serial();
 
+            //pure virtual implementation..
+            bool frame_update();
+            
+            void release();
         private:
-            static error_base get_flir_error(flir::Exception &e);
-            static error_base get_generic_error(std::string);
+            cv::Mat _buffer_camera;
 
             bool _disposing = false;
             flir_settings _cam_settings;
-            
-            flir::SystemPtr _flir_system = nullptr;
-            flir::CameraList _flir_camera_list;
+  
+            camera_flir_blackfly_system* _flir_system_ptr = nullptr;
             flir::CameraPtr _flir_cam = nullptr;
             std::string _cam_serial;
 
-            void init_flir_system();
-            uint32_t get_camera_count();
             void init_camera();
-            const char* flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
+            std::string flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format);
+            std::string flir_imgstatus_to_string(FLIR_ImageStatus flir_image_status);
             
-
     };
 }
 #endif /* CAMERA_FLIR_BLACKFLY_HPP */

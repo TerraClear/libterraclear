@@ -23,6 +23,9 @@
 #define CAMERA_BASE_HPP
 
 #include <opencv2/opencv.hpp>
+#include <mutex>
+
+#include "filetools.hpp"
 
 namespace terraclear
 {    
@@ -32,12 +35,26 @@ namespace terraclear
             camera_base();
             virtual ~camera_base();
 
-            virtual void    update_frames() = 0;
+            virtual bool    frame_update() = 0;
             cv::Mat         getRGBFrame();
+            virtual void    frame_save(std::string frame_name, bool generate_file_seq = true);
+
+            //camera syncronization features
+            //caller must supply pointer to mutex.else internal mutex will be used.
+            void set_mutex_ptr(std::mutex* mutex_ptr);
+            std::mutex* get_mutex_ptr();
+            void mutex_lock();
+            void mutex_unlock();
+            
+            std::string get_last_error();
 
         protected:
             cv::Mat _frame_color;
+            std::mutex* _mutex_ptr = nullptr;
+            std::mutex _mutex_internal;
             
+            std::string _last_error;
+
         private:
 
     };
