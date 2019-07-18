@@ -29,16 +29,22 @@ namespace terraclear
             };
             camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh);
             void update_tracking(cv::Mat new_img, bool draw_tracking_info);
-            float get_frame_velocity_x();
-            float get_frame_velocity_y();
+            float get_frame_x_v();
+            float get_frame_y_v();
+            float get_frame_x_a();
+            float get_frame_y_a();
 
         private:
             int _track_xy_size;
             int _track_max_travel;
             std::vector<bbox_t> _track_anchors;
             std::vector<bbox_t> _track_boxes;
-            terraclear::velocity_calculator* _calculator_x;
-            terraclear::velocity_calculator* _calculator_y;
+            
+            terraclear::velocity_calculator* _calculator_x_v;
+            terraclear::velocity_calculator* _calculator_y_v;
+            terraclear::velocity_calculator* _calculator_x_a;
+            terraclear::velocity_calculator* _calculator_y_a;
+            
             Tracker_optflow* _tracker_engine;
             bool get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor);
     };

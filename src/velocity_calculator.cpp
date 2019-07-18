@@ -33,7 +33,6 @@ namespace terraclear
     
     float velocity_calculator::get_average_velocity()
     {
-        float num_trackers = _trackers.size();
         float velocity_sum = 0.0f;
         
         // Add velocity calculations for each individual object in _trackers
@@ -44,6 +43,6 @@ namespace terraclear
         
         // Compute and return average velocity across all _trackers in pixels
         //per second
-        return velocity_sum / num_trackers;
+        return velocity_sum / _trackers.size();
     }
 }

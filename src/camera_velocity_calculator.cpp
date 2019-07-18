@@ -2,6 +2,29 @@
 
 namespace terraclear
 {
+    bool camera_velocity_calculator::get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor)
+    {
+        bool retval = false;
+
+        for (auto bbox : bbox_list)
+        {
+            //found it.. update anchor..
+            if (bbox.track_id == anchor.track_id)
+            {
+                //update anchor..
+                anchor.x = bbox.x;
+                anchor.y = bbox.y;
+                anchor.w = bbox.w;
+                anchor.h = bbox.h;
+                anchor.frames_counter = bbox.frames_counter;
+
+                retval = true;
+                break;                 
+            }
+        }
+
+        return retval;
+    }
     camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int paddle_offset, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int dist_reset_thresh)
     {
         _track_xy_size = track_xy_size;
@@ -15,8 +38,11 @@ namespace terraclear
         uint32_t    box_x = 0;
         uint32_t    box_y = track_start_y;
         
-        _calculator_x = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
-        _calculator_y = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
+        _calculator_x_v = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
+        _calculator_y_v = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
+        
+        _calculator_x_a = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
+        _calculator_y_a = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
         
         for (uint32_t t = 0; t < track_count; t++ )
         {
@@ -33,8 +59,9 @@ namespace terraclear
             box_y += track_offset_y_calc;
 
             //Add tracker with bbox ID to collection for averaging velocity
-            _calculator_x->add_tracker(tmp_box.track_id, 30, tmp_box.x);
-            _calculator_y->add_tracker(tmp_box.track_id, 30, tmp_box.y);
+            _calculator_x_v->add_tracker(tmp_box.track_id, 30, tmp_box.x);
+            _calculator_y_v->add_tracker(tmp_box.track_id, 30, tmp_box.y);
+
 
             //start with anchor boxes
             _tracker_engine->update_cur_bbox_vec(_track_anchors);
@@ -60,15 +87,16 @@ namespace terraclear
                 {
                     //keep tracked box
                     track_boxes_new.push_back(tmp_bbox);
-                    _calculator_x->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
-                    _calculator_y->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
+                    _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
+                    _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
+                    
                 }
                 else
                 {
                     //reset to anchor..
                     track_boxes_new.push_back(anchor);
-                    _calculator_x->reset_tracker_anchor(tmp_bbox.track_id);
-                    _calculator_y->reset_tracker_anchor(tmp_bbox.track_id);
+                    _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id);
+                    _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id);
                 }
             }
             else
@@ -99,39 +127,25 @@ namespace terraclear
         return;
     }
     
-    float camera_velocity_calculator::get_frame_velocity_x()
+    float camera_velocity_calculator::get_frame_x_v()
     {
-        return _calculator_x->get_average_velocity();
+        return _calculator_x_v->get_average_velocity();
     }
     
-    float camera_velocity_calculator::get_frame_velocity_y()
+    float camera_velocity_calculator::get_frame_y_v()
     {
-        return _calculator_y->get_average_velocity();
+        return _calculator_y_v->get_average_velocity();
     }
     
-    bool camera_velocity_calculator::get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor)
+    float camera_velocity_calculator::get_frame_x_a()
     {
-        bool retval = false;
-
-        for (auto bbox : bbox_list)
-        {
-            //found it.. update anchor..
-            if (bbox.track_id == anchor.track_id)
-            {
-                //update anchor..
-                anchor.x = bbox.x;
-                anchor.y = bbox.y;
-                anchor.w = bbox.w;
-                anchor.h = bbox.h;
-                anchor.frames_counter = bbox.frames_counter;
-
-                retval = true;
-
-                break;                 
-            }
-        }
-
-        return retval;
+        return _calculator_x_a->get_average_velocity();
     }
+        
+    float camera_velocity_calculator::get_frame_y_a()
+    {
+        return _calculator_y_a->get_average_velocity();
+    }
+   
 }
 

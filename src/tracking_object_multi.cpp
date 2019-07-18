@@ -120,15 +120,15 @@ namespace terraclear
                 {
                     _tracking_list.erase(keypair.first);
                 }
-                /*
+                
                 // remove if we dont have enough history.
                 else if (_tracking_list[keypair.first].obj_found_count < _min_track_history)
                 { 
                     _tracking_list.erase(keypair.first);
                 }
-                */
+                
                 /*
-                // Predict a velocity of zero if threshold not reached. 
+                //Remove if min velocity not reached. 
                 else if ((abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
                         (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
@@ -143,6 +143,7 @@ namespace terraclear
                     bounding_box current_box = _tracking_list[keypair.first].obj_ptr->get_object();
                     _tracking_list[keypair.first].obj_ptr->_frame_x_v = frame_v_x;
                     _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_v_y;
+                    
                     //predict next position
                     if (use_frame_v)
                     {
