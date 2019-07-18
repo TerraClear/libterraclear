@@ -2,24 +2,27 @@
 
 namespace terraclear
 {
-    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int dist_reset_thresh)
+    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int paddle_offset, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int dist_reset_thresh)
     {
         _track_xy_size = track_xy_size;
         _track_max_travel = track_max_travel;
         _tracker_engine = new Tracker_optflow(0, 21, 6, 8000, -1);
-        
-        uint32_t    track_count = 1.5 * (track_end_y - track_start_y) / (track_max_travel - track_offset_y);
-        uint32_t    track_offset_x = dst_size.width / (track_count + 1);
-        uint32_t    box_x = track_offset_x;
+                
+        uint32_t    paddle_lane = dst_size.height - paddle_offset;
+        uint32_t    track_count = (dst_size.width / track_xy_size);
+        uint32_t    track_offset_x = track_xy_size;
+        uint32_t    track_offset_y_calc = (paddle_lane - track_start_y) / (track_count + 4);
+        uint32_t    box_x = 0;
         uint32_t    box_y = track_start_y;
         
-        _calculator = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
+        _calculator_x = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
+        _calculator_y = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
         
         for (uint32_t t = 0; t < track_count; t++ )
         {
             bbox_t tmp_box;
-            tmp_box.x = box_x - (track_xy_size / 2);
-            tmp_box.y = box_y - (track_xy_size / 2);
+            tmp_box.x = box_x;
+            tmp_box.y = box_y;
             tmp_box.w = tmp_box.h = track_xy_size;
             tmp_box.track_id = t;
 
@@ -27,16 +30,15 @@ namespace terraclear
             _track_anchors.push_back(tmp_box);
 
             box_x += track_offset_x;
-            box_y += track_offset_y;
+            box_y += track_offset_y_calc;
 
             //Add tracker with bbox ID to collection for averaging velocity
-            _calculator->add_tracker(tmp_box.track_id, 30, tmp_box.y);
+            _calculator_x->add_tracker(tmp_box.track_id, 30, tmp_box.x);
+            _calculator_y->add_tracker(tmp_box.track_id, 30, tmp_box.y);
 
             //start with anchor boxes
             _tracker_engine->update_cur_bbox_vec(_track_anchors);
         }
-        
-        
     }
     
     void camera_velocity_calculator::update_tracking(cv::Mat new_img, bool draw_tracking_info)
@@ -58,14 +60,15 @@ namespace terraclear
                 {
                     //keep tracked box
                     track_boxes_new.push_back(tmp_bbox);
-
-                    _calculator->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
+                    _calculator_x->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
+                    _calculator_y->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
                 }
                 else
                 {
                     //reset to anchor..
                     track_boxes_new.push_back(anchor);
-                    _calculator->reset_tracker_anchor(tmp_bbox.track_id);
+                    _calculator_x->reset_tracker_anchor(tmp_bbox.track_id);
+                    _calculator_y->reset_tracker_anchor(tmp_bbox.track_id);
                 }
             }
             else
@@ -96,9 +99,14 @@ namespace terraclear
         return;
     }
     
-    float camera_velocity_calculator::get_frame_velocity()
+    float camera_velocity_calculator::get_frame_velocity_x()
     {
-        return _calculator->get_average_velocity();
+        return _calculator_x->get_average_velocity();
+    }
+    
+    float camera_velocity_calculator::get_frame_velocity_y()
+    {
+        return _calculator_y->get_average_velocity();
     }
     
     bool camera_velocity_calculator::get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor)

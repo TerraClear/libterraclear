@@ -19,10 +19,10 @@ namespace terraclear
 
         public:
             tracking_object_multi();
-            tracking_object_multi(int max_sample_queue, int min_track_history, float min_track_velocity, int max_prediction_disance, int max_zero_prediction);
+            tracking_object_multi(int max_sample_queue, int min_track_history, float min_track_velocity, int max_prediction_disance);
             virtual ~tracking_object_multi();
             
-            std::vector<bounding_box> track(std::vector<bounding_box> objects, bool remove_missing = true, uint32_t min_abs_x_v = 0, uint32_t min_abs_y_v = 0, bool predict_negative_y_v = false, float velocity = 0, bool use_frame_v = true);
+            std::vector<bounding_box> track(std::vector<bounding_box> objects, bool remove_missing = true, uint32_t min_abs_x_v = 0, uint32_t min_abs_y_v = 0, bool predict_negative_y_v = false, float frame_v_x = 0,float frame_v_y = 0, bool use_frame_v = true);
             
         private:
             struct object_meta

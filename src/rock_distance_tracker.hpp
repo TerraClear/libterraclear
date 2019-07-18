@@ -5,8 +5,9 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>   
-#include "regression_base.hpp"
+
 #include "stopwatch.hpp"
+#include "regression_base.hpp"
 
 namespace terraclear
 {

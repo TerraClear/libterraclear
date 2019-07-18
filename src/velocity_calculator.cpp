@@ -11,7 +11,13 @@ namespace terraclear
     
     void velocity_calculator::add_tracker(int id, int queue_size, int starting_ypos)
     {
-        velocity_tracker* new_tracker = new velocity_tracker(id, queue_size, starting_ypos, _time_reset_thresh, _dist_reset_thresh);
+        terraclear::regression_obj_meta info;
+        info.bbox_id = id;
+        info.queue_size = queue_size;
+        info.starting_pos = starting_ypos;
+        info.dist_reset_thresh = _dist_reset_thresh;
+        
+        velocity_tracker* new_tracker = new velocity_tracker(info);
         _trackers[id] = new_tracker;
     }
     

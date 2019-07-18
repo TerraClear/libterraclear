@@ -7,6 +7,7 @@
 #include <iostream>
 #include <list>
 #include "stopwatch.hpp"
+#include "detector_base.hpp"
 
 namespace terraclear
 {
@@ -15,16 +16,28 @@ namespace terraclear
         float time;
         int position;
     };
+    
     struct regression_result
     {
         float slope;
         float intercept;
     };
-            
+
+    struct regression_obj_meta
+    {
+        terraclear::bounding_box bbox;
+        int bbox_id;
+        int queue_size;
+        int starting_pos;
+        int dest_pos;
+        float time_reset_thresh;
+        int dist_reset_thresh;
+    };
+    
     class regression_base
     {
         public:
-            regression_base(int id, int queue_size, int starting_pos, float time_reset_thresh);
+            regression_base(terraclear::regression_obj_meta& info);
             void update_position(int pos);
             regression_result get_regression();
             

@@ -7,15 +7,16 @@
 #include <math.h>
 
 #include "detector_base.hpp"
+#include "regression_base.hpp"
 #include "tracking_position.hpp"
 #include "stopwatch.hpp"
 
 namespace terraclear
-{    
+{   
     class tracking_object
     {
         public: 
-            tracking_object(bounding_box bbox, int history_depth);
+            tracking_object(regression_obj_meta& info);
             ~tracking_object();
                     
             int get_id();
@@ -50,7 +51,6 @@ namespace terraclear
             float _x_v = 0.0f;
             float _y_v = 0.0f;
  
-
             std::list<int> _last_widths;
             std::list<int> _last_heights;
 

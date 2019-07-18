@@ -7,7 +7,7 @@ namespace terraclear
         
     }
 
-    tracking_object_multi::tracking_object_multi(int max_sample_queue, int min_track_history, float min_track_velocity, int max_prediction_distance, int max_zero_prediction)
+    tracking_object_multi::tracking_object_multi(int max_sample_queue, int min_track_history, float min_track_velocity, int max_prediction_distance)
     {
         _max_sample_queue = max_sample_queue;
         _min_track_history = min_track_history;
@@ -39,7 +39,7 @@ namespace terraclear
         return found_box;
     }    
 
-    std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, bool remove_missing, uint32_t min_abs_x_v, uint32_t min_abs_y_v, bool predict_negative_y_v, float frame_velocity, bool use_frame_v)
+    std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, bool remove_missing, uint32_t min_abs_x_v, uint32_t min_abs_y_v, bool predict_negative_y_v, float frame_v_x, float frame_v_y, bool use_frame_v)
     {
         std::vector<bounding_box> tracked_list;
         std::vector<uint32_t> tracked_keys;
@@ -47,7 +47,7 @@ namespace terraclear
         //add all new objects 
         for (auto bbox : objects)
         {
-            //only track/update non-predictions..
+            //only predict/update non-predictions..
             if (!bbox.predicted)
             {
                 // if it exists, just update it else create new tracker and add to tracker list,.        
@@ -62,8 +62,9 @@ namespace terraclear
                     //update seen count..
                     bbox.frame_count = _tracking_list[bbox.track_id].obj_found_count;
                     
-                    //update object position & get regressed linear velocity
+                    //update object position to get the stabilized position and velocity
                     _tracking_list[bbox.track_id].obj_ptr->update(bbox);
+                    
                     //start using regressed positions when at least max tracked positions updated
                     if (bbox.frame_count > _min_track_history)
                     {
@@ -81,12 +82,22 @@ namespace terraclear
                 {
                     //create new object to be tracked..
                     object_meta obj;
-                    obj.obj_ptr = new tracking_object(bbox, _max_sample_queue);
+                    
+                    regression_obj_meta regression_obj;
+                    regression_obj.bbox = bbox;
+                    regression_obj.bbox_id = bbox.track_id;
+                    regression_obj.dest_pos = 1200;
+                    regression_obj.dist_reset_thresh = 200;
+                    regression_obj.queue_size = 30;
+                    regression_obj.starting_pos = bbox.y;
+                    regression_obj.time_reset_thresh = 4.f;
+                    
+                    // Creates ptr to object tracking class
+                    obj.obj_ptr = new tracking_object(regression_obj);
+                    
                     obj.obj_found_count = bbox.frame_count = 1; //tracker has seen it for the first time..
-
                     _tracking_list[bbox.track_id] = obj;
                 }
-
                 //add to tracked list..
                 tracked_list.push_back(bbox);
                 tracked_keys.push_back(bbox.track_id);
@@ -116,6 +127,7 @@ namespace terraclear
                     _tracking_list.erase(keypair.first);
                 }
                 */
+                /*
                 // Predict a velocity of zero if threshold not reached. 
                 else if ((abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
                         (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
@@ -123,13 +135,14 @@ namespace terraclear
                     _tracking_list.erase(keypair.first);
   
                 }
+                */
                 //predict!
                 else
                 {
                     //get current box
                     bounding_box current_box = _tracking_list[keypair.first].obj_ptr->get_object();
-                    _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_velocity;
-                    _tracking_list[keypair.first].obj_ptr->_frame_x_v = 0.0f;
+                    _tracking_list[keypair.first].obj_ptr->_frame_x_v = frame_v_x;
+                    _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_v_y;
                     //predict next position
                     if (use_frame_v)
                     {
@@ -142,7 +155,7 @@ namespace terraclear
                     
                     //get prediction box
                     bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
-                    
+                  
                     //calculate and increment linear traveled distance
                     int linear_distance = sqrt(pow(current_box.x - predicted_box.x, 2) + pow(current_box.y - predicted_box.y, 2));
 
