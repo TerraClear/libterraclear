@@ -25,24 +25,24 @@ namespace terraclear
 
         return retval;
     }
-    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int paddle_offset, int track_max_travel, int track_offset_y, int track_xy_size, float time_reset_thresh, int dist_reset_thresh)
+
+    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int paddle_offset, int track_max_travel, int track_xy_size, float time_reset_thresh, int dist_reset_thresh, int anchor_queue_size)
     {
         _track_xy_size = track_xy_size;
         _track_max_travel = track_max_travel;
         _tracker_engine = new Tracker_optflow(0, 21, 6, 8000, -1);
                 
+        uint32_t    track_count = 6;
         uint32_t    paddle_lane = dst_size.height - paddle_offset;
-        uint32_t    track_count = (dst_size.width / track_xy_size);
-        uint32_t    track_offset_x = track_xy_size;
-        uint32_t    track_offset_y_calc = (paddle_lane - track_start_y) / (track_count + 4);
-        uint32_t    box_x = 0;
+        uint32_t    track_offset_x = dst_size.width / track_count;
+        uint32_t    track_offset_y_calc = ((paddle_lane - track_start_y)/2) / (track_count + 4);
+        uint32_t    box_x = track_xy_size/2;
         uint32_t    box_y = track_start_y;
+        uint32_t    box_y_2 = track_start_y + ((paddle_lane - track_start_y)/2);
+
         
         _calculator_x_v = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
         _calculator_y_v = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
-        
-        _calculator_x_a = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
-        _calculator_y_a = new velocity_calculator(0, time_reset_thresh, dist_reset_thresh);
         
         for (uint32_t t = 0; t < track_count; t++ )
         {
@@ -55,29 +55,43 @@ namespace terraclear
             //keep track of anchors by ID
             _track_anchors.push_back(tmp_box);
 
-            box_x += track_offset_x;
             box_y += track_offset_y_calc;
 
             //Add tracker with bbox ID to collection for averaging velocity
-            _calculator_x_v->add_tracker(tmp_box.track_id, 30, tmp_box.x);
-            _calculator_y_v->add_tracker(tmp_box.track_id, 30, tmp_box.y);
+            _calculator_x_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.x);
+            _calculator_y_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.y);
+            
+            bbox_t tmp_box2;
+            tmp_box2.x = box_x;
+            tmp_box2.y = box_y_2;
+            tmp_box2.w = tmp_box2.h = track_xy_size;
+            tmp_box2.track_id = t + track_count;
 
+            //keep track of anchors by ID
+            _track_anchors.push_back(tmp_box2);
+
+            box_x += track_offset_x;
+            box_y_2 += track_offset_y_calc;
+
+            //Add tracker with bbox ID to collection for averaging velocity
+            _calculator_x_v->add_tracker(tmp_box2.track_id, anchor_queue_size, tmp_box2.x);
+            _calculator_y_v->add_tracker(tmp_box2.track_id, anchor_queue_size, tmp_box2.y);
 
             //start with anchor boxes
             _tracker_engine->update_cur_bbox_vec(_track_anchors);
         }
+        return;
     }
     
-    void camera_velocity_calculator::update_tracking(cv::Mat new_img, bool draw_tracking_info)
+    std::vector<bbox_t> camera_velocity_calculator::update_tracking(cv::Mat new_img)
     {
         //do tracking of boxes
         _track_boxes = _tracker_engine->tracking_flow(new_img);
-        
-        //ensure anchors were tracked and not lost or past limits..
         std::vector<bbox_t> track_boxes_new;
+        //ensure anchors were tracked and not lost or past limits..
         for (auto anchor : _track_anchors)
         {
-            //get anchor, check if tracked..
+            //check that original anchor has been tracked
             bbox_t tmp_bbox = anchor;
             if (get_tracked_anchor(_track_boxes, tmp_bbox))
             {
@@ -89,7 +103,7 @@ namespace terraclear
                     track_boxes_new.push_back(tmp_bbox);
                     _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
                     _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
-                    
+
                 }
                 else
                 {
@@ -107,24 +121,13 @@ namespace terraclear
 
             //update tracker engine with corrected box positions..
             _tracker_engine->update_cur_bbox_vec(track_boxes_new);
-            // Draw tracking if configured
-            if (draw_tracking_info)
-            {
-                //draw the anchor start and end lines
-                cv::Point bbox_start(anchor.x + anchor.h / 2, anchor.y + anchor.w / 2);
-                cv::Point bbox_end(bbox_start.x, bbox_start.y + _track_max_travel);
-                line(new_img, bbox_start, bbox_end, cv::Scalar(0, 0xff, 0x00), 2);
-
-                //draw tracked areas..
-                cv::Rect bbox_rect;
-                bbox_rect.x = tmp_bbox.x;
-                bbox_rect.y = tmp_bbox.y;
-                bbox_rect.width = tmp_bbox.w;
-                bbox_rect.height = tmp_bbox.h;
-                cv::rectangle(new_img, bbox_rect, cv::Scalar(255,255,255), 2);
-            }
-        }    
-        return;
+        } 
+        return track_boxes_new;
+    }
+    
+    std::vector<bbox_t> camera_velocity_calculator::get_anchor_tracks()
+    {
+        return _track_anchors;
     }
     
     float camera_velocity_calculator::get_frame_x_v()

@@ -39,7 +39,7 @@ namespace terraclear
         return found_box;
     }    
 
-    std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, bool remove_missing, uint32_t min_abs_x_v, uint32_t min_abs_y_v, bool predict_negative_y_v, float frame_v_x, float frame_v_y, bool use_frame_v)
+    std::vector<bounding_box> tracking_object_multi::track(std::vector<bounding_box> objects, uint32_t min_abs_x_v, uint32_t min_abs_y_v, float frame_v_x, float frame_v_y, bool use_frame_v, bool remove_missing)
     {
         std::vector<bounding_box> tracked_list;
         std::vector<uint32_t> tracked_keys;
@@ -87,7 +87,6 @@ namespace terraclear
                     regression_obj.bbox = bbox;
                     regression_obj.bbox_id = bbox.track_id;
                     regression_obj.dest_pos = 1200;
-                    regression_obj.dist_reset_thresh = 200;
                     regression_obj.queue_size = 30;
                     regression_obj.starting_pos = bbox.y;
                     regression_obj.time_reset_thresh = 4.f;
