@@ -85,43 +85,58 @@ namespace terraclear
     
     std::vector<bbox_t> camera_velocity_calculator::update_tracking(cv::Mat new_img)
     {
-        //do tracking of boxes
-        _track_boxes = _tracker_engine->tracking_flow(new_img);
         std::vector<bbox_t> track_boxes_new;
-        //ensure anchors were tracked and not lost or past limits..
-        for (auto anchor : _track_anchors)
+        // Make sure the image isnt blank. If is, dont do a tracking flow update
+        
+        cv::Scalar sum = cv::sum(
+                         cv::sum(new_img.row((int)(new_img.rows-1))) + 
+                         cv::sum(new_img.row((int)(new_img.rows-2))) + 
+                         cv::sum(new_img.row((int)(new_img.rows-3)))
+                        );
+        if (sum != cv::Scalar(0))
         {
-            //check that original anchor has been tracked
-            bbox_t tmp_bbox = anchor;
-            if (get_tracked_anchor(_track_boxes, tmp_bbox))
+            // No blank frame
+             _track_boxes = _tracker_engine->tracking_flow(new_img);
+            //ensure anchors were tracked and not lost or past limits..
+            for (auto anchor : _track_anchors)
             {
-                //if anchor tracked and not past travel limits, keep tracking
-                //else reset back to anchor.. ..
-                if ((tmp_bbox.y + _track_xy_size / 2) < (anchor.y + _track_max_travel))
+                //check that original anchor has been tracked
+                bbox_t tmp_bbox = anchor;
+                if (get_tracked_anchor(_track_boxes, tmp_bbox))
                 {
-                    //keep tracked box
-                    track_boxes_new.push_back(tmp_bbox);
-                    _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
-                    _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
+                    //if anchor tracked and not past travel limits, keep tracking
+                    //else reset back to anchor.. ..
+                    if ((tmp_bbox.y + _track_xy_size / 2) < (anchor.y + _track_max_travel))
+                    {
+                        //keep tracked box
+                        track_boxes_new.push_back(tmp_bbox);
+                        _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
+                        _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
 
+                    }
+                    else
+                    {
+                        //reset to anchor..
+                        track_boxes_new.push_back(anchor);
+                        _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id);
+                        _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id);
+                    }
                 }
                 else
                 {
-                    //reset to anchor..
+                    //add un-tracked or lost anchor..
                     track_boxes_new.push_back(anchor);
-                    _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id);
-                    _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id);
                 }
-            }
-            else
-            {
-                //add un-tracked or lost anchor..
-                track_boxes_new.push_back(anchor);
-            }
 
-            //update tracker engine with corrected box positions..
-            _tracker_engine->update_cur_bbox_vec(track_boxes_new);
-        } 
+                //update tracker engine with corrected box positions..
+                _tracker_engine->update_cur_bbox_vec(track_boxes_new);
+            } 
+        }
+        else
+        {
+            // Blank frame, probably
+        }
+       
         return track_boxes_new;
     }
     
