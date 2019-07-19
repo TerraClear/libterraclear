@@ -172,8 +172,5 @@ namespace terraclear
         }
         
         return tracked_list;
-    }
-
-    
+    }   
 }
-
