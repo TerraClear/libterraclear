@@ -26,15 +26,15 @@ namespace terraclear
         return retval;
     }
 
-    camera_velocity_calculator::camera_velocity_calculator(cv::Size dst_size, int track_start_y, int paddle_offset, int track_max_travel, int track_xy_size, float time_reset_thresh, int dist_reset_thresh, int anchor_queue_size)
+    camera_velocity_calculator::camera_velocity_calculator(cv::Size img_size, int track_start_y, int paddle_offset, int track_max_travel, int track_xy_size, float time_reset_thresh, int dist_reset_thresh, int anchor_queue_size)
     {
         _track_xy_size = track_xy_size;
         _track_max_travel = track_max_travel;
         _tracker_engine = new Tracker_optflow(0, 21, 6, 8000, -1);
                 
         uint32_t    track_count = 6;
-        uint32_t    paddle_lane = dst_size.height - paddle_offset;
-        uint32_t    track_offset_x = dst_size.width / track_count;
+        uint32_t    paddle_lane = img_size.height - paddle_offset;
+        uint32_t    track_offset_x = img_size.width / track_count;
         uint32_t    track_offset_y_calc = ((paddle_lane - track_start_y)/2) / (track_count + 4);
         uint32_t    box_x = track_xy_size/2;
         uint32_t    box_y = track_start_y;

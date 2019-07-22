@@ -7,10 +7,10 @@
         <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp</itemPath>
         <itemPath>src/timed_averaging.cpp</itemPath>
         <itemPath>src/timed_averaging.hpp</itemPath>
-        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_calculator.cpp</itemPath>
-        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_calculator.hpp</itemPath>
-        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_tracker.cpp</itemPath>
-        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_tracker.hpp</itemPath>
+        <itemPath>src/velocity_calculator.cpp</itemPath>
+        <itemPath>src/velocity_calculator.hpp</itemPath>
+        <itemPath>src/velocity_tracker.cpp</itemPath>
+        <itemPath>src/velocity_tracker.hpp</itemPath>
       </logicalFolder>
       <logicalFolder name="f6" displayName="appsettings" projectFiles="true">
         <itemPath>src/appsettings.cpp</itemPath>

@@ -34,7 +34,7 @@ namespace terraclear
             bounding_box get_object();
 
             //max amount of history to consider..
-            int _max_history = 10;
+            int _max_history = 20;
             
             float _frame_x_v = 0.0f;
             float _frame_y_v = 0.0f;

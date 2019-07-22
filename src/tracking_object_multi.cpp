@@ -112,6 +112,7 @@ namespace terraclear
                 //remove if we are not supposed to be predicting.any missing objects.
                 if (remove_missing) 
                 {
+                    continue;
                     _tracking_list.erase(keypair.first);
                 }
                 //remove if enough predictions
@@ -119,19 +120,19 @@ namespace terraclear
                 {
                     _tracking_list.erase(keypair.first);
                 }
-                
                 // remove if we dont have enough history.
                 else if (_tracking_list[keypair.first].obj_found_count < _min_track_history)
                 { 
-                    _tracking_list.erase(keypair.first);
+                    continue;
+                    //_tracking_list.erase(keypair.first);
                 }
-                
                 /*
                 //Remove if min velocity not reached. 
                 else if ((abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
                         (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
-                    _tracking_list.erase(keypair.first);
+                    continue;
+                    //_tracking_list.erase(keypair.first);
   
                 }
                 */
