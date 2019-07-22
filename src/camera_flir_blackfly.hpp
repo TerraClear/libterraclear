@@ -31,8 +31,10 @@
 // Width and height
 #define FLIR_WIDTH 1440
 #define FLIR_HEIGHT 1080
-
+#define FLIR_FPS_MAX 70
 #define FLIR_DEVICE_LINK_LIMIT 114825323
+#define FLIR_BUFFER_SIZE 10
+#define FLIR_EXPOSURE_TIME 987625
 
 #define FLIR_PIXEL_FORMAT Spinnaker::PixelFormatEnums::PixelFormat_BayerRG8
 
@@ -57,16 +59,18 @@ namespace terraclear
         public:
             struct flir_settings
             {
-                FLIR_PixelFormat pixel_format;
-                int     width;
-                int     height;
-                int     bin_vertical;
-                int     bin_horizontal;
-                bool    flip_y;
-                float   fps;
-                bool    exposure_auto;
-                float   exposure_time;
-                int     device_link_limit;
+                FLIR_PixelFormat    pixel_format        = FLIR_PIXEL_FORMAT;
+                int                 width               = FLIR_WIDTH;
+                int                 height              = FLIR_HEIGHT;
+                int                 bin_vertical        = 1;
+                int                 bin_horizontal      = 1;
+                bool                flip_y              = false;
+                float               fps                 = FLIR_FPS_MAX;
+                bool                exposure_auto       = true;
+                float               exposure_time       = FLIR_EXPOSURE_TIME;
+                int                 device_link_limit   = FLIR_DEVICE_LINK_LIMIT;
+                int                 buffer_size         = FLIR_BUFFER_SIZE;
+
             };
 
             camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings);

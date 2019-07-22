@@ -3,8 +3,8 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f3" displayName="src" projectFiles="true">
       <logicalFolder name="f12" displayName="algorithms" projectFiles="true">
-        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp</itemPath>
-        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp</itemPath>
+        <itemPath>src/camera_velocity_calculator.cpp</itemPath>
+        <itemPath>src/camera_velocity_calculator.hpp</itemPath>
         <itemPath>src/timed_averaging.cpp</itemPath>
         <itemPath>src/timed_averaging.hpp</itemPath>
         <itemPath>src/velocity_calculator.cpp</itemPath>
@@ -44,6 +44,18 @@
         <itemPath>src/thread_base.cpp</itemPath>
         <itemPath>src/thread_base.hpp</itemPath>
       </logicalFolder>
+      <logicalFolder name="f1" displayName="tracking" projectFiles="true">
+        <itemPath>src/tracking_object.cpp</itemPath>
+        <itemPath>src/tracking_object.hpp</itemPath>
+        <itemPath>src/tracking_object_multi.cpp</itemPath>
+        <itemPath>src/tracking_object_multi.hpp</itemPath>
+        <itemPath>src/tracking_position.cpp</itemPath>
+        <itemPath>src/tracking_position.hpp</itemPath>
+        <itemPath>src/tracking_velocity.cpp</itemPath>
+        <itemPath>src/tracking_velocity.hpp</itemPath>
+        <itemPath>src/tracking_velocity_multi.cpp</itemPath>
+        <itemPath>src/tracking_velocity_multi.hpp</itemPath>
+      </logicalFolder>
       <logicalFolder name="f13" displayName="vision" projectFiles="true">
         <logicalFolder name="f8" displayName="calibration" projectFiles="true">
           <itemPath>src/hsvcalibration.cpp</itemPath>
@@ -64,6 +76,8 @@
           <itemPath>src/camera_file.hpp</itemPath>
           <itemPath>src/camera_flir_blackfly.cpp</itemPath>
           <itemPath>src/camera_flir_blackfly.hpp</itemPath>
+          <itemPath>src/camera_flir_blackfly_system.cpp</itemPath>
+          <itemPath>src/camera_flir_blackfly_system.hpp</itemPath>
           <itemPath>src/camera_lucid_triton.cpp</itemPath>
           <itemPath>src/camera_lucid_triton.hpp</itemPath>
           <itemPath>src/camera_recorder.cpp</itemPath>
@@ -76,6 +90,8 @@
           <itemPath>src/detector_base.hpp</itemPath>
           <itemPath>src/detector_hsv.cpp</itemPath>
           <itemPath>src/detector_hsv.hpp</itemPath>
+          <itemPath>src/detector_motion.cpp</itemPath>
+          <itemPath>src/detector_motion.hpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="transforms" projectFiles="true">
           <itemPath>src/vision_warp.cpp</itemPath>
@@ -112,6 +128,9 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
+          <incDir>
+            <pElem>/data/sources</pElem>
+          </incDir>
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}</output>
@@ -192,6 +211,16 @@
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.hpp" ex="false" tool="3" flavor2="0">
@@ -204,6 +233,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -211,6 +244,10 @@
       <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_motion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_motion.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -243,6 +280,26 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -341,6 +398,16 @@
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.hpp" ex="false" tool="3" flavor2="0">
@@ -353,6 +420,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -360,6 +431,10 @@
       <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_motion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_motion.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -392,6 +467,26 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -489,6 +584,16 @@
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.hpp" ex="false" tool="3" flavor2="0">
@@ -501,6 +606,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -508,6 +617,10 @@
       <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_motion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_motion.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -540,6 +653,26 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -638,6 +771,16 @@
       </item>
       <item path="src/camera_flir_blackfly.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_flir_blackfly_system.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/camera_flir_blackfly_system.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="src/camera_lucid_triton.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/camera_lucid_triton.hpp" ex="false" tool="3" flavor2="0">
@@ -650,6 +793,10 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -657,6 +804,10 @@
       <item path="src/detector_hsv.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_hsv.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/detector_motion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/detector_motion.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/error_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -689,6 +840,26 @@
       <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_object_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_position.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_position.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -44,8 +44,10 @@ namespace terraclear
         _videofeed.release();
     }
 
-    void camera_depth_zed::update_frames()
-    {
+    void camera_depth_zed::frame_update()
+    {        
+        
+        mutex_lock();
         //get next frame;
         cv::Mat video_frame;
         _videofeed.read(video_frame);
@@ -60,7 +62,7 @@ namespace terraclear
             rect_roi = cv::Rect(video_frame.cols / 2, 0, video_frame.cols, video_frame.rows);
             
         video_frame(rect_roi).copyTo(_frame_color);
-        
+        mutex_unlock();
         
     }
 

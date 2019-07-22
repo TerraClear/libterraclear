@@ -1,5 +1,5 @@
 /*
- * Specific implementation for StereoLabs ZED 3D camera class 
+ * helper class for tracking velocity of pixels in pixels per second 
  * Copyright (C) 2019 TerraClear, Inc.
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -15,36 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * 
- * CREATED BY: Koos du Preez - koos@terraclear.com
+ * CREATED BY: Isabelle Butterfield - isabelle.butterdield@terraclear.com
  * 
 */
 
-#ifndef CAMERA_DEPTH_ZED_HPP
-#define CAMERA_DEPTH_ZED_HPP
+#ifndef TRACKING_VELOCITY_MULTI_HPP
+#define TRACKING_VELOCITY_MULTI_HPP
 
-#include "camera_depth.hpp"
-
-#define ZED_RESX 1920 * 2
-#define ZED_RESY 1080
+#include <map>
+#include <unistd.h>
+#include <stdio.h>
+#include <iostream>
+#include "tracking_velocity.hpp"
 
 namespace terraclear
 {
-    class camera_depth_zed : public camera_depth
+    class velocity_calculator
     {
-     
         public:
-            camera_depth_zed(uint32_t camera_index, CameraPosition selected_cam);
-            virtual ~camera_depth_zed();
-
-            //base class implementations.. 
-            double      get_depth_cm(uint32_t x, uint32_t y);
-            void        frame_update();
-
+            velocity_calculator();
+            void add_tracker(int id, int initial_pos);
+            void remove_tracker(int id);
+            void update_tracker_position(int id, int current_pos);
+            void reset_tracker_anchor(int id);
+            float get_average_velocity();
         private:
-            CameraPosition _selected_camera = CameraPosition::Both;
-            cv::VideoCapture _videofeed;
-            
+            std::map<int,terraclear::tracking_velocity*> _trackers;
     };
 }
-#endif /* CAMERA_DEPTH_ZED_HPP */
 
+#endif //TRACKING_VELOCITY_MULTI_HPP

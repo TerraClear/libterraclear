@@ -1,9 +1,13 @@
+#include <opencv2/core/cuda.hpp>
+#include <opencv2/cudawarping.hpp>
+
 #include "vision_warp.h"
 
 namespace  terraclear
 {
     vision_warp::vision_warp() 
     {
+        _sw.start();
     }
 
     vision_warp::~vision_warp() 
@@ -29,7 +33,6 @@ namespace  terraclear
         target_points.bottom_right.y = _target_size.height;
         target_points.bottom_left.x = 0;
         target_points.bottom_left.y = _target_size.height;
-
         
         std::vector<cv::Point2f> points_dst;
         points_dst.push_back(target_points.top_left);        
@@ -42,15 +45,39 @@ namespace  terraclear
 
     }
     
-    
+    cv::Mat vision_warp::get_transfor_matrix()
+    {
+        return _transform_matrix;
+    }
+            
     cv::Mat vision_warp::transform_image(cv::Mat img_src)
     {
         cv::Mat img_result;
         
         //warp original & resize.
+        _sw.reset();
         cv::warpPerspective(img_src, img_result, _transform_matrix, _target_size); // do perspective transformation
+        _elapsed_us = _sw.get_elapsed_us();
       
         return img_result;
     }
+    
+    cv::Mat vision_warp::transform_image_gpu(cv::Mat img_src)
+    {
+        //copy image to GPU
+        cv::cuda::GpuMat gpu_src(img_src);
+        cv::cuda::GpuMat gpu_dst;
+        
+        //warp original & resize.
+        _sw.reset();
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size); // do perspective transformation
+        _elapsed_us = _sw.get_elapsed_us();
+        
+        //copy GPU image back to regular cv mat
+        cv::Mat img_result(gpu_dst);
+        
+        
+        return img_result;
+    }    
     
 }

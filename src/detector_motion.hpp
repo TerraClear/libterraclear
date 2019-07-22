@@ -1,5 +1,5 @@
 /*
- * Specific implementation for StereoLabs ZED 3D camera class 
+ * basic motion detector
  * Copyright (C) 2019 TerraClear, Inc.
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -19,32 +19,34 @@
  * 
 */
 
-#ifndef CAMERA_DEPTH_ZED_HPP
-#define CAMERA_DEPTH_ZED_HPP
+#ifndef DETECTOR_MOTION_HPP
+#define DETECTOR_MOTION_HPP
 
-#include "camera_depth.hpp"
-
-#define ZED_RESX 1920 * 2
-#define ZED_RESY 1080
+#include "detector_base.hpp"
 
 namespace terraclear
 {
-    class camera_depth_zed : public camera_depth
+    class detector_motion : public detector_base
     {
-     
         public:
-            camera_depth_zed(uint32_t camera_index, CameraPosition selected_cam);
-            virtual ~camera_depth_zed();
+            detector_motion(cv::Mat imgsrc);
+            virtual ~detector_motion();
 
-            //base class implementations.. 
-            double      get_depth_cm(uint32_t x, uint32_t y);
-            void        frame_update();
-
-        private:
-            CameraPosition _selected_camera = CameraPosition::Both;
-            cv::VideoCapture _videofeed;
+            //pixel area as min area to change to trigger motion.
+            void set_motion_threshold(double motion_threshold);
             
+            //pure virtual implementation
+            std::vector<bounding_box> detect_objects();
+
+            //debug mode
+            bool _debug_mode = false;
+            
+        private:
+            double _motion_threshold = 500;
+            cv::Mat _imgsrc_old;
+            uint64_t _detect_count = 0;
+
     };
 }
-#endif /* CAMERA_DEPTH_ZED_HPP */
+#endif /* DETECTOR_MOTION_HPP */
 

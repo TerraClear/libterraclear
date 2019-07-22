@@ -47,11 +47,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_depth_zed.o \
 	${OBJECTDIR}/src/camera_file.o \
 	${OBJECTDIR}/src/camera_flir_blackfly.o \
+	${OBJECTDIR}/src/camera_flir_blackfly_system.o \
 	${OBJECTDIR}/src/camera_lucid_triton.o \
 	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
+	${OBJECTDIR}/src/camera_velocity_calculator.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
+	${OBJECTDIR}/src/detector_motion.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
@@ -60,6 +63,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o \
 	${OBJECTDIR}/src/timed_averaging.o \
+	${OBJECTDIR}/src/tracking_object.o \
+	${OBJECTDIR}/src/tracking_object_multi.o \
+	${OBJECTDIR}/src/tracking_position.o \
+	${OBJECTDIR}/src/tracking_velocity.o \
+	${OBJECTDIR}/src/tracking_velocity_multi.o \
 	${OBJECTDIR}/src/vision_warp.o
 
 
@@ -147,6 +155,11 @@ ${OBJECTDIR}/src/camera_flir_blackfly.o: src/camera_flir_blackfly.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_flir_blackfly.o src/camera_flir_blackfly.cpp
 
+${OBJECTDIR}/src/camera_flir_blackfly_system.o: src/camera_flir_blackfly_system.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_flir_blackfly_system.o src/camera_flir_blackfly_system.cpp
+
 ${OBJECTDIR}/src/camera_lucid_triton.o: src/camera_lucid_triton.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -162,6 +175,11 @@ ${OBJECTDIR}/src/camera_usb.o: src/camera_usb.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_usb.o src/camera_usb.cpp
 
+${OBJECTDIR}/src/camera_velocity_calculator.o: src/camera_velocity_calculator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_velocity_calculator.o src/camera_velocity_calculator.cpp
+
 ${OBJECTDIR}/src/detector_base.o: src/detector_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -171,6 +189,11 @@ ${OBJECTDIR}/src/detector_hsv.o: src/detector_hsv.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_hsv.o src/detector_hsv.cpp
+
+${OBJECTDIR}/src/detector_motion.o: src/detector_motion.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/detector_motion.o src/detector_motion.cpp
 
 ${OBJECTDIR}/src/error_base.o: src/error_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -211,6 +234,31 @@ ${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
+
+${OBJECTDIR}/src/tracking_object.o: src/tracking_object.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_object.o src/tracking_object.cpp
+
+${OBJECTDIR}/src/tracking_object_multi.o: src/tracking_object_multi.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_object_multi.o src/tracking_object_multi.cpp
+
+${OBJECTDIR}/src/tracking_position.o: src/tracking_position.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_position.o src/tracking_position.cpp
+
+${OBJECTDIR}/src/tracking_velocity.o: src/tracking_velocity.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_velocity.o src/tracking_velocity.cpp
+
+${OBJECTDIR}/src/tracking_velocity_multi.o: src/tracking_velocity_multi.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_velocity_multi.o src/tracking_velocity_multi.cpp
 
 ${OBJECTDIR}/src/vision_warp.o: src/vision_warp.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
