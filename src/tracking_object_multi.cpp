@@ -48,7 +48,7 @@ namespace terraclear
         for (auto bbox : objects)
         {
             //only track/update non-predictions..
-            if (!bbox.predicted)
+          /*  if (!bbox.predicted)
             {
                 // if it exists, just update it else create new tracker and add to tracker list,.        
                 if (_tracking_list.count(bbox.track_id) > 0)
@@ -91,7 +91,7 @@ namespace terraclear
                 //add to tracked list..
                 tracked_list.push_back(bbox);
                 tracked_keys.push_back(bbox.track_id);
-            }
+            }*/
         }
         
         //isolate missing objects and if required remove or predict....        

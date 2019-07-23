@@ -1,4 +1,4 @@
- /*
+/*
  * basic hsv color detector
  * Copyright (C) 2019 TerraClear, Inc.
  * 
@@ -19,7 +19,7 @@
  * 
 */
 
-#include "detector_hsv.hpp"
+#include "detector_aruco.hpp"
 #include <opencv2/core/cvstd.hpp>
 
 //#include "/data/sources/yolotracker/Line.hpp"
@@ -33,73 +33,43 @@
 using namespace cv;
 namespace terraclear
 {
-    
-    detector_hsv::detector_hsv(cv::Mat imgsrc) 
+       std::vector<std::vector<cv::Point2f> > corners2; 
+       
+    detector_aruco::detector_aruco(cv::Mat imgsrc) 
         : detector_base(imgsrc) 
     {
+       
+               
+
     }
 
-    detector_hsv::~detector_hsv() 
+    detector_aruco::~detector_aruco() 
     {
     }
+    
+    
+     
+//cv::aruco::DetectorParameters params; 
+    
 
-    std::vector<std::vector<cv::Vec3d>>  detector_hsv::detect_objects() 
+   // std::vector<cv::Point2f> detector_hsv::get_paddle_coords(){
+        
+   // }
+    std::vector<std::vector<cv::Vec3d>>  detector_aruco::detect_objects() 
     {
-        //ret vector
-        cv::Vec3d r = (0,0,0);
+           
+          //ret vector/rvec2 = (3,r);
+        //tvec2 = (3,r);
+   cv::Vec3d r = (0,0,0);
         
          std::vector<cv::Vec3d> rvec2(3,r);
           std::vector<cv::Vec3d> tvec2(3,r);
         std::vector<bounding_box> ret_vect;
         std::vector<std::vector<cv::Vec3d>> ret_cup;
-        cv::Mat mat_filtered;
-        cv::Mat mat_thresh;
-        //blur Image a bit first.
-       cv::blur(_imgsrc, mat_filtered, cv::Size(5,5));
-        /// Transform it to HSV color space
-        cv::cvtColor(mat_filtered, mat_filtered, cv::COLOR_BGR2HSV);
-       // cv::imshow("a",mat_filtered);
-        cv::Mat maskHSV;
-        cv::Mat resultHSV;
-        //find all objects in range
-        cv::inRange(mat_filtered, _lowrange, _highrange, maskHSV);
-        cv::bitwise_and(mat_filtered,mat_filtered, resultHSV, maskHSV);
+       // std::vector<std::vector<cv::Point2f> > corners2; 
+std::vector<int> ids2; 
+
         
-
-      //  cv::cvtColor(mat_filtered,mat_filtered,cv::COLOR_RGB2GRAY);
-      //  cv::blur(mat_filtered,mat_filtered,cv::Size(3,3));
-
-
-        mat_filtered = maskHSV;
-        cv::Canny(mat_filtered,mat_filtered,100,200);
-
-        //morphological opening (remove small objects from the foreground)
-        //cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
-        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7)) ); 
-
-         //morphological closing (fill small holes in the foreground)
-       // cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(9, 9)) ); 
-       // cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(9, 9)) );
-      //  cv::waitKey(0);
-      //  cv::destroyWindow("img");
-        char window_name[] = "g";
-        cv::namedWindow(window_name, cv::WINDOW_NORMAL | cv::WINDOW_FREERATIO);
-        cv::imshow("g",mat_filtered);
-        //Vector for all contours.
-        //cv::Mat dispIm;
-       // dispIm = mat_filtered;
-        std::vector<std::vector<cv::Point>> contours;
-        cv::findContours(mat_filtered, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-        //cv::drawContours(dispIm,contours,-1,(0,0,255),CV_FILLED);
-       
-        int k = 0;
-        //create bounding boxes from contours
-        int trackid = 0; //unique ID per bounding box..
-       //// std::cout << cv::contours.size();
-        //for (size_t idx = 0; idx < contours.size(); idx++) {
-       /// cv::drawContours(mat_filtered, contours, idx, (255,0,0),-1);
-        
-     //  std::cout<<"hi"; 
         // strt
           //  c++ cv::VideoCapture inputVideo; inputVideo.open(0);
 
@@ -134,9 +104,7 @@ std::vector<int> ids1;
 std::vector<std::vector<cv::Point2f> > corners1; 
 cv::aruco::detectMarkers(imageCopy, dictionary1, corners1, ids1);
 */
-std::vector<int> ids2; 
-std::vector<std::vector<cv::Point2f> > corners2; 
-//cv::aruco::DetectorParameters params; 
+
 //params.doCornerRefinement = false;
 //cv::aruco::detectMarkers(inputImage, board.dictionary, markerCorners, markerIds, params);
 cv::aruco::detectMarkers(imageCopy, dictionary2, corners2, ids2);
@@ -197,58 +165,28 @@ double z = tvec2[0][2];
 //if (key == 27) break; 
         //emd
           //drawDetectedCornersCharuco
-    //}
-        int big_track = 0;
-        std::vector<cv::Point> largest_cont;
-        for (auto contour : contours)
-        {
-            trackid++;
-            if (trackid == 1){
-                largest_cont = contour;
-            }
-            if(cv::contourArea(contour)>100){
-            cv::Rect rect = cv::boundingRect(cv::Mat(contour));
-            bounding_box bbox;
-            bbox.x = rect.x;
-            bbox.y = rect.y;
-            bbox.width = rect.width;
-            bbox.height = rect.height;
-            bbox.class_id = 0;
-            bbox.confidence = 1.0f;
-            bbox.track_id = trackid;
-            bbox.frame_count = 0;
-           // std::cout <<bbox.x;
-            ret_vect.push_back(bbox);
-            //cv::drawContours(_imgsrc, contours, k, (255,255,0),-1);
-            if(cv::contourArea(contour)>cv::contourArea(largest_cont)){
-                largest_cont = contour;
-                big_track = trackid;
-                //std::cout<<cv::contourArea(contour);
-            }
-            }
-            k++;
-            ///home/koos/Desktop/Dropbox/Private/Code/cpp/yolotracker
+  return ret_cup;
 
-        }  
-      //  cv::drawContours(_imgsrc,contours,big_track-1,(255,255,0),-1);
-        if(big_track != 0){
-      //  std::cout<<cv::contourArea(largest_cont);
-            
-        }
-     //    char window[] = "img";
-        //cv::namedWindow(window, cv::WINDOW_NORMAL | cv::WINDOW_FREERATIO);
-
-        //cv::imshow("img",mat_filtered);
-        //cluster into larger boxes
-      mergeBoundingBoxes(ret_vect, 60);
+}
+    
+   double detector_aruco::calc_area(){
+        double area = 0;
+      if(corners2.size()!=0){
+       cv::Point2f top_l = corners2.at(0)[0];
+       cv::Point2f top_r= corners2.at(0)[1];
+       cv::Point2f bot_r = corners2.at(0)[2];
+       double l1 = std::abs(top_l.x-top_r.x);
+       double l2 = std::abs(top_r.y-bot_r.y);
+       area = l1*l2;
+       std::cout<<std::flush;
+      }
+     //  std::cout<<"size "<<std::to_string(area)<<std::endl;
+       
         
-        //TODO: iterate through until no overlaps..
-        //twice seems to do the trick..
-       mergeBoundingBoxes(ret_vect, 60);
+           // std::cout<<"size "<<std::to_string((corners2.at(0)).size())<<std::endl;
+        return area;
+    }
 
-     
-       return ret_cup;
-
-
+       
 }
-}
+

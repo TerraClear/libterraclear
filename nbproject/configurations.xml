@@ -82,6 +82,8 @@
           <itemPath>src/camera_usb.hpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f9" displayName="detectors" projectFiles="true">
+          <itemPath>detector_aruco.cpp</itemPath>
+          <itemPath>detector_aruco.hpp</itemPath>
           <itemPath>src/detector_base.cpp</itemPath>
           <itemPath>src/detector_base.hpp</itemPath>
           <itemPath>src/detector_hsv.cpp</itemPath>
@@ -110,7 +112,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src</Elem>
+    <Elem>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -143,6 +145,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="detector_aruco.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="detector_aruco.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -301,6 +307,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="detector_aruco.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="detector_aruco.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/appsettings.hpp" ex="false" tool="3" flavor2="0">
@@ -456,6 +466,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="detector_aruco.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="detector_aruco.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -613,6 +627,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="detector_aruco.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="detector_aruco.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/appsettings.cpp" ex="false" tool="1" flavor2="8">
       </item>

@@ -60,7 +60,7 @@ namespace terraclear
     void tracking_object::update(bounding_box bbox)
     {
         _bbox = bbox;
-        _bbox.predicted = false;
+//        _bbox.predicted = false;
 
         //update velocity tracker for center points
         _x_tracker.update(_bbox.get_center().x);
@@ -117,7 +117,7 @@ namespace terraclear
         _bbox.x = (_bbox.get_center().x + dx) - _bbox.width / 2;
         _bbox.y = (_bbox.get_center().y + dy) -  _bbox.height / 2;
         
-        _bbox.predicted = true;      
+//        _bbox.predicted = true;      
         
         //increase position tracked..
         _position_count++;
@@ -135,7 +135,7 @@ namespace terraclear
         _bbox.x = _bbox.get_center().x - _bbox.width / 2;
         _bbox.y = _bbox.get_center().y -  _bbox.height / 2;
         
-        _bbox.predicted = true;      
+//        _bbox.predicted = true;      
         
         //increase position tracked..
         _position_count++;

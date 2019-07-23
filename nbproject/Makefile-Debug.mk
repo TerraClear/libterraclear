@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/cc787d41/camera_async.o \
+	${OBJECTDIR}/detector_aruco.o \
 	${OBJECTDIR}/src/appsettings.o \
 	${OBJECTDIR}/src/basicserial.o \
 	${OBJECTDIR}/src/camera_base.o \
@@ -96,6 +97,11 @@ ${OBJECTDIR}/_ext/cc787d41/camera_async.o: /home/koos/Desktop/Dropbox/Private/Co
 	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cc787d41/camera_async.o /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
+
+${OBJECTDIR}/detector_aruco.o: detector_aruco.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/detector_aruco.o detector_aruco.cpp
 
 ${OBJECTDIR}/src/appsettings.o: src/appsettings.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
