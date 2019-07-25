@@ -70,6 +70,7 @@ namespace terraclear
                 float               exposure_time       = FLIR_EXPOSURE_TIME;
                 int                 device_link_limit   = FLIR_DEVICE_LINK_LIMIT;
                 int                 buffer_size         = FLIR_BUFFER_SIZE;
+
             };
 
             camera_flir_blackfly(camera_flir_blackfly_system* flir_system_ptr, flir_settings cam_settings);

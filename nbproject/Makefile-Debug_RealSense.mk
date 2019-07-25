@@ -35,6 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/b9c8e08b/camera_velocity_calculator.o \
+	${OBJECTDIR}/_ext/b9c8e08b/velocity_calculator.o \
+	${OBJECTDIR}/_ext/b9c8e08b/velocity_tracker.o \
 	${OBJECTDIR}/_ext/cc787d41/camera_async.o \
 	${OBJECTDIR}/src/appsettings.o \
 	${OBJECTDIR}/src/basicserial.o \
@@ -91,6 +94,21 @@ LDLIBSOPTIONS=`pkg-config --libs realsense2` `pkg-config --libs opencv`
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
+
+${OBJECTDIR}/_ext/b9c8e08b/camera_velocity_calculator.o: /home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9c8e08b
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9c8e08b/camera_velocity_calculator.o /home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp
+
+${OBJECTDIR}/_ext/b9c8e08b/velocity_calculator.o: /home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_calculator.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9c8e08b
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9c8e08b/velocity_calculator.o /home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_calculator.cpp
+
+${OBJECTDIR}/_ext/b9c8e08b/velocity_tracker.o: /home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_tracker.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/b9c8e08b
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9c8e08b/velocity_tracker.o /home/izzy/TerraClear/yolo-detect/libterraclear/src/velocity_tracker.cpp
 
 ${OBJECTDIR}/_ext/cc787d41/camera_async.o: /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41

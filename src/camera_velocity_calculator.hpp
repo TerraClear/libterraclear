@@ -19,39 +19,57 @@
  * 
 */
 
-
 #ifndef CAMERA_VELOCITY_CALCULATOR_HPP
 #define CAMERA_VELOCITY_CALCULATOR_HPP
 
 #include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+
 
 #define OPENCV
 #define TRACK_OPTFLOW
 #define GPU
-#include "darknet/include/yolo_v2_class.hpp"
+#include <darknet/include/yolo_v2_class.hpp>
 
 #include <map>
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
-#include "tracking_velocity_multi.hpp"
+#include "velocity_calculator.hpp"
 
 namespace terraclear
 {
     class camera_velocity_calculator
     {
         public:
-            camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_offset_y, int track_xy_size);
-            cv::Mat update_tracking(cv::Mat new_img);
-            float get_frame_velocity();
+            struct velocity_vec
+            {
+                float x;
+                float y;
+            };
+            
+            std::vector<bbox_t> _track_anchors;
+            camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh, int anchor_queue_size);
+            std::vector<bbox_t> update_tracking(cv::Mat new_img);
+            
+            float get_frame_x_v();
+            float get_frame_y_v();
+            float get_frame_x_a();
+            float get_frame_y_a();
+            
+            std::vector<bbox_t> get_anchor_tracks();
 
         private:
             int _track_xy_size;
             int _track_max_travel;
-            std::vector<bbox_t> _track_anchors;
             std::vector<bbox_t> _track_boxes;
-            terraclear::velocity_calculator* _calculator;
+            
+            terraclear::velocity_calculator* _calculator_x_v;
+            terraclear::velocity_calculator* _calculator_y_v;
+            terraclear::velocity_calculator* _calculator_x_a;
+            terraclear::velocity_calculator* _calculator_y_a;
+            
             Tracker_optflow* _tracker_engine;
             bool get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor);
     };

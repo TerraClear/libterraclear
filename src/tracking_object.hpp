@@ -7,15 +7,16 @@
 #include <math.h>
 
 #include "detector_base.hpp"
+#include "regression_base.hpp"
 #include "tracking_position.hpp"
 #include "stopwatch.hpp"
 
 namespace terraclear
-{    
+{   
     class tracking_object
     {
         public: 
-            tracking_object(bounding_box bbox, int history_depth);
+            tracking_object(regression_obj_meta& info);
             ~tracking_object();
                     
             int get_id();
@@ -28,17 +29,20 @@ namespace terraclear
             void reset();
             void update(bounding_box bbox);
             void predict();
-            void predict_zero();
+            void predict_average();
 
             bounding_box get_object();
 
             //max amount of history to consider..
-            int _max_history = 10;
+            int _max_history = 20;
+            
+            float _frame_x_v = 0.0f;
+            float _frame_y_v = 0.0f;
 
         private:
             uint32_t _history_depth = 10;
             uint32_t _position_count = 0;
-            uint32_t _vel0_count = 0;
+            
             stopwatch _sw;
             bounding_box _bbox;
             tracking_position _x_tracker;
@@ -46,7 +50,7 @@ namespace terraclear
 
             float _x_v = 0.0f;
             float _y_v = 0.0f;
-
+ 
             std::list<int> _last_widths;
             std::list<int> _last_heights;
 

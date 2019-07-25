@@ -3,11 +3,11 @@
 namespace terraclear
 {    
 
-    tracking_object::tracking_object(bounding_box bbox, int history_depth) 
-        : _x_tracker(history_depth), _y_tracker(history_depth)
+    tracking_object::tracking_object(terraclear::regression_obj_meta& info) 
+        : _x_tracker(info), _y_tracker(info)
     {      
-        _history_depth = history_depth;
-        _bbox = bbox;
+        _history_depth = info.queue_size;
+        _bbox = info.bbox;
         _position_count = 1;
         
         _sw.start();
@@ -49,7 +49,6 @@ namespace terraclear
     float tracking_object::get_velocity_y()
     {
         return _y_v;
-        
     }
     
     float tracking_object::get_velocity_linear()
@@ -68,11 +67,15 @@ namespace terraclear
         
         //update with the velocity and stable positions
         tracking_position::tracking_info x_info = _x_tracker.get_tracking_info();
+        // get the regressed x_velocity
         _x_v = x_info.velocity;
+        // get the regressed x position
         _bbox.x = x_info.position -_bbox.width / 2;
         
         tracking_position::tracking_info y_info = _y_tracker.get_tracking_info();
+        // get the regressed y_velocity
         _y_v = y_info.velocity;
+        // get the regressed y position
         _bbox.y = y_info.position - _bbox.height / 2;
         
         //update object linear velocity & times seen...
@@ -107,10 +110,12 @@ namespace terraclear
     
     void tracking_object::predict()
     {
+        // Predict using regressed velocity
+        
         //time passed since previous update / predict
         float dT =  std::round(1000.0f / (float) _sw.get_elapsed_ms());
 
-        float dy =  std::round (_y_v / dT);
+        float dy =  std::round (_y_v/ dT);
         float dx =  std::round (_x_v / dT);
         
         //predict pos.
@@ -121,30 +126,32 @@ namespace terraclear
         
         //increase position tracked..
         _position_count++;
-                
-        _vel0_count = 0;
-        _bbox.vel0_count = _vel0_count;
         
         //reset update/predict intervals.
         _sw.reset();
     }
-
-    void tracking_object::predict_zero()
+    void tracking_object::predict_average()
     {
-        //predict pos.
-        _bbox.x = _bbox.get_center().x - _bbox.width / 2;
-        _bbox.y = _bbox.get_center().y -  _bbox.height / 2;
+        // Predict position using frame velocity
         
+        //time passed since previous update / predict
+        float dT =  std::round(1000.0f / (float) _sw.get_elapsed_ms());
+
+        float dy =  std::round (_frame_y_v/ dT);
+        float dx =  std::round (_frame_x_v / dT);
+        
+        //predict pos.
+        _bbox.x = (_bbox.get_center().x + dx) - _bbox.width / 2;
+        _bbox.y = (_bbox.get_center().y + dy) -  _bbox.height / 2;
         _bbox.predicted = true;      
         
         //increase position tracked..
         _position_count++;
         
-        _vel0_count++;
-        _bbox.vel0_count = _vel0_count;
         //reset update/predict intervals.
         _sw.reset();
     }
+
     int tracking_object::get_list_median(std::list<int> value_list)
     {
         int retval = 0;

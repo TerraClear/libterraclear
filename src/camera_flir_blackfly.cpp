@@ -160,7 +160,7 @@ namespace terraclear
             ptrFPSEnable->SetValue(true);
             flir_api::CFloatPtr ptrFPS = flir_nodemap.GetNode("AcquisitionFrameRate");
             ptrFPS->SetValue(_cam_settings.fps);
-            
+
             //get current pixel format and change if needed..
             flir::PixelFormatEnums flir_format = _flir_cam->PixelFormat.GetValue();
             if (flir_format != _cam_settings.pixel_format)
