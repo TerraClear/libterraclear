@@ -110,6 +110,7 @@
       <itemPath>Makefile</itemPath>
       <itemPath>README.md</itemPath>
     </logicalFolder>
+    <itemPath>src/paddles.h</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear</Elem>
@@ -239,6 +240,8 @@
       <item path="src/navmath.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/navmath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/paddles.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -401,6 +404,8 @@
       </item>
       <item path="src/navmath.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/paddles.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/stopwatch.hpp" ex="false" tool="3" flavor2="0">
@@ -560,6 +565,8 @@
       <item path="src/navmath.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/navmath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/paddles.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -721,6 +728,8 @@
       <item path="src/navmath.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/navmath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/paddles.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/stopwatch.cpp" ex="false" tool="1" flavor2="8">
       </item>

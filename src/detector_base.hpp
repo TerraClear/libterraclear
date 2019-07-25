@@ -38,7 +38,7 @@
 
 //internal includes
 #include "filetools.hpp"
-
+#include "paddles.h"
 
 namespace terraclear
 {
@@ -110,8 +110,8 @@ namespace terraclear
             virtual ~detector_base();
 
             //pure virtual 
-         //   virtual std::vector<bounding_box>   detect_objects() = 0;
-            virtual std::vector<std::vector<cv::Vec3d>>   detect_objects()=0 ;
+           virtual std::vector<bounding_box>  detect_objects() = 0;
+         //   virtual paddles  detect_paddles()=0 ;
             static void                         saveBoxesJSON(std::string image_file_name, uint32_t image_width, uint32_t image_height, std::list<bounding_box> bboxes);
        
         protected:
