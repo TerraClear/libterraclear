@@ -89,7 +89,7 @@ namespace terraclear
                     regression_obj.dest_pos = 1200;
                     regression_obj.queue_size = 30;
                     regression_obj.starting_pos = bbox.y;
-                    regression_obj.time_reset_thresh = 4.f;
+                    regression_obj.time_reset_thresh = 4.0f;
                     
                     // Creates ptr to object tracking class
                     obj.obj_ptr = new tracking_object(regression_obj);
@@ -112,7 +112,6 @@ namespace terraclear
                 //remove if we are not supposed to be predicting.any missing objects.
                 if (remove_missing) 
                 {
-                    continue;
                     _tracking_list.erase(keypair.first);
                 }
                 //remove if enough predictions
@@ -123,19 +122,15 @@ namespace terraclear
                 // remove if we dont have enough history.
                 else if (_tracking_list[keypair.first].obj_found_count < _min_track_history)
                 { 
-                    continue;
-                    //_tracking_list.erase(keypair.first);
+                    _tracking_list.erase(keypair.first);
                 }
-                /*
                 //Remove if min velocity not reached. 
                 else if ((abs(keypair.second.obj_ptr->get_velocity_x()) < min_abs_x_v) ||
                         (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
-                    continue;
-                    //_tracking_list.erase(keypair.first);
+                    _tracking_list.erase(keypair.first);
   
                 }
-                */
                 //predict!
                 else
                 {

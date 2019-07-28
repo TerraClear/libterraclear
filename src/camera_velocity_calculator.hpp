@@ -50,13 +50,11 @@ namespace terraclear
             };
             
             std::vector<bbox_t> _track_anchors;
-            camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh, int anchor_queue_size);
-            std::vector<bbox_t> update_tracking(cv::Mat new_img);
+            camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh, int anchor_queue_size, bool two_tracking_rows);
+            std::vector<bbox_t> update_tracking (cv::Mat& new_img);
             
             float get_frame_x_v();
             float get_frame_y_v();
-            float get_frame_x_a();
-            float get_frame_y_a();
             
             std::vector<bbox_t> get_anchor_tracks();
 

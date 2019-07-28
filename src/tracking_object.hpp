@@ -45,8 +45,8 @@ namespace terraclear
             
             stopwatch _sw;
             bounding_box _bbox;
-            tracking_position _x_tracker;
-            tracking_position _y_tracker;
+            terraclear::tracking_position _x_tracker;
+            terraclear::tracking_position _y_tracker;
 
             float _x_v = 0.0f;
             float _y_v = 0.0f;
