@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
-#include "velocity_tracker.hpp"
+#include "tracking_position.hpp"
 
 namespace terraclear
 {
@@ -18,7 +18,7 @@ namespace terraclear
             void reset_tracker_anchor(int id);
             float get_average_velocity();
         private:
-            std::map<int,terraclear::velocity_tracker*> _trackers;
+            std::map<int,terraclear::tracking_position*> _trackers;
             int _starting_fps;
             float _time_reset_thresh;
             int _dist_reset_thresh;

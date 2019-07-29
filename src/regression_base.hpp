@@ -38,8 +38,8 @@ namespace terraclear
     {
         public:
             regression_base(terraclear::regression_obj_meta& info);
-            void update_position(int pos);
-            regression_result get_regression();
+            void update_position(int& pos);
+            regression_result get_regression() const;
             
         protected:
             std::list<position_time> _position_history;

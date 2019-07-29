@@ -62,8 +62,8 @@ namespace terraclear
         _bbox.predicted = false;
 
         //update velocity tracker for center points
-        _x_tracker.update(_bbox.get_center().x);
-        _y_tracker.update(_bbox.get_center().y);
+        _x_tracker.update_rock_pos(_bbox.get_center().x);
+        _y_tracker.update_rock_pos(_bbox.get_center().y);
         
         //update with the velocity and stable positions
         tracking_position::tracking_info x_info = _x_tracker.get_tracking_info();

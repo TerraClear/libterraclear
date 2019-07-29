@@ -8,8 +8,8 @@ namespace terraclear
             _id = info.bbox_id;
             _queue_size = info.queue_size;
             _time_sum = 0.f;
+            //_time_reset_thresh = info.time_reset_thresh;
             _time_reset_thresh = info.time_reset_thresh;
-    
             position_time init_pos;
             init_pos.time = _time_sum;
             
@@ -20,7 +20,7 @@ namespace terraclear
             _sw.reset();
 	}
 
-	void regression_base::update_position(int pos)
+	void regression_base::update_position(int& pos)
 	{
             position_time current_pos;
             _time_sum = _time_sum + _sw.get_elapsed_ms() / 1000.0;
@@ -35,7 +35,6 @@ namespace terraclear
             {
                 _position_history.pop_front();
             }
-
             //If accumulating time getting too large, set values back
             if (_position_history.front().time > _time_reset_thresh)
             {   
@@ -49,9 +48,9 @@ namespace terraclear
             }
 	}
 
-    regression_result regression_base::get_regression()
+    regression_result regression_base::get_regression() const
     {
-        float count = 0.0;  //counter for number of frames
+        int count = 0;      //counter for number of frames
         float x_sum = 0.0;  //sum of x values (frame numbers)
         float y_sum = 0.0;  //sum of y values (y pixel locations)
 
@@ -81,7 +80,7 @@ namespace terraclear
         float slope = xy_sum / s_x_sum;
         float intercept = m_y - slope * m_x;
         
-        regression_result slope_intercept;
+        terraclear::regression_result slope_intercept;
         // catch cases if frames lost 
 
         slope_intercept.slope = slope;

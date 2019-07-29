@@ -16,14 +16,15 @@ namespace terraclear
         info.queue_size = queue_size;
         info.starting_pos = starting_ypos;
         info.dist_reset_thresh = _dist_reset_thresh;
+        info.time_reset_thresh = _time_reset_thresh;
         
-        velocity_tracker* new_tracker = new velocity_tracker(info);
+        terraclear::tracking_position* new_tracker = new tracking_position(info);
         _trackers[id] = new_tracker;
     }
     
-    void velocity_calculator::update_tracker_position(int id, int ypos)
+    void velocity_calculator::update_tracker_position(int id, int pos)
     {
-        _trackers[id]->update_position(ypos);
+        _trackers[id]->update_position(pos);
     }
     
     void velocity_calculator::reset_tracker_anchor(int id)
@@ -42,10 +43,13 @@ namespace terraclear
             float vel = elem.second->get_velocity();
             if (isnan(vel))
             {
-                vel = 0;
+                std::cout << "nan" << std::endl;
                 --size;
             }
-            velocity_sum += vel;
+            else
+            {
+                velocity_sum += vel;
+            }
         }
         
         // Compute and return average velocity across all _trackers in pixels
