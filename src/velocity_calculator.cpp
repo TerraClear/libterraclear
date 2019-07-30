@@ -9,7 +9,7 @@ namespace terraclear
         _dist_reset_thresh = dist_reset_thresh;
     }
     
-    void velocity_calculator::add_tracker(int id, int queue_size, int starting_ypos)
+    void velocity_calculator::add_tracker(int id, int queue_size, int starting_ypos, int max_travel_dist)
     {
         terraclear::regression_obj_meta info;
         info.bbox_id = id;
@@ -17,6 +17,7 @@ namespace terraclear
         info.starting_pos = starting_ypos;
         info.dist_reset_thresh = _dist_reset_thresh;
         info.time_reset_thresh = _time_reset_thresh;
+        info.max_travel_dist = max_travel_dist;
         
         terraclear::tracking_position* new_tracker = new tracking_position(info);
         _trackers[id] = new_tracker;
@@ -27,9 +28,9 @@ namespace terraclear
         _trackers[id]->update_position(pos);
     }
     
-    void velocity_calculator::reset_tracker_anchor(int id)
+    void velocity_calculator::reset_tracker_anchor(int id, int pos)
     {
-        _trackers[id]->reset_anchor();
+        _trackers[id]->reset_anchor(pos);
     }
     
     float velocity_calculator::get_average_velocity()
@@ -43,7 +44,6 @@ namespace terraclear
             float vel = elem.second->get_velocity();
             if (isnan(vel))
             {
-                std::cout << "nan" << std::endl;
                 --size;
             }
             else

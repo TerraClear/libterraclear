@@ -127,6 +127,15 @@ namespace terraclear
         //increase position tracked..
         _position_count++;
         
+        if (dy == 0 && dx == 0)
+        {
+            _zero_vel_count++;
+        }
+        else 
+        {
+            _zero_vel_count = 0;  
+        }
+        
         //reset update/predict intervals.
         _sw.reset();
     }
@@ -143,10 +152,20 @@ namespace terraclear
         //predict pos.
         _bbox.x = (_bbox.get_center().x + dx) - _bbox.width / 2;
         _bbox.y = (_bbox.get_center().y + dy) -  _bbox.height / 2;
+        
         _bbox.predicted = true;      
         
         //increase position tracked..
         _position_count++;
+        
+        if (dy == 0 && dx == 0)
+        {
+            _zero_vel_count++;
+        }
+        else 
+        {
+            _zero_vel_count = 0;  
+        }
         
         //reset update/predict intervals.
         _sw.reset();

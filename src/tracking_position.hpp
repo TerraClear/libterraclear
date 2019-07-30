@@ -27,7 +27,7 @@ namespace terraclear
             
             void update_position(int pos);
             float get_velocity();
-            void reset_anchor();
+            void reset_anchor(int pos);
             
         private:
             stopwatch _sw;
@@ -42,6 +42,7 @@ namespace terraclear
             int _position_sum;
             int _anchor_pos;
             int _dist_reset_thresh;
+            int _max_track_distance;
     };
 }
 

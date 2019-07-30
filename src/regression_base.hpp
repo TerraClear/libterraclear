@@ -32,6 +32,7 @@ namespace terraclear
         int dest_pos;
         float time_reset_thresh;
         int dist_reset_thresh;
+        int max_travel_dist;
     };
     
     class regression_base
