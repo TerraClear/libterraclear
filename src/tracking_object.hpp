@@ -38,6 +38,8 @@ namespace terraclear
             
             float _frame_x_v = 0.0f;
             float _frame_y_v = 0.0f;
+            
+            int _zero_vel_count = 0;
 
         private:
             uint32_t _history_depth = 10;

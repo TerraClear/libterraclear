@@ -30,6 +30,7 @@ namespace terraclear
                 int                 obj_found_count = 0; 
                 int                 obj_lost_count = 0; 
                 int                 obj_predict_distance = 0;
+                int                 obj_zero_vel_count = 0;
             };
             
             std::map<uint32_t, object_meta> _tracking_list;
@@ -38,6 +39,8 @@ namespace terraclear
             float _min_track_velocity = 0.0f;
             int _max_prediction_distance = 10;
             float _stable_frame_vel = 0;
+            int _max_zero_vel_count = 20;
+            
 
             bool boxes_contain_point(cv::Point source_point, std::vector<bounding_box> target_boxes);
             

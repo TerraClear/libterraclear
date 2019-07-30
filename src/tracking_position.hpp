@@ -27,7 +27,7 @@ namespace terraclear
             
             void update_position(int pos);
             float get_velocity();
-            void reset_anchor();
+            void reset_anchor(int pos);
             
         private:
             stopwatch _sw;

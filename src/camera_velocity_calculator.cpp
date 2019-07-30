@@ -27,6 +27,7 @@ namespace terraclear
     {
         _track_xy_size = track_xy_size;
         _track_max_travel = track_max_travel;
+        _track_start_y = track_start_y;
         _tracker_engine = new Tracker_optflow(0, 21, 6, 8000, -1);
                 
         uint32_t    track_count = 6;
@@ -55,8 +56,8 @@ namespace terraclear
                 _track_anchors.push_back(tmp_box);
 
                 //Add tracker with bbox ID to collection for averaging velocity
-                _calculator_x_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.x);
-                _calculator_y_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.y);
+                _calculator_x_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.x, _track_max_travel);
+                _calculator_y_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.y, _track_max_travel);
 
                 bbox_t tmp_box2;
                 tmp_box2.x = box_x;
@@ -72,8 +73,8 @@ namespace terraclear
                 box_y_2 += track_offset_y_calc;
 
                 //Add tracker with bbox ID to collection for averaging velocity
-                _calculator_x_v->add_tracker(tmp_box2.track_id, anchor_queue_size, tmp_box2.x);
-                _calculator_y_v->add_tracker(tmp_box2.track_id, anchor_queue_size, tmp_box2.y);
+                _calculator_x_v->add_tracker(tmp_box2.track_id, anchor_queue_size, tmp_box2.x, _track_max_travel);
+                _calculator_y_v->add_tracker(tmp_box2.track_id, anchor_queue_size, tmp_box2.y, _track_max_travel);
 
                 //start with anchor boxes
                 _tracker_engine->update_cur_bbox_vec(_track_anchors);
@@ -97,8 +98,8 @@ namespace terraclear
                 box_y += track_offset_y_calc;
 
                 //Add tracker with bbox ID to collection for averaging velocity
-                _calculator_x_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.x);
-                _calculator_y_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.y);
+                _calculator_x_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.x, _track_max_travel);
+                _calculator_y_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.y, _track_max_travel);
 
                 //start with anchor boxes
                 _tracker_engine->update_cur_bbox_vec(_track_anchors);    
@@ -148,25 +149,33 @@ namespace terraclear
             //ensure anchors were tracked and not lost or past limits..
             for (auto anchor : _track_anchors)
             {
-                //check that original anchor has been tracked
+                // check that original anchor has been tracked
                 bbox_t tmp_bbox = anchor;
                 if (get_tracked_anchor(_track_boxes, tmp_bbox))
                 {
-                    //if anchor tracked and not past travel limits, keep tracking
-                    //else reset back to anchor.. ..
-                    if ((tmp_bbox.y + _track_xy_size / 2) < (anchor.y + _track_max_travel))
+                    // if anchor past max travel distance, reset to top
+                    if ((tmp_bbox.y + _track_xy_size/2) > (anchor.y + _track_max_travel))
+                    {
+                        //reset to anchor..
+                        track_boxes_new.push_back(anchor);
+                        _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.x);
+                        _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.y);
+                    }
+                    // if box moving 'backward' past starting pos
+                    else if ((tmp_bbox.y) < (anchor.y))
+                    {
+                        //reset to anchor..
+                        _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.x);
+                        _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.y +  _track_max_travel - _track_xy_size); 
+                        anchor.y += (_track_max_travel- _track_xy_size);
+                        track_boxes_new.push_back(anchor);
+                    }
+                    else
                     {
                         //keep tracked box
                         track_boxes_new.push_back(tmp_bbox);
                         _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
                         _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
-                    }
-                    else
-                    {
-                        //reset to anchor..
-                        track_boxes_new.push_back(anchor);
-                        _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id);
-                        _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id);
                     }
                 }
                 else

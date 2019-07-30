@@ -1,5 +1,11 @@
+/*
+ *  Copyright: TerraClear, Inc - 2019
+ *  Author: TerraClear Team
+ */
+
 #include <opencv2/core/cuda.hpp>
 #include <opencv2/cudawarping.hpp>
+#include <opencv2/cudaarithm.hpp>
 
 #include "vision_warp.h"
 
@@ -49,7 +55,7 @@ namespace  terraclear
     {
         return _transform_matrix;
     }
-            
+    
     cv::Mat vision_warp::transform_image(cv::Mat img_src)
     {
         cv::Mat img_result;
@@ -57,6 +63,25 @@ namespace  terraclear
         //warp original & resize.
         _sw.reset();
         cv::warpPerspective(img_src, img_result, _transform_matrix, _target_size); // do perspective transformation
+        _elapsed_us = _sw.get_elapsed_us();
+      
+        return img_result;
+    }
+    
+    cv::Mat vision_warp::transform_image(cv::Mat img_src, bool flip)
+    {
+        cv::Mat img_result;
+        
+        //warp original & resize.
+        cv::warpPerspective(img_src, img_result, _transform_matrix, _target_size); // do perspective transformation
+            
+        _sw.reset();
+        if (flip)
+        {   
+            cv::Mat img_flip;
+            cv::flip(img_result, img_flip, 0);
+            img_result = img_flip;
+        }
         _elapsed_us = _sw.get_elapsed_us();
       
         return img_result;
@@ -77,6 +102,44 @@ namespace  terraclear
         cv::Mat img_result(gpu_dst);
         
         
+        return img_result;
+    }
+            
+
+    
+    cv::Mat vision_warp::transform_image_gpu(cv::Mat img_src, bool flip)
+    {
+        // Initialize final image;
+        cv::Mat img_result;
+        
+        //copy image to GPU
+        cv::cuda::GpuMat gpu_src(img_src);
+        cv::cuda::GpuMat gpu_dst;
+   
+        //warp original & resize.
+        _sw.reset();
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size); // do perspective transformation
+        // For flipping negative roll 
+        if (flip)
+        {
+            cv::Mat flip_base;
+            cv::cuda::GpuMat flip_gpu;
+
+            flip_gpu.upload(flip_base);
+            cv::cuda::flip(gpu_dst, flip_gpu, 0); 
+            
+            // Copy flipped image back to cpu
+            flip_gpu.download(img_result);
+            flip_gpu.release();
+        }
+        else
+        {
+            // Copy unflipped image back to cpu
+            gpu_dst.download(img_result);
+            gpu_dst.release();
+        }
+        _elapsed_us = _sw.get_elapsed_us();
+
         return img_result;
     }    
     

@@ -129,7 +129,10 @@ namespace terraclear
                         (abs(keypair.second.obj_ptr->get_velocity_y()) < min_abs_y_v) ) 
                 {
                     _tracking_list.erase(keypair.first);
-  
+                }
+                else if (_tracking_list[keypair.first].obj_ptr->_zero_vel_count > _max_zero_vel_count)
+                {
+                    _tracking_list.erase(keypair.first);
                 }
                 //predict!
                 else
@@ -148,6 +151,10 @@ namespace terraclear
                     {
                         _tracking_list[keypair.first].obj_ptr->predict();   
                     }
+                    
+                    //check for zero velocity
+                    (keypair.second.obj_ptr->get_velocity_y()== 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
+                                                                           : _tracking_list[keypair.first].obj_zero_vel_count = 0;
                     
                     //get prediction box
                     bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
