@@ -152,6 +152,10 @@ namespace terraclear
                         _tracking_list[keypair.first].obj_ptr->predict();   
                     }
                     
+                    //check for zero velocity
+                    (keypair.second.obj_ptr->get_velocity_y()== 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
+                                                                           : _tracking_list[keypair.first].obj_zero_vel_count = 0;
+                    
                     //get prediction box
                     bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
                   

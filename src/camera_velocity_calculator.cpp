@@ -166,8 +166,8 @@ namespace terraclear
                     {
                         //reset to anchor..
                         _calculator_x_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.x);
-                        _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.y +  _track_max_travel - _track_xy_size/2); 
-                        anchor.y += (_track_max_travel- _track_xy_size/2);
+                        _calculator_y_v->reset_tracker_anchor(tmp_bbox.track_id, anchor.y +  _track_max_travel - _track_xy_size); 
+                        anchor.y += (_track_max_travel- _track_xy_size);
                         track_boxes_new.push_back(anchor);
                     }
                     else

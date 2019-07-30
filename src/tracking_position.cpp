@@ -14,7 +14,6 @@ namespace terraclear
         _position_sum = 0.f;
         _anchor_pos = info.starting_pos;
         _dist_reset_thresh = info.dist_reset_thresh;
-        _max_track_distance = info.max_travel_dist;
     }
 
     void tracking_position::update_rock_pos(int pos)

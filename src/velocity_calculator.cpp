@@ -17,7 +17,6 @@ namespace terraclear
         info.starting_pos = starting_ypos;
         info.dist_reset_thresh = _dist_reset_thresh;
         info.time_reset_thresh = _time_reset_thresh;
-        info.max_travel_dist = max_travel_dist;
         
         terraclear::tracking_position* new_tracker = new tracking_position(info);
         _trackers[id] = new_tracker;

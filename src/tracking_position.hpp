@@ -42,7 +42,6 @@ namespace terraclear
             int _position_sum;
             int _anchor_pos;
             int _dist_reset_thresh;
-            int _max_track_distance;
     };
 }
 
