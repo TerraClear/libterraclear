@@ -140,6 +140,7 @@ namespace terraclear
                 {
                     //get current box
                     bounding_box current_box = _tracking_list[keypair.first].obj_ptr->get_object();
+                    
                     _tracking_list[keypair.first].obj_ptr->_frame_x_v = frame_v_x;
                     _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_v_y;
                     
@@ -152,14 +153,13 @@ namespace terraclear
                     {
                         _tracking_list[keypair.first].obj_ptr->predict();   
                     }
-                    
                     //check for zero velocity
-                    (keypair.second.obj_ptr->get_velocity_y()== 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
+                    (keypair.second.obj_ptr->get_velocity_y() == 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
                                                                            : _tracking_list[keypair.first].obj_zero_vel_count = 0;
                     
                     //get prediction box
                     bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
-                  
+                    
                     //calculate and increment linear traveled distance
                     int linear_distance = sqrt(pow(current_box.x - predicted_box.x, 2) + pow(current_box.y - predicted_box.y, 2));
 

@@ -13,11 +13,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/calib3d.hpp>
+#include <opencv2/core.hpp>
 
 #define OPENCV
 #define GPU
 #include "stopwatch.hpp"
-
+using namespace std;
 namespace  terraclear
 {
     class vision_warp 
@@ -45,6 +47,7 @@ namespace  terraclear
             
             cv::Mat transform_image(cv::Mat img_src, bool flip);
             cv::Mat transform_image_gpu(cv::Mat img_src, bool flip);
+            cv::Mat get_chessboard_corners(cv::Mat img_src, cv::Size chessboard_sz);
             uint64_t _elapsed_us; 
             cv::Mat _transform_matrix;
 
