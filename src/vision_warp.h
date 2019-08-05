@@ -44,10 +44,11 @@ namespace  terraclear
             cv::Mat get_transfor_matrix();
             cv::Mat transform_image(cv::Mat img_src);
             cv::Mat transform_image_gpu(cv::Mat img_src);
+            cv::Mat transform_image_gpu_crop(cv::Mat img_src, cv::Size size);
             
             cv::Mat transform_image(cv::Mat img_src, bool flip);
             cv::Mat transform_image_gpu(cv::Mat img_src, bool flip);
-            cv::Mat get_chessboard_corners(cv::Mat img_src, cv::Size chessboard_sz);
+            cv::Mat get_chessboard_transform(cv::Mat img_src, cv::Size chessboard_sz);
             uint64_t _elapsed_us; 
             cv::Mat _transform_matrix;
 

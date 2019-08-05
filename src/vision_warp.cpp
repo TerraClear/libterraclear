@@ -112,6 +112,27 @@ namespace  terraclear
         
         return img_result;
     }
+    
+    cv::Mat vision_warp::transform_image_gpu_crop(cv::Mat img_src, cv::Size size)
+    {
+        //copy image to GPU
+        cv::cuda::GpuMat gpu_src(img_src);
+        cv::cuda::GpuMat gpu_dst;
+        
+        //warp original & resize.
+        _sw.reset();
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size, cv::RANSAC); // do perspective transformation
+        cv::cuda::GpuMat gpu_crop0;
+        //cv::cuda::resize(gpu_dst,gpu_crop0,cv::Size(gpu_dst.cols,size.height));
+        
+        _elapsed_us = _sw.get_elapsed_us();
+        
+        //copy GPU image back to regular cv mat
+        cv::Mat img_result(gpu_dst);
+        //cv::Rect rect((img_result.cols - size.width)/2,0,size.width,size.height);
+        //cv::Mat crop = img_result(rect);
+        return img_result;
+    }
  
     cv::Mat vision_warp::transform_image_gpu(cv::Mat img_src, bool flip)
     {
@@ -178,7 +199,7 @@ namespace  terraclear
         return dst_corners;
     }
     
-    cv::Mat vision_warp::get_chessboard_corners(cv::Mat img_src, cv::Size board_sz)
+    cv::Mat vision_warp::get_chessboard_transform(cv::Mat img_src, cv::Size board_sz)
     {
         cv::Mat gray_image;
         cv::cvtColor(img_src, gray_image, cv::COLOR_BGR2GRAY);
@@ -199,7 +220,8 @@ namespace  terraclear
             org_corners.push_back(cv::Point((int)(std::floor(corners[board_sz.area() - board_sz.width].x)),(int)(std::floor(corners[board_sz.area() - board_sz.width].y))));
             org_corners.push_back(cv::Point((int)(std::floor(corners.begin()->x)),(int)(std::floor(corners.begin()->y))));
             org_corners.push_back(cv::Point((int)(std::floor(corners[board_sz.width-1].x)),(int)(std::floor(corners[board_sz.width-1].y))));
-            
+            //org_corners.push_back(cv::Point((img_src.cols-700)/2,img_src.cols));
+            //org_corners.push_back(cv::Point((img_src.cols+700)/2,img_src.cols));
             for (int i = 0; i < corners.size(); i++)
             {
                 corners[i].x = std::floor(corners[i].x);
@@ -211,7 +233,6 @@ namespace  terraclear
             std::sort(corners.begin(), corners.end(), myobject);
 
             int miny = (corners.begin())->y;
-            int maxy = (--corners.end())->y;
 
             struct myclass2 {
             bool operator() (cv::Point pt1, cv::Point pt2) { return (pt1.x < pt2.x);}
@@ -221,37 +242,20 @@ namespace  terraclear
             int minx = (corners.begin())->x;
             int maxx = (--corners.end())->x;
 
-            struct myclass3 {
-            bool operator() (cv::Point pt1, cv::Point pt2) { return ((pt1.x < pt2.x) || (pt1.y < pt2.y));}
-            } myobject3;
-            std::sort(corners.begin(), corners.end(), myobject3);
-
             // Need to get corners of warped board for finding homography
             std::vector<Point2d> corr_corners;
             // Corners of the rectified chessboard
             corr_corners.push_back(cv::Point(minx,miny));
             corr_corners.push_back(cv::Point(maxx,miny));
-            corr_corners.push_back(cv::Point(maxx,maxy));
-            corr_corners.push_back(cv::Point(minx,maxy));
+            // Keep original bottom corners of the board so that the bottom of the image isnt warped out of frame
+            corr_corners.push_back(org_corners[2]);
+            corr_corners.push_back(org_corners[3]);
             
-            cv::Mat H = cv::findHomography(org_corners, corr_corners, cv::RANSAC);
+            //corr_corners.push_back(cv::Point((img_src.cols-700)/2,img_src.cols));
+            //corr_corners.push_back(cv::Point((img_src.cols+700)/2,img_src.cols));
             
-            _transform_matrix = H;
-            
-//            cv::Mat final_img;
-//            cv::warpPerspective(img_src, final_img, H, img_src.size());
-//
-//            cv::Rect rect1(0,0,img_src.cols,y);
-//            cv::Mat crop1 = final_img(rect1);
-//
-//            cv::imwrite("/home/alexwitt/Downloads/resultfull.jpg", crop1);
-//
-//            cv::Rect rect((img_src.cols/2)-350,0,700,crop1.rows);
-//            cv::Mat crop = crop1(rect);
-//
-//            cv::Mat finalMat;
-//            cv::resize(crop, finalMat, cv::Size(700,1200));
-            
+            _transform_matrix = cv::findHomography(org_corners, corr_corners, cv::RANSAC);
+
             return _transform_matrix;   
         }
         else 
