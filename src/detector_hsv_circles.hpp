@@ -34,6 +34,8 @@ namespace terraclear
             cv::Scalar _lowrange = cv::Scalar(0, 140, 80);
             cv::Scalar _highrange = cv::Scalar(20, 255, 255);
             
+            bool draw_contours = false;
+            
             detector_hsv_circles(cv::Mat imgsrc);
             virtual ~detector_hsv_circles();
 
