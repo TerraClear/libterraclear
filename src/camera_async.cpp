@@ -111,7 +111,8 @@ namespace  terraclear
         {
             mutex_lock();
                 _lost_frames++;
-             mutex_unlock();
+            mutex_unlock();
+            usleep(50000); //sleep 50ms..
         }
     }
 

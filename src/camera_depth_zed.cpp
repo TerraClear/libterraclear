@@ -44,7 +44,7 @@ namespace terraclear
         _videofeed.release();
     }
 
-    void camera_depth_zed::frame_update()
+    bool camera_depth_zed::frame_update()
     {        
         
         mutex_lock();
@@ -63,6 +63,8 @@ namespace terraclear
             
         video_frame(rect_roi).copyTo(_frame_color);
         mutex_unlock();
+        
+        return true;
         
     }
 

@@ -35,9 +35,20 @@ namespace terraclear
             void setimage(cv::Mat diplay_image);
             virtual ~hsvcalibration();
 
-        private:
-            cv::Mat _window_img;
-            std::string _window_name;
+       // private:
+            static cv::Mat _window_img;
+            static std::string _window_name;
+
+            static void callback_slider(int track_val, void* user_param);
+            
+            int* _h_low;
+            int* _h_high;
+            int* _s_low;
+            int* _s_high;
+            int* _v_low;
+            int* _v_high;
+            
+            void fill_hsv();
 
     };
 

@@ -1,5 +1,5 @@
 /*
- * Specific implementation for StereoLabs ZED 3D camera class 
+ * detector for finding specific range of colored circles
  * Copyright (C) 2019 TerraClear, Inc.
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -19,32 +19,32 @@
  * 
 */
 
-#ifndef CAMERA_DEPTH_ZED_HPP
-#define CAMERA_DEPTH_ZED_HPP
+#ifndef DETECTOR_HSV_CIRCLES_HPP
+#define DETECTOR_HSV_CIRCLES_HPP
 
-#include "camera_depth.hpp"
-
-#define ZED_RESX 1920 * 2
-#define ZED_RESY 1080
+#include "detector_base.hpp"
 
 namespace terraclear
 {
-    class camera_depth_zed : public camera_depth
+    class detector_hsv_circles : public detector_base
     {
-     
         public:
-            camera_depth_zed(uint32_t camera_index, CameraPosition selected_cam);
-            virtual ~camera_depth_zed();
-
-            //base class implementations.. 
-            double      get_depth_cm(uint32_t x, uint32_t y);
-            bool        frame_update();
-
-        private:
-            CameraPosition _selected_camera = CameraPosition::Both;
-            cv::VideoCapture _videofeed;
             
+            //default values for various shades of orange.
+            cv::Scalar _lowrange = cv::Scalar(0, 140, 80);
+            cv::Scalar _highrange = cv::Scalar(20, 255, 255);
+            
+            detector_hsv_circles(cv::Mat imgsrc);
+            virtual ~detector_hsv_circles();
+
+            //pure virtual implementation
+            std::vector<bounding_box> detect_objects();
+            
+        private:
+
     };
+
 }
-#endif /* CAMERA_DEPTH_ZED_HPP */
+
+#endif /* DETECTOR_HSV_CIRCLES_HPP */
 

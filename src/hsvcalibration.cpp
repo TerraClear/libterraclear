@@ -19,30 +19,66 @@
  * 
 */
 
+#include <opencv2/imgproc/types_c.h>
+#include <opencv2/imgproc/imgproc_c.h>
+
 #include "hsvcalibration.hpp"
 
 namespace terraclear
 {
     
+    //static vars..
+    cv::Mat hsvcalibration::_window_img;
+    std::string hsvcalibration::_window_name;
+            
     hsvcalibration::hsvcalibration(int &h_low, int &h_high, int &s_low, int &s_high, int &v_low, int &v_high, std::string window_name) 
     {
+
+        _h_low = &h_low;
+        _h_high = &h_high;
+        _s_low = &s_low;
+        _s_high = &s_high;
+        _v_low = &v_low;
+        _v_high = &v_high;
+        
         //Open CV Window stuff
         _window_name = window_name;
+        
         cv::namedWindow(window_name, cv::WINDOW_NORMAL|cv::WINDOW_AUTOSIZE);
         
-        cv::createTrackbar("HL", _window_name, &h_low, 175, nullptr);
-        cv::createTrackbar("HH", _window_name, &h_high, 175, nullptr);
-        cv::createTrackbar("SL", _window_name, &s_low, 255, nullptr);
-        cv::createTrackbar("SH", _window_name, &s_high, 255, nullptr);
-        cv::createTrackbar("VL", _window_name, &v_low, 255, nullptr);
-        cv::createTrackbar("VH", _window_name, &v_high, 255, nullptr);
+        _window_img = cv::Mat(50, 100, CV_8UC3, cv::Scalar(0xff, 0x00, 0x00));
 
-        _window_img = cv::Mat1s(1,1);
-        cv::imshow(window_name, _window_img);
+        cv::createTrackbar("HL", window_name, _h_low, 175, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("HH", window_name, _h_high, 175, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("SL", window_name, _s_low, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("SH", window_name, _s_high, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("VL", window_name, _v_low, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("VH", window_name, _v_high, 255, hsvcalibration::callback_slider, this);
+
+        fill_hsv();
     }
 
     hsvcalibration::~hsvcalibration() 
     {
+    }
+    
+    void hsvcalibration::callback_slider(int track_val, void* user_param)
+    {
+        hsvcalibration* this_ptr = (hsvcalibration*)(user_param);
+        this_ptr->fill_hsv();
+    }
+     
+    void hsvcalibration::fill_hsv()
+    {
+        cv::Mat tmp_hsv = cv::Mat(_window_img.rows,_window_img.cols, CV_8UC3, cv::Scalar(0xff, 0x00, 0x00));
+        cv::cvtColor(_window_img, tmp_hsv, CV_BGR2HSV);
+        cv::Rect rect1(0,0,50, 50);        
+        cv::Rect rect2(_window_img.cols/2, 0, _window_img.cols, _window_img.rows);        
+        cv::rectangle(tmp_hsv, rect1, cv::Scalar(*_h_low, *_s_low, *_v_low), -1);
+        cv::rectangle(tmp_hsv, rect2, cv::Scalar(*_h_high, *_s_high, *_v_high), -1);
+        cv::cvtColor(tmp_hsv, _window_img, CV_HSV2BGR);
+
+        cv::imshow(_window_name, _window_img);
     }
     
      void hsvcalibration::setimage(cv::Mat diplay_image)
