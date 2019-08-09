@@ -39,7 +39,7 @@ namespace terraclear
         cv::Mat mat_filtered;
 
         //blur Image a bit first.
-        cv::blur(_imgsrc, mat_filtered, cv::Size(10, 10));
+        cv::blur(_imgsrc, mat_filtered, cv::Size(5, 5));
 
         /// Transform it to HSV color space
         cv::cvtColor(mat_filtered, mat_filtered, cv::COLOR_BGR2HSV);
@@ -48,14 +48,15 @@ namespace terraclear
         cv::inRange(mat_filtered, _lowrange, _highrange, mat_filtered);
 
         //morphological opening (remove small objects from the foreground)
-        cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
-        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)) ); 
+       cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
+        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) ); 
 
          //morphological closing (fill small holes in the foreground)
-        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)) ); 
-        cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
+        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7)) ); 
+        cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)) );
 
         cv::medianBlur(mat_filtered, mat_filtered, 5);
+        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(10, 10)) ); 
 
         //Vector for all contours.
         std::vector<std::vector<cv::Point>> contours;
@@ -81,7 +82,7 @@ namespace terraclear
         cv::HoughCircles(mat_filtered, circles, cv::HOUGH_GRADIENT, 1,
                      100, // change this value to detect circles with different distances to each other
                      80, 15, //canny edge detector thresholds
-                     5, 150 // change the last two parameters (min_radius & max_radius) to detect larger circles
+                     50, 200 // change the last two parameters (min_radius & max_radius) to detect larger circles
                      );
 
         //generate inscribed bbox for each circle.
