@@ -43,6 +43,7 @@ namespace  terraclear
             void    init_transform();
             cv::Mat get_transfor_matrix();
             cv::Mat transform_image(cv::Mat img_src);
+            cv::Mat transform_image_crop(cv::Mat img_src);
             cv::Mat transform_image_gpu(cv::Mat img_src);
             cv::Mat transform_image_gpu_crop(cv::Mat img_src, cv::Size size);
             

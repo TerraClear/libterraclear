@@ -68,7 +68,6 @@ namespace  terraclear
     cv::Mat vision_warp::transform_image(cv::Mat img_src)
     {
         cv::Mat img_result;
-        
         //warp original & resize.
         _sw.reset();
         cv::warpPerspective(img_src, img_result, _transform_matrix, img_src.size()); // do perspective transformation
@@ -113,6 +112,22 @@ namespace  terraclear
         return img_result;
     }
     
+    cv::Mat vision_warp::transform_image_crop(cv::Mat img_src)
+    {
+        cv::Mat img_result;
+        //warp original & resize.
+        _sw.reset();
+        cv::warpPerspective(img_src, img_result, _transform_matrix, img_src.size()); // do perspective transformation
+        
+        cv::Rect myROI((img_result.cols /2) - 350, (img_result.rows) - img_result.rows, 700, img_result.rows);
+        cv::Mat crop = img_result(myROI);
+        cv::Mat resize;
+        cv::resize(crop,resize,cv::Size(700,1200),0,0,cv::INTER_CUBIC);
+        _elapsed_us = _sw.get_elapsed_us();
+      
+        return resize;
+    }
+    
     cv::Mat vision_warp::transform_image_gpu_crop(cv::Mat img_src, cv::Size size)
     {
         //copy image to GPU
@@ -122,16 +137,18 @@ namespace  terraclear
         //warp original & resize.
         _sw.reset();
         cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size, cv::RANSAC); // do perspective transformation
-        cv::cuda::GpuMat gpu_crop0;
-        //cv::cuda::resize(gpu_dst,gpu_crop0,cv::Size(gpu_dst.cols,size.height));
+        cv::Mat img_result(gpu_dst);
+        
+        cv::Rect myROI((img_result.cols /2) - 350, (img_result.rows) - img_result.rows, 700, img_result.rows);
+        cv::Mat crop = img_result(myROI);
         
         _elapsed_us = _sw.get_elapsed_us();
         
         //copy GPU image back to regular cv mat
-        cv::Mat img_result(gpu_dst);
+        
         //cv::Rect rect((img_result.cols - size.width)/2,0,size.width,size.height);
         //cv::Mat crop = img_result(rect);
-        return img_result;
+        return crop;
     }
  
     cv::Mat vision_warp::transform_image_gpu(cv::Mat img_src, bool flip)
