@@ -71,7 +71,7 @@ namespace  terraclear
         
         //warp original & resize.
         _sw.reset();
-        cv::warpPerspective(img_src, img_result, _transform_matrix, _target_size); // do perspective transformation
+        cv::warpPerspective(img_src, img_result, _transform_matrix, img_src.size()); // do perspective transformation
         _elapsed_us = _sw.get_elapsed_us();
       
         return img_result;
