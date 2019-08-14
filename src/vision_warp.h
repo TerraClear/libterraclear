@@ -16,12 +16,16 @@
 #include <opencv2/calib3d.hpp>
 #include <opencv2/core.hpp>
 
+#include "stopwatch.hpp"
+
 #define OPENCV
 #define GPU
-#include "stopwatch.hpp"
 using namespace std;
 namespace  terraclear
 {
+    
+    enum Pattern { CHESSBOARD, CIRCLES_GRID, ASYMMETRIC_CIRCLES_GRID };
+    
     class vision_warp 
     {
         protected:
@@ -34,13 +38,12 @@ namespace  terraclear
             };
 
         public:
-            vision_warp();
+            vision_warp(std::string exe_filepath);
             virtual ~vision_warp();
 
             roi_transform   _source_points;
             cv::Size        _target_size;
 
-            void    init_transform();
             cv::Mat get_transfor_matrix();
             cv::Mat transform_image(cv::Mat img_src);
             cv::Mat transform_image_crop(cv::Mat img_src);
@@ -52,9 +55,24 @@ namespace  terraclear
             cv::Mat get_chessboard_transform(cv::Mat img_src, cv::Size chessboard_sz);
             uint64_t _elapsed_us; 
             cv::Mat _transform_matrix;
-
-        private:            
             
+            cv::Mat _undistorted_img;
+            bool   _board_found;
+            cv::Mat _H;
+            void get_camera_paramters(std::string filepath);
+            void update_frame(const cv::Mat img_src);
+            void undistort_img();
+            bool findChessBoard(const cv::Size board_sz);
+            void calcChessboardCorners(cv::Size boardSize, float squareSize, terraclear::Pattern patternType);
+            void computeC2MC1(const cv::Mat &R1, const cv::Mat &tvec1, const cv::Mat &R2, const cv::Mat &tvec2, cv::Mat &R_1to2, cv::Mat &tvec_1to2);
+            cv::Mat init_transform();
+
+        private:   
+            cv::Mat _img;
+            cv::Mat cameraMatrix;
+            cv::Mat distCoeffs; 
+            std::vector<cv::Point3f> objectPoints;
+            std::vector<cv::Point2f> corners; 
             stopwatch _sw;
     };
 }
