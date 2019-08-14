@@ -42,7 +42,7 @@ namespace terraclear
 
     bool camerawarp::findChessBoard(const cv::Size board_sz) {
         // Find chess board corners 
-        return findChessboardCorners(_undistorted_img, board_sz, corners);
+        return findChessboardCorners(_img, board_sz, corners);
     }
     
     void camerawarp::calcChessboardCorners(cv::Size boardSize, float squareSize, terraclear::Pattern patternType = terraclear::Pattern::CHESSBOARD)

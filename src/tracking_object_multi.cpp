@@ -12,7 +12,7 @@ namespace terraclear
         _max_sample_queue = max_sample_queue;
         _min_track_history = min_track_history;
         _min_track_velocity = min_track_velocity;
-        _max_prediction_distance = max_prediction_distance;
+        _max_prediction_distance = 2000;
         _max_zero_vel_count = max_zero_velocity_count;
     }
     
@@ -84,17 +84,24 @@ namespace terraclear
                     //create new object to be tracked..
                     object_meta obj;
                     
-                    regression_obj_meta regression_obj;
-                    regression_obj.bbox = bbox;
-                    regression_obj.bbox_id = bbox.track_id;
-                    regression_obj.dest_pos = 1200;
-                    regression_obj.queue_size = 30;
-                    regression_obj.starting_pos = bbox.y;
-                    regression_obj.time_reset_thresh = 4.0f;
+                    regression_obj_meta regression_obj_y;
+                    regression_obj_y.bbox = bbox;
+                    regression_obj_y.bbox_id = bbox.track_id;
+                    regression_obj_y.dest_pos = 1200;
+                    regression_obj_y.queue_size = 30;
+                    regression_obj_y.starting_pos = bbox.y;
+                    regression_obj_y.time_reset_thresh = 4.0f;
+                    
+                    regression_obj_meta regression_obj_x;
+                    regression_obj_x.bbox = bbox;
+                    regression_obj_x.bbox_id = bbox.track_id;
+                    regression_obj_x.dest_pos = 1200;
+                    regression_obj_x.queue_size = 30;
+                    regression_obj_x.starting_pos = bbox.x;
+                    regression_obj_x.time_reset_thresh = 4.0f;
                     
                     // Creates ptr to object tracking class
-                    obj.obj_ptr = new tracking_object(regression_obj);
-                    
+                    obj.obj_ptr = new tracking_object(regression_obj_x, regression_obj_y);
                     obj.obj_found_count = bbox.frame_count = 1; //tracker has seen it for the first time..
                     _tracking_list[bbox.track_id] = obj;
                 }
