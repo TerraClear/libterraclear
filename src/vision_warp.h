@@ -20,10 +20,11 @@
 
 #define OPENCV
 #define GPU
+
 using namespace std;
+
 namespace  terraclear
 {
-    
     enum Pattern { CHESSBOARD, CIRCLES_GRID, ASYMMETRIC_CIRCLES_GRID };
     
     class vision_warp 
@@ -41,31 +42,29 @@ namespace  terraclear
             vision_warp(std::string exe_filepath);
             virtual ~vision_warp();
 
-            roi_transform   _source_points;
-            cv::Size        _target_size;
-
             cv::Mat get_transfor_matrix();
             cv::Mat transform_image(cv::Mat img_src);
             cv::Mat transform_image_crop(cv::Mat img_src);
+            cv::Mat transform_image(cv::Mat img_src, bool flip);
+            
             cv::Mat transform_image_gpu(cv::Mat img_src);
+            cv::Mat transform_image_gpu(cv::Mat img_src, bool flip);
             cv::Mat transform_image_gpu_crop(cv::Mat img_src, cv::Size size);
             
-            cv::Mat transform_image(cv::Mat img_src, bool flip);
-            cv::Mat transform_image_gpu(cv::Mat img_src, bool flip);
             cv::Mat get_chessboard_transform(cv::Mat img_src, cv::Size chessboard_sz);
-            uint64_t _elapsed_us; 
-            cv::Mat _transform_matrix;
-            
-            cv::Mat _undistorted_img;
-            bool   _board_found;
-            cv::Mat _H;
-            void get_camera_paramters(std::string filepath);
             void update_frame(const cv::Mat img_src);
             void undistort_img();
             bool findChessBoard(const cv::Size board_sz);
             void calcChessboardCorners(cv::Size boardSize, float squareSize, terraclear::Pattern patternType);
             void computeC2MC1(const cv::Mat &R1, const cv::Mat &tvec1, const cv::Mat &R2, const cv::Mat &tvec2, cv::Mat &R_1to2, cv::Mat &tvec_1to2);
             cv::Mat init_transform();
+            
+            uint64_t       _elapsed_us; 
+            cv::Mat        _transform_matrix;
+            cv::Mat        _undistorted_img;
+            cv::Size       _target_size;
+            roi_transform  _source_points;
+            bool           _board_found;
 
         private:   
             cv::Mat _img;

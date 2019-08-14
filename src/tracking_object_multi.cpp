@@ -12,7 +12,7 @@ namespace terraclear
         _max_sample_queue = max_sample_queue;
         _min_track_history = min_track_history;
         _min_track_velocity = min_track_velocity;
-        _max_prediction_distance = 2000;
+        _max_prediction_distance = max_prediction_distance;
         _max_zero_vel_count = max_zero_velocity_count;
     }
     

@@ -263,11 +263,11 @@ namespace  terraclear
 
         vision_warp::computeC2MC1(R, tvec, R_desired, tvec_desired, R_1to2, tvec_1to2);
        
-        _H = R_1to2 + d_inv1 * tvec_1to2*normal1.t();
+        _transform_matrix = R_1to2 + d_inv1 * tvec_1to2*normal1.t();
 
-        _H = cameraMatrix * _H * cameraMatrix.inv();
+        _transform_matrix = cameraMatrix * _transform_matrix * cameraMatrix.inv();
         
-        return  _H/_H.at<double>(2,2);
+        return  _transform_matrix/_transform_matrix.at<double>(2,2);
             
     }
     
