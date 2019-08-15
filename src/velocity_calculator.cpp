@@ -41,14 +41,7 @@ namespace terraclear
         for (auto elem: _trackers)
         {
             float vel = elem.second->get_velocity();
-            if (isnan(vel))
-            {
-                --size;
-            }
-            else
-            {
-                velocity_sum += vel;
-            }
+            velocity_sum += vel;
         }
         
         // Compute and return average velocity across all _trackers in pixels

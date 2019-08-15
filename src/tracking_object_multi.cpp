@@ -84,17 +84,24 @@ namespace terraclear
                     //create new object to be tracked..
                     object_meta obj;
                     
-                    regression_obj_meta regression_obj;
-                    regression_obj.bbox = bbox;
-                    regression_obj.bbox_id = bbox.track_id;
-                    regression_obj.dest_pos = 1200;
-                    regression_obj.queue_size = 30;
-                    regression_obj.starting_pos = bbox.y;
-                    regression_obj.time_reset_thresh = 4.0f;
+                    regression_obj_meta regression_obj_y;
+                    regression_obj_y.bbox = bbox;
+                    regression_obj_y.bbox_id = bbox.track_id;
+                    regression_obj_y.dest_pos = 1200;
+                    regression_obj_y.queue_size = 30;
+                    regression_obj_y.starting_pos = bbox.y;
+                    regression_obj_y.time_reset_thresh = 4.0f;
+                    
+                    regression_obj_meta regression_obj_x;
+                    regression_obj_x.bbox = bbox;
+                    regression_obj_x.bbox_id = bbox.track_id;
+                    regression_obj_x.dest_pos = 1200;
+                    regression_obj_x.queue_size = 30;
+                    regression_obj_x.starting_pos = bbox.x;
+                    regression_obj_x.time_reset_thresh = 4.0f;
                     
                     // Creates ptr to object tracking class
-                    obj.obj_ptr = new tracking_object(regression_obj);
-                    
+                    obj.obj_ptr = new tracking_object(regression_obj_x, regression_obj_y);
                     obj.obj_found_count = bbox.frame_count = 1; //tracker has seen it for the first time..
                     _tracking_list[bbox.track_id] = obj;
                 }
@@ -140,6 +147,7 @@ namespace terraclear
                 {
                     //get current box
                     bounding_box current_box = _tracking_list[keypair.first].obj_ptr->get_object();
+                    
                     _tracking_list[keypair.first].obj_ptr->_frame_x_v = frame_v_x;
                     _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_v_y;
                     
@@ -152,14 +160,13 @@ namespace terraclear
                     {
                         _tracking_list[keypair.first].obj_ptr->predict();   
                     }
-                    
                     //check for zero velocity
-                    (keypair.second.obj_ptr->get_velocity_y()== 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
+                    (keypair.second.obj_ptr->get_velocity_y() == 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
                                                                            : _tracking_list[keypair.first].obj_zero_vel_count = 0;
                     
                     //get prediction box
                     bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
-                  
+                    
                     //calculate and increment linear traveled distance
                     int linear_distance = sqrt(pow(current_box.x - predicted_box.x, 2) + pow(current_box.y - predicted_box.y, 2));
 

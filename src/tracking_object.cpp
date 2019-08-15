@@ -3,11 +3,11 @@
 namespace terraclear
 {    
 
-    tracking_object::tracking_object(terraclear::regression_obj_meta& info) 
-        : _x_tracker(info), _y_tracker(info)
+    tracking_object::tracking_object(terraclear::regression_obj_meta& info_x, terraclear::regression_obj_meta& info_y) 
+        : _x_tracker(info_x), _y_tracker(info_y)
     {      
-        _history_depth = info.queue_size;
-        _bbox = info.bbox;
+        _history_depth = info_x.queue_size;
+        _bbox = info_x.bbox;
         _position_count = 1;
         
         _sw.start();
