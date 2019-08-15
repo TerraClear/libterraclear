@@ -43,8 +43,8 @@ namespace terraclear
     tracking_position::tracking_info tracking_position::get_tracking_info()
     {
         regression_result slope_intercept = regression_base::get_regression();
+        
         float stable_position = slope_intercept.slope * (_position_history.back().time) + slope_intercept.intercept;
-
         tracking_info retval;
         // return the stable position
         retval.position = stable_position;

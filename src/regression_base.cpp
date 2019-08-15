@@ -81,8 +81,7 @@ namespace terraclear
         float intercept = m_y - slope * m_x;
         
         terraclear::regression_result slope_intercept;
-        // catch cases if frames lost 
-
+        
         slope_intercept.slope = slope;
         slope_intercept.intercept = intercept;
         

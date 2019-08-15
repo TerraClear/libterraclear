@@ -16,7 +16,7 @@ namespace terraclear
     class tracking_object
     {
         public: 
-            tracking_object(regression_obj_meta& info);
+            tracking_object(regression_obj_meta& info_x,regression_obj_meta& info_y);
             ~tracking_object();
                     
             int get_id();
