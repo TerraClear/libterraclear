@@ -21,6 +21,7 @@ using namespace std;
 
 namespace  terraclear
 {   
+    vision_warp::vision_warp() {}
     vision_warp::vision_warp(std::string exe_filepath) 
     {
         _sw.start();

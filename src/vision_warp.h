@@ -39,6 +39,7 @@ namespace  terraclear
             };
 
         public:
+            vision_warp();
             vision_warp(std::string exe_filepath);
             virtual ~vision_warp();
 
