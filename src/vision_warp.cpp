@@ -2,6 +2,7 @@
  *  Copyright: TerraClear, Inc - 2019
  *  Author: TerraClear Team
  */
+#include <iostream>
 
 #include <opencv2/core/cuda.hpp>
 #include <opencv2/cudaarithm.hpp>
@@ -41,7 +42,7 @@ namespace  terraclear
         
     void vision_warp::update_frame(const cv::Mat img_src)
     {
-        _img = img_src;
+        cv::cvtColor(img_src, _img, cv::COLOR_RGB2GRAY);
     }
     cv::Mat vision_warp::get_transfor_matrix()
     {
@@ -201,7 +202,7 @@ namespace  terraclear
     
     bool vision_warp::findChessBoard(const cv::Size board_sz) {
         // Find chess board corners 
-        return findChessboardCorners(_img, board_sz, corners);
+        return cv::findChessboardCorners(_img, board_sz, corners);
     }
     
     void vision_warp::calcChessboardCorners(cv::Size boardSize, float squareSize, terraclear::Pattern patternType = terraclear::Pattern::CHESSBOARD)
@@ -247,8 +248,8 @@ namespace  terraclear
         cv::solvePnP(objectPoints, corners, cameraMatrix, distCoeffs, rvec, tvec);
 
         cv::Mat R_desired = (Mat_<double>(3,3) <<
-                        -1, 0, 0,
                         0, -1, 0,
+                        1, 0, 0,
                         0, 0, 1);
         cv::Mat R;
         cv::Rodrigues(rvec, R);
@@ -258,17 +259,19 @@ namespace  terraclear
         cv::Mat origin1 = R*origin + tvec;
         
         double d_inv1 = 1.0 / normal1.dot(origin1);
-        
+
         cv::Mat R_1to2, tvec_1to2;
         cv::Mat tvec_desired = tvec.clone();
-
         vision_warp::computeC2MC1(R, tvec, R_desired, tvec_desired, R_1to2, tvec_1to2);
        
         _transform_matrix = R_1to2 + d_inv1 * tvec_1to2*normal1.t();
-
         _transform_matrix = cameraMatrix * _transform_matrix * cameraMatrix.inv();
-        
-        return  _transform_matrix/_transform_matrix.at<double>(2,2);
+        cv::Mat final_mat = _transform_matrix/_transform_matrix.at<double>(2,2);
+        std::vector<cv::Point2f> worldPoints;
+        cv::perspectiveTransform(corners, worldPoints,final_mat);
+        _gsd = _block_size / abs(worldPoints[0].y - worldPoints[1].y) ;
+
+        return final_mat;
             
     }
     

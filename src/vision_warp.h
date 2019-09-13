@@ -65,7 +65,9 @@ namespace  terraclear
             cv::Mat        _undistorted_img;
             cv::Size       _target_size;
             roi_transform  _source_points;
+            float          _block_size;
             bool           _board_found;
+            float          _gsd;
 
         private:   
             cv::Mat _img;
