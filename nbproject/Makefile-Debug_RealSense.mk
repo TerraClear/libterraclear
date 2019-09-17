@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/cc787d41/camera_async.o \
+	${OBJECTDIR}/_ext/cc787d41/vision_core.o \
 	${OBJECTDIR}/src/appsettings.o \
 	${OBJECTDIR}/src/basicserial.o \
 	${OBJECTDIR}/src/camera_base.o \
@@ -59,7 +60,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o \
-	${OBJECTDIR}/src/timed_averaging.o \
 	${OBJECTDIR}/src/tracking_object.o \
 	${OBJECTDIR}/src/tracking_object_multi.o \
 	${OBJECTDIR}/src/tracking_position.o \
@@ -96,6 +96,11 @@ ${OBJECTDIR}/_ext/cc787d41/camera_async.o: /home/koos/Desktop/Dropbox/Private/Co
 	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cc787d41/camera_async.o /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
+
+${OBJECTDIR}/_ext/cc787d41/vision_core.o: /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cc787d41/vision_core.o /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp
 
 ${OBJECTDIR}/src/appsettings.o: src/appsettings.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -211,11 +216,6 @@ ${OBJECTDIR}/src/thread_base.o: src/thread_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/thread_base.o src/thread_base.cpp
-
-${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
 
 ${OBJECTDIR}/src/tracking_object.o: src/tracking_object.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -94,7 +94,7 @@ namespace terraclear
             bbox.y =  c[1] - round(wh/2);
             bbox.width = wh;
             bbox.height = wh;
-            bbox.class_id = 0;
+            bbox.class_id = vision_class_type::rock;
             bbox.confidence = 1.0f;
             bbox.track_id = 0;
             bbox.frame_count = 0;

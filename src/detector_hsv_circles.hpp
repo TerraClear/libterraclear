@@ -23,6 +23,7 @@
 #define DETECTOR_HSV_CIRCLES_HPP
 
 #include "detector_base.hpp"
+#include "vision_core.hpp"
 
 namespace terraclear
 {

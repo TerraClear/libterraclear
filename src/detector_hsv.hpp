@@ -23,6 +23,9 @@
 #define DETECTOR_HSV_HPP
 
 #include "detector_base.hpp"
+#include "vision_core.hpp"
+
+#include <opencv2/imgproc.hpp>
 
 namespace terraclear
 {

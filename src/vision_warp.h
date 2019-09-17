@@ -42,7 +42,7 @@ namespace  terraclear
             vision_warp(std::string exe_filepath);
             virtual ~vision_warp();
 
-            cv::Mat get_transfor_matrix();
+            cv::Mat get_transform_matrix();
             cv::Mat transform_image(cv::Mat img_src);
             cv::Mat transform_image_crop(cv::Mat img_src);
             cv::Mat transform_image(cv::Mat img_src, bool flip);

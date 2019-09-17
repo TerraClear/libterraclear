@@ -74,7 +74,7 @@ namespace terraclear
             bbox.y = rect.y;
             bbox.width = rect.width;
             bbox.height = rect.height;
-            bbox.class_id = 0;
+            bbox.class_id = vision_class_type::not_rock;
             bbox.confidence = 1.0f;
             bbox.track_id = trackid;
             bbox.frame_count = 0;
@@ -83,11 +83,11 @@ namespace terraclear
         }
 
         //cluster into larger boxes
-       mergeBoundingBoxes(ret_vect, 60);
+        vision_core::mergeBoxes(ret_vect, 60);
         
         //TODO: iterate through until no overlaps..
         //twice seems to do the trick..
-        mergeBoundingBoxes(ret_vect, 60);
+        vision_core::mergeBoxes(ret_vect, 60);
 
         return ret_vect;
     }

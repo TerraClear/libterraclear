@@ -42,7 +42,7 @@ namespace  terraclear
     {
         _img = img_src;
     }
-    cv::Mat vision_warp::get_transfor_matrix()
+    cv::Mat vision_warp::get_transform_matrix()
     {
         return _transform_matrix;
     }
