@@ -39,7 +39,7 @@ namespace  terraclear
             };
 
         public:
-            vision_warp(std::string exe_filepath);
+            vision_warp(std::string camera_xml);
             virtual ~vision_warp();
 
             cv::Mat get_transform_matrix();

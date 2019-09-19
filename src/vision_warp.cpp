@@ -21,15 +21,12 @@ using namespace std;
 
 namespace  terraclear
 {   
-    vision_warp::vision_warp(std::string exe_filepath) 
+    vision_warp::vision_warp(std::string camera_xml) 
     {
         _sw.start();
         
-        // Get path to camera calibration file
-        std::string basepath = terraclear::filetools::get_base_path(exe_filepath);
-        std::string cam_file = basepath + "/../../../camera.xml";
         // Read in camera intrinsics 
-        cv::FileStorage fs(cam_file, FileStorage::READ);
+        cv::FileStorage fs(camera_xml, FileStorage::READ);
         fs["camera_matrix"] >> cameraMatrix;
         fs["distortion_coefficients"] >> distCoeffs;
     }
