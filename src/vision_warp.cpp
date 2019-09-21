@@ -211,26 +211,18 @@ namespace  terraclear
 
         switch (patternType)
         {
-        case CHESSBOARD:
-        case CIRCLES_GRID:
-            //! [compute-chessboard-object-points]
-            for( int i = 0; i < boardSize.height; i++ )
-                for( int j = 0; j < boardSize.width; j++ )
-                    //To try to center the chessboard frame, we substract the image size
-                    objectPoints.push_back(cv::Point3f(float((j-boardSize.width/2)*squareSize),
-                                              float((i-boardSize.height/2)*squareSize), 0));
-            //! [compute-chessboard-object-points]
-            break;
+            case CHESSBOARD:
+                //! [compute-chessboard-object-points]
+                for( int i = 0; i < boardSize.height; i++ )
+                    for( int j = 0; j < boardSize.width; j++ )
+                        //To try to center the chessboard frame, we substract the image size
+                        objectPoints.push_back(cv::Point3f(float((j-boardSize.width/2)*squareSize),
+                                                float((i-boardSize.height/2)*squareSize), 0));
 
-        case ASYMMETRIC_CIRCLES_GRID:
-            for( int i = 0; i < boardSize.height; i++ )
-                for( int j = 0; j < boardSize.width; j++ )
-                    objectPoints.push_back(cv::Point3f(float((2*j + i % 2)*squareSize),
-                                              float(i*squareSize), 0));
-            break;
+                break;
 
-        default:
-            CV_Error(Error::StsBadArg, "Unknown pattern type\n");
+            default:
+                CV_Error(Error::StsBadArg, "Unknown pattern type\n");
         }
     }
 
@@ -268,8 +260,9 @@ namespace  terraclear
         _transform_matrix = cameraMatrix * _transform_matrix * cameraMatrix.inv();
         cv::Mat final_mat = _transform_matrix/_transform_matrix.at<double>(2,2);
         std::vector<cv::Point2f> worldPoints;
+        
         cv::perspectiveTransform(corners, worldPoints,final_mat);
-        _gsd = _block_size / abs(worldPoints[0].y - worldPoints[1].y) ;
+        _gsd = _block_size / abs(worldPoints[0].y - worldPoints[1].y);
 
         return final_mat;
             
