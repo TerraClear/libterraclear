@@ -22,6 +22,7 @@ using namespace std;
 
 namespace  terraclear
 {   
+    vision_warp::vision_warp() {};
     vision_warp::vision_warp(std::string camera_xml) 
     {
         _sw.start();

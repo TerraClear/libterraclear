@@ -39,6 +39,7 @@ namespace  terraclear
             };
 
         public:
+            vision_warp();
             vision_warp(std::string camera_xml);
             virtual ~vision_warp();
 
