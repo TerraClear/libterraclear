@@ -201,24 +201,32 @@ namespace  terraclear
         return cv::findChessboardCorners(_img, board_sz, corners);
     }
     
-    void vision_warp::calcChessboardCorners(cv::Size boardSize, float squareSize, terraclear::Pattern patternType = terraclear::Pattern::CHESSBOARD)
+    void vision_warp::calcChessboardCorners(cv::Size boardSize, terraclear::Pattern patternType = terraclear::Pattern::CHESSBOARD)
     {
         objectPoints.resize(0);
 
         switch (patternType)
         {
-            case CHESSBOARD:
-                //! [compute-chessboard-object-points]
-                for( int i = 0; i < boardSize.height; i++ )
-                    for( int j = 0; j < boardSize.width; j++ )
-                        //To try to center the chessboard frame, we substract the image size
-                        objectPoints.push_back(cv::Point3f(float((j-boardSize.width/2)*squareSize),
-                                                float((i-boardSize.height/2)*squareSize), 0));
+        case CHESSBOARD:
+        case CIRCLES_GRID:
+            //! [compute-chessboard-object-points]
+            for( int i = 0; i < boardSize.height; i++ )
+                for( int j = 0; j < boardSize.width; j++ )
+                    //To try to center the chessboard frame, we substract the image size
+                    objectPoints.push_back(cv::Point3f(float((j-boardSize.width/2)*_block_size),
+                                              float((i-boardSize.height/2)*_block_size), 0));
+            //! [compute-chessboard-object-points]
+            break;
 
-                break;
+        case ASYMMETRIC_CIRCLES_GRID:
+            for( int i = 0; i < boardSize.height; i++ )
+                for( int j = 0; j < boardSize.width; j++ )
+                    objectPoints.push_back(cv::Point3f(float((2*j + i % 2)*_block_size),
+                                              float(i*_block_size), 0));
+            break;
 
-            default:
-                CV_Error(Error::StsBadArg, "Unknown pattern type\n");
+        default:
+            CV_Error(Error::StsBadArg, "Unknown pattern type\n");
         }
     }
 
