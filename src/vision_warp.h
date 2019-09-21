@@ -39,6 +39,7 @@ namespace  terraclear
             };
 
         public:
+            vision_warp();
             vision_warp(std::string camera_xml);
             virtual ~vision_warp();
 
@@ -55,7 +56,7 @@ namespace  terraclear
             void update_frame(const cv::Mat img_src);
             void undistort_img();
             bool findChessBoard(const cv::Size board_sz);
-            void calcChessboardCorners(cv::Size boardSize, float squareSize, terraclear::Pattern patternType);
+            void calcChessboardCorners(cv::Size boardSize, terraclear::Pattern patternType);
             void computeC2MC1(const cv::Mat &R1, const cv::Mat &tvec1, const cv::Mat &R2, const cv::Mat &tvec2, cv::Mat &R_1to2, cv::Mat &tvec_1to2);
             cv::Mat init_transform();
             
