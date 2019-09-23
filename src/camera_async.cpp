@@ -73,6 +73,31 @@ namespace  terraclear
          mutex_unlock();
     }
     
+    void camera_async::change_white_balance(float red_level, float blue_level)
+    {
+        _pcam->change_white_balance(red_level, blue_level);
+    }
+    
+    void camera_async::change_gain(float gain_level)
+    {
+        _pcam->change_gain(gain_level);
+    }
+    
+    void camera_async::change_exposure_time(int time)
+    {
+        _pcam->change_exposure_time(time);
+    }
+    
+    void camera_async::change_black_level(float level)
+    {
+        _pcam->change_black_level(level);
+    }
+    
+    void camera_async::change_gamma(float gamma)
+    {
+        _pcam->change_gamma(gamma);
+    }
+    
     uint64_t camera_async::get_lost_frames()
     {
         
@@ -111,8 +136,7 @@ namespace  terraclear
         {
             mutex_lock();
                 _lost_frames++;
-            mutex_unlock();
-            usleep(50000); //sleep 50ms..
+             mutex_unlock();
         }
     }
 

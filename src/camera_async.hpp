@@ -44,6 +44,11 @@ namespace  terraclear
           
             uint64_t get_lost_frames();
             void reset_lost_frames();
+            void change_white_balance(float red_level, float blue_level);
+            void change_gain(float gain_level);
+            void change_exposure_time(int time);
+            void change_black_level(float level);
+            void change_gamma(float gamma);
             
         protected:
             //pure virtual function implementation..

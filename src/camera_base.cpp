@@ -36,6 +36,31 @@ namespace terraclear
         return _frame_color;
     }
     
+    void camera_base::change_white_balance(float red_level, float blue_level)
+    {
+        
+    }
+    
+    void camera_base::change_gain(float gain_level)
+    {
+        
+    }
+    
+    void camera_base::change_exposure_time(int time)
+    {
+        
+    }
+    
+    void camera_base::change_black_level(float level)
+    {
+        
+    }
+    
+    void camera_base::change_gamma(float gamma)
+    {
+        
+    }
+    
     void camera_base::frame_save(std::string frame_name, bool generate_file_seq)
     {
         std::string target_file = (!generate_file_seq) ? frame_name : filetools::generate_filename_seq(frame_name);

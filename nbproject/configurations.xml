@@ -3,8 +3,12 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f3" displayName="src" projectFiles="true">
       <logicalFolder name="f12" displayName="algorithms" projectFiles="true">
-        <itemPath>src/camera_velocity_calculator.cpp</itemPath>
-        <itemPath>src/camera_velocity_calculator.hpp</itemPath>
+        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp</itemPath>
+        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp</itemPath>
+        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp</itemPath>
+        <itemPath>/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.hpp</itemPath>
+        <itemPath>src/timed_averaging.cpp</itemPath>
+        <itemPath>src/timed_averaging.hpp</itemPath>
         <itemPath>src/velocity_calculator.cpp</itemPath>
         <itemPath>src/velocity_calculator.hpp</itemPath>
         <itemPath>src/velocity_tracker.cpp</itemPath>
@@ -83,10 +87,6 @@
           <itemPath>src/camera_usb.cpp</itemPath>
           <itemPath>src/camera_usb.hpp</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="core" projectFiles="true">
-          <itemPath>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp</itemPath>
-          <itemPath>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.hpp</itemPath>
-        </logicalFolder>
         <logicalFolder name="f9" displayName="detectors" projectFiles="true">
           <itemPath>src/detector_base.cpp</itemPath>
           <itemPath>src/detector_base.hpp</itemPath>
@@ -118,6 +118,7 @@
   <sourceRootList>
     <Elem>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src</Elem>
     <Elem>/home/izzy/TerraClear/yolo-detect/libterraclear/src</Elem>
+    <Elem>/usr/include/spinnaker</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -141,22 +142,32 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -215,10 +226,6 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -259,6 +266,10 @@
       </item>
       <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
@@ -278,6 +289,14 @@
       <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -304,22 +323,32 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -378,10 +407,6 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -422,6 +447,10 @@
       </item>
       <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
@@ -441,6 +470,14 @@
       <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -466,22 +503,32 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -540,10 +587,6 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -584,6 +627,10 @@
       </item>
       <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
@@ -603,6 +650,14 @@
       <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -629,22 +684,32 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="/home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
       <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.hpp"
             ex="false"
             tool="3"
             flavor2="0">
@@ -703,10 +768,6 @@
       </item>
       <item path="src/camera_usb.hpp" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="src/camera_velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -747,6 +808,10 @@
       </item>
       <item path="src/thread_base.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/timed_averaging.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/timed_averaging.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/tracking_object.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_object.hpp" ex="false" tool="3" flavor2="0">
@@ -766,6 +831,14 @@
       <item path="src/tracking_velocity_multi.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/tracking_velocity_multi.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/velocity_tracker.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="src/vision_warp.cpp" ex="false" tool="1" flavor2="0">
       </item>
