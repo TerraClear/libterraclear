@@ -33,12 +33,9 @@ namespace terraclear
     {
     }
 
-    std::vector<terraclear::bounding_box> detector_hsv::detect_objects() 
+    std::vector<std::vector<cv::Point>> detector_hsv::detect_contours()
     {
-        //ret vector
-        std::vector<bounding_box> ret_vect;
-
-        cv::Mat mat_filtered;
+         cv::Mat mat_filtered;
 
         //blur Image a bit first.
         cv::blur(_imgsrc, mat_filtered, cv::Size(5,5));
@@ -61,6 +58,14 @@ namespace terraclear
         //Vector for all contours.
         std::vector<std::vector<cv::Point>> contours;
         findContours(mat_filtered, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        
+        return contours;
+    }
+    
+    std::vector<bounding_box> detector_hsv::boxes_from_contours(std::vector<std::vector<cv::Point>> contours)
+    {
+        //ret vector
+        std::vector<bounding_box> ret_vect;
 
         //create bounding boxes from contours
         int trackid = 0; //unique ID per bounding box..
@@ -90,6 +95,11 @@ namespace terraclear
         vision_core::mergeBoxes(ret_vect, 60);
 
         return ret_vect;
+    }    
+    
+    std::vector<terraclear::bounding_box> detector_hsv::detect_objects() 
+    {
+        return (boxes_from_contours(detect_contours()));
     }
 
 

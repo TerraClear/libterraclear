@@ -42,6 +42,9 @@ namespace terraclear
 
             //pure virtual implementation
             std::vector<bounding_box> detect_objects();
+            
+            std::vector<std::vector<cv::Point>> detect_contours();
+            std::vector<bounding_box> boxes_from_contours(std::vector<std::vector<cv::Point>> contours);
 
         private:
             
