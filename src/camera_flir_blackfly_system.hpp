@@ -19,7 +19,7 @@
  * 
 */
 
-//#define TC_USE_BLACKFLY
+#define TC_USE_BLACKFLY
 
 //only compile for FLIR Blackfly S if required.. 
 //i.e you MUST #define TC_USE_BLACKFLY or use g++ with -DTC_USE_BLACKFLY

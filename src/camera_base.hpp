@@ -38,6 +38,11 @@ namespace terraclear
             virtual bool    frame_update() = 0;
             cv::Mat         getRGBFrame();
             virtual void    frame_save(std::string frame_name, bool generate_file_seq = true);
+            virtual void    change_white_balance(float red_level, float blue_level);
+            virtual void    change_gain(float gain_level);
+            virtual void    change_exposure_time(int time);
+            virtual void    change_black_level(float level);
+            virtual void    change_gamma(float gamma);
 
             //camera syncronization features
             //caller must supply pointer to mutex.else internal mutex will be used.

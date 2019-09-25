@@ -12,6 +12,7 @@
             <sourceRootList>
                 <sourceRootElem>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src</sourceRootElem>
                 <sourceRootElem>/home/izzy/TerraClear/yolo-detect/libterraclear/src</sourceRootElem>
+                <sourceRootElem>/usr/include/spinnaker</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

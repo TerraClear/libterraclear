@@ -18,7 +18,7 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
-
+#define TC_USE_BLACKFLY
 #include "camera_flir_blackfly.hpp"
 
 #ifdef TC_USE_BLACKFLY
@@ -262,6 +262,77 @@ namespace terraclear
         }        
 
         return success;
+    }
+    
+    void camera_flir_blackfly::change_white_balance(float red_level, float blue_level)
+    {
+        Spinnaker::GenApi::INodeMap & nodeMap = _flir_cam->GetNodeMap();
+        
+        Spinnaker::GenApi::CEnumerationPtr balanceWhiteAuto = nodeMap.GetNode("BalanceWhiteAuto");
+        balanceWhiteAuto->SetIntValue(balanceWhiteAuto->GetEntryByName("Off")->GetValue());
+
+        Spinnaker::GenApi::CEnumerationPtr balanceRatioSelector = nodeMap.GetNode("BalanceRatioSelector");
+
+        Spinnaker::GenApi::CFloatPtr balanceRatio = nodeMap.GetNode("BalanceRatio");
+//        balanceRatio->SetValue(level);
+
+        balanceRatioSelector->SetIntValue(balanceRatioSelector->GetEntryByName("Red")->GetValue());
+        balanceRatio->SetValue(red_level);
+        
+//        balanceRatioSelector->SetIntValue(balanceRatioSelector->GetEntryByName("Green")->GetValue());
+//        balanceRatio->SetValue(green_level);
+        
+        balanceRatioSelector->SetIntValue(balanceRatioSelector->GetEntryByName("Blue")->GetValue());
+        balanceRatio->SetValue(blue_level);
+    }
+    
+    void camera_flir_blackfly::change_gain(float gain_level)
+    {
+        Spinnaker::GenApi::INodeMap & nodeMap = _flir_cam->GetNodeMap();
+        
+        Spinnaker::GenApi::CEnumerationPtr gainAuto = nodeMap.GetNode("GainAuto");
+        gainAuto->SetIntValue(gainAuto->GetEntryByName("Off")->GetValue());
+
+        Spinnaker::GenApi::CFloatPtr gainValue = nodeMap.GetNode("Gain");
+        gainValue->SetValue(gain_level);
+    }
+    
+    void camera_flir_blackfly::change_exposure_time(int time)
+    {
+        Spinnaker::GenApi::INodeMap & nodeMap = _flir_cam->GetNodeMap();
+        
+        Spinnaker::GenApi::CEnumerationPtr exposureAuto = nodeMap.GetNode("ExposureAuto");
+        exposureAuto->SetIntValue(exposureAuto->GetEntryByName("Off")->GetValue());
+
+        Spinnaker::GenApi::CEnumerationPtr exposureMode = nodeMap.GetNode("ExposureMode");
+        exposureMode->SetIntValue(exposureMode->GetEntryByName("Timed")->GetValue());
+
+        Spinnaker::GenApi::CFloatPtr exposureTime = nodeMap.GetNode("ExposureTime");
+        exposureTime->SetValue(time);
+    }
+    
+    void camera_flir_blackfly::change_black_level(float level)
+    {
+        Spinnaker::GenApi::INodeMap & nodeMap = _flir_cam->GetNodeMap();
+        std::cout << 1 << std::endl;
+        
+        Spinnaker::GenApi::CBooleanPtr blackLevelEnabled = nodeMap.GetNode("BlackLevelEnabled");
+        std::cout << 2 << std::endl;
+//        std::cout << blackLevelEnabled << std::endl;
+        blackLevelEnabled->SetValue("True");
+        std::cout << 3 << std::endl;
+
+        Spinnaker::GenApi::CFloatPtr blackLevel = nodeMap.GetNode("BlackLevel");
+        std::cout << 4 << std::endl;
+        blackLevel->SetValue(level);
+    }
+    
+    void camera_flir_blackfly::change_gamma(float gamma)
+    {
+        Spinnaker::GenApi::INodeMap & nodeMap = _flir_cam->GetNodeMap();
+        
+        Spinnaker::GenApi::CFloatPtr gam = nodeMap.GetNode("Gamma");
+        gam->SetValue(gamma);
     }
     
     std::string camera_flir_blackfly::flir_pixel_format_to_string(FLIR_PixelFormat flir_pixel_format)
