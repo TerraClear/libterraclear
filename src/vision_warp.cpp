@@ -120,12 +120,13 @@ namespace  terraclear
         cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, img_src.size(), cv::RANSAC); // do perspective transformation
         cv::Mat img_result(gpu_dst);
         
-        cv::Rect myROI((img_result.cols /2) - _target_size.width, (img_result.rows) - img_result.rows, _target_size.height, img_result.rows);
+        cv::Rect myROI((img_result.cols /2) - _target_size.width/2, 0, _target_size.width, img_result.rows);
         cv::Mat crop = img_result(myROI);
-        
+        cv::Mat resize;
+        cv::resize(crop,resize,cv::Size(700,1200),0,0,cv::INTER_CUBIC);
         _elapsed_us = _sw.get_elapsed_us();
         
-        return crop;
+        return resize;
     }
  
     cv::Mat vision_warp::transform_image_gpu(cv::Mat img_src, bool flip)
