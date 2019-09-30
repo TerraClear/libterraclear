@@ -50,7 +50,7 @@ namespace  terraclear
             
             cv::Mat transform_image_gpu(cv::Mat img_src);
             cv::Mat transform_image_gpu(cv::Mat img_src, bool flip);
-            cv::Mat transform_image_gpu_crop(cv::Mat img_src, cv::Size size);
+            cv::Mat transform_image_gpu_crop(cv::Mat img_src);
             
             cv::Mat get_chessboard_transform(cv::Mat img_src, cv::Size chessboard_sz);
             void update_frame(const cv::Mat img_src);

@@ -14,7 +14,7 @@
 #include <opencv2/cudawarping.hpp>
 #include <opencv2/calib3d.hpp>
 
-#include "vision_warp.h"
+#include "libterraclear/src/vision_warp.h"
 #include <libterraclear/src/filetools.hpp>
 
 using namespace cv;
@@ -109,7 +109,7 @@ namespace  terraclear
         return resize;
     }
     
-    cv::Mat vision_warp::transform_image_gpu_crop(cv::Mat img_src, cv::Size size)
+    cv::Mat vision_warp::transform_image_gpu_crop(cv::Mat img_src)
     {
         //copy image to GPU
         cv::cuda::GpuMat gpu_src(img_src);
@@ -117,18 +117,14 @@ namespace  terraclear
         
         //warp original & resize.
         _sw.reset();
-        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size, cv::RANSAC); // do perspective transformation
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, img_src.size(), cv::RANSAC); // do perspective transformation
         cv::Mat img_result(gpu_dst);
         
-        cv::Rect myROI((img_result.cols /2) - 350, (img_result.rows) - img_result.rows, 700, img_result.rows);
+        cv::Rect myROI((img_result.cols /2) - _target_size.width, (img_result.rows) - img_result.rows, _target_size.height, img_result.rows);
         cv::Mat crop = img_result(myROI);
         
         _elapsed_us = _sw.get_elapsed_us();
         
-        //copy GPU image back to regular cv mat
-        
-        //cv::Rect rect((img_result.cols - size.width)/2,0,size.width,size.height);
-        //cv::Mat crop = img_result(rect);
         return crop;
     }
  
