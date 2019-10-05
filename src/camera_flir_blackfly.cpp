@@ -18,7 +18,7 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
-#define TC_USE_BLACKFLY
+//#define TC_USE_BLACKFLY
 #include "camera_flir_blackfly.hpp"
 
 #ifdef TC_USE_BLACKFLY
