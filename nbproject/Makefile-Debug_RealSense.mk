@@ -65,6 +65,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/tracking_position.o \
 	${OBJECTDIR}/src/tracking_velocity.o \
 	${OBJECTDIR}/src/tracking_velocity_multi.o \
+	${OBJECTDIR}/src/vision_filtering.o \
 	${OBJECTDIR}/src/vision_warp.o
 
 
@@ -241,6 +242,11 @@ ${OBJECTDIR}/src/tracking_velocity_multi.o: src/tracking_velocity_multi.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/tracking_velocity_multi.o src/tracking_velocity_multi.cpp
+
+${OBJECTDIR}/src/vision_filtering.o: src/vision_filtering.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/vision_filtering.o src/vision_filtering.cpp
 
 ${OBJECTDIR}/src/vision_warp.o: src/vision_warp.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
