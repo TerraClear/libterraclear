@@ -30,10 +30,6 @@
                     <name>Debug_All</name>
                     <type>2</type>
                 </confElem>
-                <confElem>
-                    <name>Debug_cv4</name>
-                    <type>2</type>
-                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>

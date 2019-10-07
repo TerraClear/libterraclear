@@ -82,6 +82,11 @@ namespace terraclear
 
             //pure virtual implementation..
             bool frame_update();
+            void change_white_balance(float red_level, float blue_level);
+            void change_gain(float gain_level);
+            void change_exposure_time(int time);
+            void change_black_level(float level);
+            void change_gamma(float gamma);
             
             void release();
         private:
