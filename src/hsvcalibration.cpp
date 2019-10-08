@@ -32,9 +32,21 @@ namespace terraclear
     cv::Mat hsvcalibration::_window_img;
     std::string hsvcalibration::_window_name;
             
+    struct ColorThresholdData
+    {
+        int &_h_low;
+        int &_h_high;
+    };
+
+    enum ColorThresholdType
+    {
+        RED_HIGH,
+        RED_LOW
+    };
+
     hsvcalibration::hsvcalibration(int &h_low, int &h_high, int &s_low, int &s_high, int &v_low, int &v_high, std::string window_name) 
     {
-
+        
         _h_low = &h_low;
         _h_high = &h_high;
         _s_low = &s_low;
@@ -49,12 +61,12 @@ namespace terraclear
         
         _window_img = cv::Mat(50, 100, CV_8UC3, cv::Scalar(0xff, 0x00, 0x00));
 
-        cv::createTrackbar("HL", window_name, _h_low, 175, hsvcalibration::callback_slider, this);
-        cv::createTrackbar("HH", window_name, _h_high, 175, hsvcalibration::callback_slider, this);
-        cv::createTrackbar("SL", window_name, _s_low, 255, hsvcalibration::callback_slider, this);
-        cv::createTrackbar("SH", window_name, _s_high, 255, hsvcalibration::callback_slider, this);
-        cv::createTrackbar("VL", window_name, _v_low, 255, hsvcalibration::callback_slider, this);
-        cv::createTrackbar("VH", window_name, _v_high, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("HL", window_name, _h_low, 175, hsvcalibration::callback_slider, new hsvcalibration(*this));
+        cv::createTrackbar("HH", window_name, _h_high, 175, hsvcalibration::callback_slider, new hsvcalibration(*this));
+        cv::createTrackbar("SL", window_name, _s_low, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
+        cv::createTrackbar("SH", window_name, _s_high, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
+        cv::createTrackbar("VL", window_name, _v_low, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
+        cv::createTrackbar("VH", window_name, _v_high, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
 
         fill_hsv();
     }
@@ -65,7 +77,8 @@ namespace terraclear
     
     void hsvcalibration::callback_slider(int track_val, void* user_param)
     {
-        
+        hsvcalibration* this_ptr = (hsvcalibration*)(user_param);
+        this_ptr->fill_hsv();
     }
      
     void hsvcalibration::fill_hsv()
