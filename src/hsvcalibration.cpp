@@ -31,18 +31,6 @@ namespace terraclear
     //static vars..
     cv::Mat hsvcalibration::_window_img;
     std::string hsvcalibration::_window_name;
-            
-    struct ColorThresholdData
-    {
-        int &_h_low;
-        int &_h_high;
-    };
-
-    enum ColorThresholdType
-    {
-        RED_HIGH,
-        RED_LOW
-    };
 
     hsvcalibration::hsvcalibration(int &h_low, int &h_high, int &s_low, int &s_high, int &v_low, int &v_high, std::string window_name) 
     {
