@@ -21,27 +21,12 @@ using namespace cv;
 using namespace std;
 
 namespace  terraclear
-{   
-    vision_warp::vision_warp() {};
-    vision_warp::vision_warp(std::string camera_xml) 
-    {
-        _sw.start();
-        
-        // Read in camera intrinsics 
-        cv::FileStorage fs(camera_xml, FileStorage::READ);
-        fs["camera_matrix"] >> cameraMatrix;
-        fs["distortion_coefficients"] >> distCoeffs;
-    }
-
+{  
     vision_warp::~vision_warp() 
     {
     }
-        
-    void vision_warp::update_frame(const cv::Mat img_src)
-    {
-        cv::cvtColor(img_src, _img, cv::COLOR_RGB2GRAY);
-    }
-    cv::Mat vision_warp::get_transform_matrix()
+
+    cv::Mat* vision_warp::get_transform_matrix()
     {
         return _transform_matrix;
     }
@@ -51,7 +36,7 @@ namespace  terraclear
         cv::Mat img_result;
         //warp original & resize.
         _sw.reset();
-        cv::warpPerspective(img_src, img_result, _transform_matrix, img_src.size()); // do perspective transformation
+        cv::warpPerspective(img_src, img_result, *_transform_matrix, img_src.size()); // do perspective transformation
         _elapsed_us = _sw.get_elapsed_us();
       
         return img_result;
@@ -62,7 +47,7 @@ namespace  terraclear
         cv::Mat img_result;
         
         //warp original & resize.
-        cv::warpPerspective(img_src, img_result, _transform_matrix, _target_size); // do perspective transformation
+        cv::warpPerspective(img_src, img_result, *_transform_matrix, _target_size); // do perspective transformation
             
         _sw.reset();
         if (flip)
@@ -84,7 +69,7 @@ namespace  terraclear
         
         //warp original & resize.
         _sw.reset();
-        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size); // do perspective transformation
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, *_transform_matrix, _target_size); // do perspective transformation
         _elapsed_us = _sw.get_elapsed_us();
         
         //copy GPU image back to regular cv mat
@@ -98,12 +83,13 @@ namespace  terraclear
         cv::Mat img_result;
         //warp original & resize.
         _sw.reset();
-        cv::warpPerspective(img_src, img_result, _transform_matrix, img_src.size()); // do perspective transformation
+        cv::warpPerspective(img_src, img_result, *_transform_matrix, img_src.size()); // do perspective transformation
         
-        cv::Rect myROI((img_result.cols /2) - 350, (img_result.rows) - img_result.rows, 700, img_result.rows);
+        cv::Rect myROI((img_result.cols/2) - ((int)_target_size.width/2), 0, _target_size.width, img_result.rows);
         cv::Mat crop = img_result(myROI);
+
         cv::Mat resize;
-        cv::resize(crop,resize,cv::Size(700,1200),0,0,cv::INTER_CUBIC);
+        cv::resize(crop, resize,_target_size, 0, 0, cv::INTER_CUBIC);
         _elapsed_us = _sw.get_elapsed_us();
       
         return resize;
@@ -117,7 +103,7 @@ namespace  terraclear
         
         //warp original & resize.
         _sw.reset();
-        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, img_src.size(), cv::RANSAC); // do perspective transformation
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, *_transform_matrix, img_src.size(), cv::RANSAC); // do perspective transformation
         cv::Mat img_result(gpu_dst);
         
         cv::Rect myROI((img_result.cols /2) - _target_size.width/2, 0, _target_size.width, img_result.rows);
@@ -140,7 +126,7 @@ namespace  terraclear
    
         //warp original & resize.
         _sw.reset();
-        cv::cuda::warpPerspective(gpu_src, gpu_dst, _transform_matrix, _target_size); // do perspective transformation
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, *_transform_matrix, _target_size); // do perspective transformation
         // For flipping negative roll 
         if (flip)
         {
@@ -192,82 +178,6 @@ namespace  terraclear
         }
 
         return dst_corners;
-    }
-    
-    bool vision_warp::findChessBoard(const cv::Size board_sz) {
-        // Find chess board corners 
-        return cv::findChessboardCorners(_img, board_sz, corners);
-    }
-    
-    void vision_warp::calcChessboardCorners(cv::Size boardSize, terraclear::Pattern patternType = terraclear::Pattern::CHESSBOARD)
-    {
-        objectPoints.resize(0);
-
-        switch (patternType)
-        {
-        case CHESSBOARD:
-        case CIRCLES_GRID:
-            //! [compute-chessboard-object-points]
-            for( int i = 0; i < boardSize.height; i++ )
-                for( int j = 0; j < boardSize.width; j++ )
-                    //To try to center the chessboard frame, we substract the image size
-                    objectPoints.push_back(cv::Point3f(float((j-boardSize.width/2)*_block_size),
-                                              float((i-boardSize.height/2)*_block_size), 0));
-            //! [compute-chessboard-object-points]
-            break;
-
-        case ASYMMETRIC_CIRCLES_GRID:
-            for( int i = 0; i < boardSize.height; i++ )
-                for( int j = 0; j < boardSize.width; j++ )
-                    objectPoints.push_back(cv::Point3f(float((2*j + i % 2)*_block_size),
-                                              float(i*_block_size), 0));
-            break;
-
-        default:
-            CV_Error(Error::StsBadArg, "Unknown pattern type\n");
-        }
-    }
-
-    void vision_warp::computeC2MC1(const Mat &R1, const Mat &tvec1, const Mat &R2, const Mat &tvec2,
-                      Mat &R_1to2, Mat &tvec_1to2)
-    {
-        //c2Mc1 = c2Mo * oMc1 = c2Mo * c1Mo.inv()
-        R_1to2 = R2 * R1.t();
-        tvec_1to2 = R2 * (-R1.t()*tvec1) + tvec2;
-    }
-    
-    cv::Mat vision_warp::init_transform()
-    {
-        cv::Mat rvec, tvec;
-        cv::solvePnP(objectPoints, corners, cameraMatrix, distCoeffs, rvec, tvec);
-
-        cv::Mat R_desired = (Mat_<double>(3,3) <<
-                        0, -1, 0,
-                        1, 0, 0,
-                        0, 0, 1);
-        cv::Mat R;
-        cv::Rodrigues(rvec, R);
-        cv::Mat normal = (Mat_<double>(3,1) << 0, 0, 1);
-        cv::Mat normal1 = R*normal;
-        cv::Mat origin(3, 1, CV_64F, Scalar(0));
-        cv::Mat origin1 = R*origin + tvec;
-        
-        double d_inv1 = 1.0 / normal1.dot(origin1);
-
-        cv::Mat R_1to2, tvec_1to2;
-        cv::Mat tvec_desired = tvec.clone();
-        vision_warp::computeC2MC1(R, tvec, R_desired, tvec_desired, R_1to2, tvec_1to2);
-       
-        _transform_matrix = R_1to2 + d_inv1 * tvec_1to2*normal1.t();
-        _transform_matrix = cameraMatrix * _transform_matrix * cameraMatrix.inv();
-        cv::Mat final_mat = _transform_matrix/_transform_matrix.at<double>(2,2);
-        std::vector<cv::Point2f> worldPoints;
-        
-        cv::perspectiveTransform(corners, worldPoints,final_mat);
-        _gsd = _block_size / abs(worldPoints[0].y - worldPoints[1].y);
-
-        return final_mat;
-            
     }
     
 }

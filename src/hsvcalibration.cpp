@@ -31,10 +31,10 @@ namespace terraclear
     //static vars..
     cv::Mat hsvcalibration::_window_img;
     std::string hsvcalibration::_window_name;
-            
+
     hsvcalibration::hsvcalibration(int &h_low, int &h_high, int &s_low, int &s_high, int &v_low, int &v_high, std::string window_name) 
     {
-
+        
         _h_low = &h_low;
         _h_high = &h_high;
         _s_low = &s_low;
@@ -73,12 +73,11 @@ namespace terraclear
     {
         cv::Mat tmp_hsv = cv::Mat(_window_img.rows,_window_img.cols, CV_8UC3, cv::Scalar(0xff, 0x00, 0x00));
         cv::cvtColor(_window_img, tmp_hsv, CV_BGR2HSV);
-        cv::Rect rect1(0,0,50, 50);        
-        cv::Rect rect2(_window_img.cols/2, 0, _window_img.cols, _window_img.rows);        
+        cv::Rect rect1(0,0,50, 50);     
+        cv::Rect rect2(_window_img.cols/2, 0, _window_img.cols, _window_img.rows); 
         cv::rectangle(tmp_hsv, rect1, cv::Scalar(*_h_low, *_s_low, *_v_low), -1);
         cv::rectangle(tmp_hsv, rect2, cv::Scalar(*_h_high, *_s_high, *_v_high), -1);
         cv::cvtColor(tmp_hsv, _window_img, CV_HSV2BGR);
-
         cv::imshow(_window_name, _window_img);
     }
     

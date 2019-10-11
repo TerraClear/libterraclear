@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release Debug_RealSense Debug_All 
+ALLCONFS=Debug Release Debug_RealSense Debug_All Debug_cv4 
 
 
 # build

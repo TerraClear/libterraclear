@@ -38,6 +38,14 @@ CND_ARTIFACT_PATH_Debug_All=dist/Debug_All/GNU-Linux/libterraclear.so
 CND_PACKAGE_DIR_Debug_All=dist/Debug_All/GNU-Linux/package
 CND_PACKAGE_NAME_Debug_All=liblibterraclear.so.tar
 CND_PACKAGE_PATH_Debug_All=dist/Debug_All/GNU-Linux/package/liblibterraclear.so.tar
+# Debug_cv4 configuration
+CND_PLATFORM_Debug_cv4=GNU-Linux
+CND_ARTIFACT_DIR_Debug_cv4=dist/Debug_cv4/GNU-Linux
+CND_ARTIFACT_NAME_Debug_cv4=libterraclear.so
+CND_ARTIFACT_PATH_Debug_cv4=dist/Debug_cv4/GNU-Linux/libterraclear.so
+CND_PACKAGE_DIR_Debug_cv4=dist/Debug_cv4/GNU-Linux/package
+CND_PACKAGE_NAME_Debug_cv4=liblibterraclear.so.tar
+CND_PACKAGE_PATH_Debug_cv4=dist/Debug_cv4/GNU-Linux/package/liblibterraclear.so.tar
 #
 # include compiler specific variables
 #

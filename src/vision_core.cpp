@@ -243,6 +243,50 @@ namespace terraclear
         json_file.close();
 
     }
+    
+
+    std::list<bounding_box> vision_core::readBoxesJSON(std::string json_file_name, uint32_t min_area)
+    {
+        std::list<bounding_box> bboxes;
+
+        //If bboxes json file exist, load them into vector..
+        if (filetools::file_exists(json_file_name.c_str()))
+        {
+            //read json file..
+            Json::Value json_obj;
+            std::ifstream json_fstream(json_file_name, std::ifstream::binary);
+            json_fstream >> json_obj;        
+
+            //get Bounding Boxes for img
+            Json::Value bboxes_json = json_obj["bboxes"];
+
+            //iterate and create box vector
+            for (Json::Value::ArrayIndex i = 0; i != bboxes_json.size(); i++)
+            {
+                bounding_box bbox;
+
+                bbox.width =  bboxes_json[i].get("width", 0).asInt();
+                bbox.height = bboxes_json[i].get("height", 0).asInt();           
+                bbox.x = bboxes_json[i].get("x", 0).asInt();
+                bbox.y = bboxes_json[i].get("y", 0).asInt();
+
+                //support for json format where left  = x and y top = y
+                bbox.x = (bbox.x > 0) ? bbox.x :  bboxes_json[i].get("left", 0).asInt();
+                bbox.y = (bbox.y > 0) ? bbox.y :  bboxes_json[i].get("top", 0).asInt();
+
+                bbox.confidence = (float)std::stoi(bboxes_json[i].get("confidence", "1000").asCString()) / 100.0f;
+                bbox.class_id = classStringToType(bboxes_json[i].get("label", VISION_CLASS_ROCK).asCString());
+
+                //Add bbox to labeled boxes if min area size
+                if ((bbox.width * bbox.height) >= min_area)
+                    bboxes.push_back(bbox);
+            }
+
+            json_fstream.close();
+        }
+
+        return bboxes;
+    }
 
     
 }

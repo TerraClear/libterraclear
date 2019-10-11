@@ -25,7 +25,6 @@ using namespace std;
 
 namespace  terraclear
 {
-    enum Pattern { CHESSBOARD, CIRCLES_GRID, ASYMMETRIC_CIRCLES_GRID };
     
     class vision_warp 
     {
@@ -39,11 +38,10 @@ namespace  terraclear
             };
 
         public:
-            vision_warp();
-            vision_warp(std::string camera_xml);
+        
             virtual ~vision_warp();
 
-            cv::Mat get_transform_matrix();
+            cv::Mat* get_transform_matrix();
             cv::Mat transform_image(cv::Mat img_src);
             cv::Mat transform_image_crop(cv::Mat img_src);
             cv::Mat transform_image(cv::Mat img_src, bool flip);
@@ -52,29 +50,14 @@ namespace  terraclear
             cv::Mat transform_image_gpu(cv::Mat img_src, bool flip);
             cv::Mat transform_image_gpu_crop(cv::Mat img_src);
             
-            cv::Mat get_chessboard_transform(cv::Mat img_src, cv::Size chessboard_sz);
-            void update_frame(const cv::Mat img_src);
-            void undistort_img();
-            bool findChessBoard(const cv::Size board_sz);
-            void calcChessboardCorners(cv::Size boardSize, terraclear::Pattern patternType);
-            void computeC2MC1(const cv::Mat &R1, const cv::Mat &tvec1, const cv::Mat &R2, const cv::Mat &tvec2, cv::Mat &R_1to2, cv::Mat &tvec_1to2);
-            cv::Mat init_transform();
-            
-            uint64_t       _elapsed_us; 
-            cv::Mat        _transform_matrix;
-            cv::Mat        _undistorted_img;
-            cv::Size       _target_size;
+            uint64_t _elapsed_us; 
+            cv::Mat* _transform_matrix;
+            cv::Size _target_size;
+            float    _block_size;
             roi_transform  _source_points;
-            float          _block_size;
-            bool           _board_found;
-            float          _gsd;
 
         private:   
             cv::Mat _img;
-            cv::Mat cameraMatrix;
-            cv::Mat distCoeffs; 
-            std::vector<cv::Point3f> objectPoints;
-            std::vector<cv::Point2f> corners; 
             stopwatch _sw;
     };
 }
