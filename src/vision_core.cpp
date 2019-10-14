@@ -202,9 +202,9 @@ namespace terraclear
         //Generate JSON
         Json::Value root_json;
 
-        root_json["image_name"] = image_file_name;
-        root_json["image-width"] = image_width;
-        root_json["image-height"] = image_height;
+        root_json["ImageName"] = image_file_name;
+        root_json["imageWidth"] = image_width;
+        root_json["imageHeight"] = image_height;
 
         //array node for boxes                       
         Json::Value bboxes_json(Json::arrayValue);
@@ -288,5 +288,41 @@ namespace terraclear
         return bboxes;
     }
 
+std::list<bounding_box> vision_core::readBoxesTXT(std::string txtfilepath, int image_width, int image_height, uint32_t min_area)
+{
+    std::list<bounding_box> bboxes;
     
+    //If bboxes TXT file exist, load them into vector..
+    if (filetools::file_exists(txtfilepath.c_str()))
+    {
+        // bounding boxes
+        std::ifstream infile(txtfilepath.c_str());
+        int classtype;
+        float fcenterx, fcentery, fboxw, fboxh;
+
+        //read all lines from file and create bounding boxes. 
+        while (infile >> classtype >> fcenterx >> fcentery >> fboxw >> fboxh)
+        {
+            bounding_box bbox;
+
+            bbox.width =  abs(image_width * fboxw);
+            bbox.height =  abs(image_height * fboxh);
+            unsigned int icenterx =  abs(image_width * fcenterx);
+            unsigned int icentery =  abs(image_height * fcentery); 
+            bbox.x = icenterx - bbox.width / 2;
+            bbox.y = icentery - bbox.height / 2;
+            bbox.confidence = 1.00f;
+            bbox.class_id = (vision_class_type) classtype;
+
+            //Add bbox to labeled boxes if min area size
+            if ((bbox.width * bbox.height) >= min_area)
+                bboxes.push_back(bbox);
+
+        }
+    }//endif TXT file..
+
+    return bboxes;
+}
+
+
 }
