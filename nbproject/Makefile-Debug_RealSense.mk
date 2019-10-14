@@ -35,9 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/b9c8e08b/camera_velocity_calculator.o \
-	${OBJECTDIR}/_ext/b9c8e08b/rock_distance_tracker.o \
 	${OBJECTDIR}/_ext/cc787d41/camera_async.o \
+	${OBJECTDIR}/_ext/cc787d41/vision_core.o \
 	${OBJECTDIR}/src/appsettings.o \
 	${OBJECTDIR}/src/basicserial.o \
 	${OBJECTDIR}/src/camera_base.o \
@@ -50,17 +49,19 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_lucid_triton.o \
 	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
+	${OBJECTDIR}/src/camera_velocity_calculator.o \
+	${OBJECTDIR}/src/chessboard_calib.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
 	${OBJECTDIR}/src/detector_motion.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
+	${OBJECTDIR}/src/light_meter_camera_calibrator.o \
 	${OBJECTDIR}/src/msgserver.o \
 	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
 	${OBJECTDIR}/src/thread_base.o \
-	${OBJECTDIR}/src/timed_averaging.o \
 	${OBJECTDIR}/src/tracking_object.o \
 	${OBJECTDIR}/src/tracking_object_multi.o \
 	${OBJECTDIR}/src/tracking_position.o \
@@ -94,20 +95,15 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}: ${OBJE
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
 
-${OBJECTDIR}/_ext/b9c8e08b/camera_velocity_calculator.o: /home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/b9c8e08b
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9c8e08b/camera_velocity_calculator.o /home/izzy/TerraClear/yolo-detect/libterraclear/src/camera_velocity_calculator.cpp
-
-${OBJECTDIR}/_ext/b9c8e08b/rock_distance_tracker.o: /home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/b9c8e08b
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/b9c8e08b/rock_distance_tracker.o /home/izzy/TerraClear/yolo-detect/libterraclear/src/rock_distance_tracker.cpp
-
 ${OBJECTDIR}/_ext/cc787d41/camera_async.o: /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cc787d41/camera_async.o /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp
+
+${OBJECTDIR}/_ext/cc787d41/vision_core.o: /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/cc787d41
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/cc787d41/vision_core.o /home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/vision_core.cpp
 
 ${OBJECTDIR}/src/appsettings.o: src/appsettings.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -169,6 +165,16 @@ ${OBJECTDIR}/src/camera_usb.o: src/camera_usb.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_usb.o src/camera_usb.cpp
 
+${OBJECTDIR}/src/camera_velocity_calculator.o: src/camera_velocity_calculator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_velocity_calculator.o src/camera_velocity_calculator.cpp
+
+${OBJECTDIR}/src/chessboard_calib.o: src/chessboard_calib.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/chessboard_calib.o src/chessboard_calib.cpp
+
 ${OBJECTDIR}/src/detector_base.o: src/detector_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -199,6 +205,11 @@ ${OBJECTDIR}/src/hsvcalibration.o: src/hsvcalibration.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/hsvcalibration.o src/hsvcalibration.cpp
 
+${OBJECTDIR}/src/light_meter_camera_calibrator.o: src/light_meter_camera_calibrator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/light_meter_camera_calibrator.o src/light_meter_camera_calibrator.cpp
+
 ${OBJECTDIR}/src/msgserver.o: src/msgserver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -218,11 +229,6 @@ ${OBJECTDIR}/src/thread_base.o: src/thread_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/thread_base.o src/thread_base.cpp
-
-${OBJECTDIR}/src/timed_averaging.o: src/timed_averaging.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags realsense2` `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/timed_averaging.o src/timed_averaging.cpp
 
 ${OBJECTDIR}/src/tracking_object.o: src/tracking_object.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -56,8 +56,12 @@
       </logicalFolder>
       <logicalFolder name="f13" displayName="vision" projectFiles="true">
         <logicalFolder name="f8" displayName="calibration" projectFiles="true">
+          <itemPath>src/chessboard_calib.cpp</itemPath>
+          <itemPath>src/chessboard_calib.hpp</itemPath>
           <itemPath>src/hsvcalibration.cpp</itemPath>
           <itemPath>src/hsvcalibration.hpp</itemPath>
+          <itemPath>src/light_meter_camera_calibrator.cpp</itemPath>
+          <itemPath>src/light_meter_camera_calibrator.hpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="camera" projectFiles="true">
           <itemPath>/home/koos/Desktop/Dropbox/Private/Code/cpp/libterraclear/src/camera_async.cpp</itemPath>
@@ -140,6 +144,7 @@
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}</output>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs opencv`</linkerOptionItem>
+            <linkerLibFileItem>../../../ml/darknet/darknet.so</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -221,6 +226,10 @@
       </item>
       <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/chessboard_calib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/chessboard_calib.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -244,6 +253,16 @@
       <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -388,6 +407,10 @@
       </item>
       <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/chessboard_calib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/chessboard_calib.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -411,6 +434,16 @@
       <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -554,6 +587,10 @@
       </item>
       <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/chessboard_calib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/chessboard_calib.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -577,6 +614,16 @@
       <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -721,6 +768,10 @@
       </item>
       <item path="src/camera_velocity_calculator.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="src/chessboard_calib.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/chessboard_calib.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/detector_base.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/detector_base.hpp" ex="false" tool="3" flavor2="0">
@@ -744,6 +795,16 @@
       <item path="src/hsvcalibration.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="src/hsvcalibration.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="src/light_meter_camera_calibrator.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="src/msgserver.cpp" ex="false" tool="1" flavor2="8">
       </item>

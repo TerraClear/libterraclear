@@ -21,7 +21,6 @@
 //only compile for Serial Port Comms if required.. 
 //i.e you MUST #define TC_USE_SERIAL or use g++ with -DTC_USE_SERIAL
 
-#ifdef TC_USE_SERIAL
 #include <cstring>
 #include "iostream"
 #include <libserialport.h>
@@ -114,5 +113,3 @@ namespace terraclear
     }
 
 }
-
-#endif

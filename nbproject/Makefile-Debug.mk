@@ -50,12 +50,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/camera_velocity_calculator.o \
+	${OBJECTDIR}/src/chessboard_calib.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
 	${OBJECTDIR}/src/detector_motion.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
+	${OBJECTDIR}/src/light_meter_camera_calibrator.o \
 	${OBJECTDIR}/src/msgserver.o \
 	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
@@ -83,11 +85,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs opencv`  
+LDLIBSOPTIONS=`pkg-config --libs opencv` ../../../ml/darknet/darknet.so  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}: ../../../ml/darknet/darknet.so
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -168,6 +172,11 @@ ${OBJECTDIR}/src/camera_velocity_calculator.o: src/camera_velocity_calculator.cp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_velocity_calculator.o src/camera_velocity_calculator.cpp
 
+${OBJECTDIR}/src/chessboard_calib.o: src/chessboard_calib.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/chessboard_calib.o src/chessboard_calib.cpp
+
 ${OBJECTDIR}/src/detector_base.o: src/detector_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -197,6 +206,11 @@ ${OBJECTDIR}/src/hsvcalibration.o: src/hsvcalibration.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/hsvcalibration.o src/hsvcalibration.cpp
+
+${OBJECTDIR}/src/light_meter_camera_calibrator.o: src/light_meter_camera_calibrator.cpp
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/light_meter_camera_calibrator.o src/light_meter_camera_calibrator.cpp
 
 ${OBJECTDIR}/src/msgserver.o: src/msgserver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -259,6 +273,8 @@ ${OBJECTDIR}/src/vision_warp.o: src/vision_warp.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} -r ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/darknet.so
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libterraclear.${CND_DLIB_EXT}
 
 # Subprojects
 .clean-subprojects:
