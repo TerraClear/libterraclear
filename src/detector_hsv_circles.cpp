@@ -39,7 +39,7 @@ namespace terraclear
         cv::Mat mat_filtered;
 
         //blur Image a bit first.
-        cv::blur(_imgsrc, mat_filtered, cv::Size(10, 10));
+        cv::blur(_imgsrc, mat_filtered, cv::Size(5, 5));
 
         /// Transform it to HSV color space
         cv::cvtColor(mat_filtered, mat_filtered, cv::COLOR_BGR2HSV);
@@ -48,40 +48,41 @@ namespace terraclear
         cv::inRange(mat_filtered, _lowrange, _highrange, mat_filtered);
 
         //morphological opening (remove small objects from the foreground)
-        cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
-        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)) ); 
+       cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
+        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(5, 5)) ); 
 
          //morphological closing (fill small holes in the foreground)
-        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)) ); 
-        cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(2, 2)) );
+        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(7, 7)) ); 
+        cv::erode(mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3)) );
 
         cv::medianBlur(mat_filtered, mat_filtered, 5);
+        cv::dilate( mat_filtered, mat_filtered, cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(10, 10)) ); 
 
         //Vector for all contours.
         std::vector<std::vector<cv::Point>> contours;
         findContours(mat_filtered, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-//        //define bounding box areas fromcontours
-//        for (auto contour : contours)
-//        {
-//            cv::Rect rectobj = cv::boundingRect(cv::Mat(contour));
-//            cv::rectangle(imgsrc, rectobj, cv::Scalar(0x00, 0xff, 0x00), 3, 8, 0 );
+        if (draw_contours)
+        {
+//            for (auto contour : contours)
+//            {
+//                cv::Rect rectobj = cv::boundingRect(cv::Mat(contour));
 //
-//            //get center of mass
-//            cv::Mat roi = mat_filtered(rectobj);
-//            cv::Moments m = cv::moments(roi, true);
-//            cv::Point p(rectobj.x + m.m10/m.m00, rectobj.y + m.m01/m.m00);
-//            cv::circle(imgsrc, p, 4, cv::Scalar(0x00, 0xff,0xff), 3, 8);
-//        }    
-//
-//        cv::drawContours(imgsrc, contours, -1, cv::Scalar(0xff, 0x00, 0x00), 2, 8);
+//                //get center of mass
+//                cv::Mat roi = mat_filtered(rectobj);
+//                cv::Moments m = cv::moments(roi, true);
+//                cv::Point p(rectobj.x + m.m10/m.m00, rectobj.y + m.m01/m.m00);
+//                cv::circle(imgsrc, p, 4, cv::Scalar(0x00, 0xff,0xff), 3, 8);
+//            }        
+            cv::drawContours(_imgsrc, contours, -1, cv::Scalar(0xff, 0x00, 0x00), 2, 8);
+        }
 
         //find circles in contours..
         std::vector<cv::Vec3f> circles;
         cv::HoughCircles(mat_filtered, circles, cv::HOUGH_GRADIENT, 1,
                      100, // change this value to detect circles with different distances to each other
                      80, 15, //canny edge detector thresholds
-                     5, 150 // change the last two parameters (min_radius & max_radius) to detect larger circles
+                     50, 200 // change the last two parameters (min_radius & max_radius) to detect larger circles
                      );
 
         //generate inscribed bbox for each circle.
