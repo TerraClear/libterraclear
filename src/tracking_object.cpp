@@ -146,7 +146,7 @@ namespace terraclear
         //time passed since previous update / predict
         float dT =  std::round(1000.0f / (float) _sw.get_elapsed_ms());
 
-        float dy =  std::round (_frame_y_v/ dT);
+        float dy =  std::round (_frame_y_v / dT);
         float dx =  std::round (_frame_x_v / dT);
         
         //predict pos.

@@ -1,5 +1,5 @@
 #include "tracking_object_multi.hpp"
-
+namespace tc = terraclear;
 namespace terraclear
 {   
     tracking_object_multi::tracking_object_multi() 
@@ -148,8 +148,8 @@ namespace terraclear
                     _tracking_list[keypair.first].obj_ptr->_frame_x_v = frame_v_x;
                     _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_v_y;
                     
-                    //predict next position using frame velocity if above paddle line else use individual linearly regressed vel
-                    if(_tracking_list[keypair.first].obj_found_count < _paddle_line)
+                    // predict next position using frame velocity if above paddle line else use individual linearly regressed vel
+                    if(_tracking_list[keypair.first].obj_ptr->get_object().y < _paddle_line)
                     {
                         _tracking_list[keypair.first].obj_ptr->predict_average();
                     }
@@ -162,7 +162,7 @@ namespace terraclear
                                                                            : _tracking_list[keypair.first].obj_zero_vel_count = 0;
                     
                     //get prediction box
-                    bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
+                    tc::bounding_box predicted_box = _tracking_list[keypair.first].obj_ptr->get_object();
                     
                     //calculate and increment linear traveled distance
                     int linear_distance = sqrt(pow(current_box.x - predicted_box.x, 2) + pow(current_box.y - predicted_box.y, 2));
