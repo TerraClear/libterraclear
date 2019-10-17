@@ -262,25 +262,45 @@ namespace  terraclear
     //read lines from text file..
     std::vector<std::string> filetools::read_lines(std::string txtfilepath)
     {
-        std::vector<std::string> names_list;
+        std::vector<std::string> line_list;
 
         //If names file exist, load them into vector..
         if (file_exists(txtfilepath.c_str()))
         {
-            // bounding boxes
+            // open file stream
             std::ifstream infile(txtfilepath.c_str());
 
-            std::string class_name;
-            //read all names from file 
-            while (std::getline(infile, class_name))
+            std::string in_string;
+            //read all line entries 
+            while (std::getline(infile, in_string))
             {
-                names_list.push_back(class_name);
+                line_list.push_back(in_string);
             }
+            
+            //close file
+            infile.close();
+            
         }//endif names file..
 
-        return names_list;
+        return line_list;
     }  
 
+    //write lines to text file..
+    void filetools::write_lines(std::string txtfilepath, std::vector<std::string> string_lines, bool replace_file)
+    {
+        // open file stream
+        std::ios_base::openmode file_opts = (replace_file) ? std::ios_base::app : std::ios_base::out; 
+        std::ofstream outfile(txtfilepath.c_str(), file_opts);
+        
+        //write all line entries 
+        for (std::string line : string_lines)
+        {
+            outfile << line << std::endl;
+        }
+        //close file
+        outfile.close();
+    }
+    
     //split delimeted string into vector of parts..
     std::vector<std::string> filetools::split_string(const std::string& in_string, char delimiter)
     {
