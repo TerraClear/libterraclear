@@ -57,7 +57,7 @@ namespace terraclear
     }
 
 
-    cv::cuda::GpuMat vision_filtering::apply_gpu_threshold(cv::cuda::GpuMat& src_img, cv::Scalar hsv_low, cv::Scalar hsv_high)
+    cv::cuda::GpuMat vision_filtering::apply_gpu_threshold(cv::cuda::GpuMat& src_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv)
     {
         const uchar MAX_UCHAR = 0xff;
 
@@ -72,30 +72,34 @@ namespace terraclear
         src_img.release();
 
         // Transform it to HSV color space
-        cv::cuda::cvtColor(tmp, tmp2, cv::COLOR_BGR2HSV);
+        if(use_hsv)
+            cv::cuda::cvtColor(tmp, tmp2, cv::COLOR_BGR2HSV);
+        else
+            tmp.copyTo(tmp2);
+        
         tmp.release();
 
         //split into 3 channels H, S and V
         cv::cuda::split(tmp2, mat_parts);
         tmp2.release();
 
-        //Threshold H, S and V channels individually 
-        cv::cuda::threshold(mat_parts[0], mat_parts_low[0], hsv_low[0], MAX_UCHAR, cv::THRESH_BINARY);
-        cv::cuda::threshold(mat_parts[0], mat_parts_high[0],  hsv_high[0], MAX_UCHAR, cv::THRESH_BINARY_INV);
+        //find range for channel 0
+        cv::cuda::threshold(mat_parts[0], mat_parts_low[0], lowrange[0], MAX_UCHAR, cv::THRESH_BINARY);
+        cv::cuda::threshold(mat_parts[0], mat_parts_high[0],  highrange[0], MAX_UCHAR, cv::THRESH_BINARY_INV);
         cv::cuda::bitwise_and(mat_parts_high[0], mat_parts_low[0], mat_parts[0]);
         mat_parts_low[0].release();    
         mat_parts_high[0].release();    
 
-        //find range between high and low values of S
-        cv::cuda::threshold(mat_parts[1], mat_parts_low[1], hsv_low[1], MAX_UCHAR, cv::THRESH_BINARY);
-        cv::cuda::threshold(mat_parts[1], mat_parts_high[1],  hsv_high[1], MAX_UCHAR, cv::THRESH_BINARY_INV);
+        //find range for channel 1
+        cv::cuda::threshold(mat_parts[1], mat_parts_low[1], lowrange[1], MAX_UCHAR, cv::THRESH_BINARY);
+        cv::cuda::threshold(mat_parts[1], mat_parts_high[1],  highrange[1], MAX_UCHAR, cv::THRESH_BINARY_INV);
         cv::cuda::bitwise_and(mat_parts_high[1], mat_parts_low[1], mat_parts[1]);
         mat_parts_low[1].release();    
         mat_parts_high[1].release();    
 
-        //find range between high and low values of V
-        cv::cuda::threshold(mat_parts[2], mat_parts_low[2], hsv_low[2], MAX_UCHAR, cv::THRESH_BINARY);
-        cv::cuda::threshold(mat_parts[2], mat_parts_high[2],  hsv_high[2], MAX_UCHAR, cv::THRESH_BINARY_INV);
+        //find range for channel 2
+        cv::cuda::threshold(mat_parts[2], mat_parts_low[2], lowrange[2], MAX_UCHAR, cv::THRESH_BINARY);
+        cv::cuda::threshold(mat_parts[2], mat_parts_high[2],  highrange[2], MAX_UCHAR, cv::THRESH_BINARY_INV);
         cv::cuda::bitwise_and(mat_parts_high[2], mat_parts_low[2], mat_parts[2]);
         mat_parts_low[2].release();    
         mat_parts_high[2].release();    
@@ -111,23 +115,29 @@ namespace terraclear
         mat_parts[2].release();    
 
         //morphological opening (remove small objects from the foreground)
-        int morph_size = 2;   
-        cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(morph_size * 2 + 1, morph_size * 2 + 1), cv::Point(morph_size, morph_size));
-        cv::Ptr<cv::cuda::Filter> filter_erode = cv::cuda::createMorphologyFilter(cv::MORPH_ERODE, tmp4.type(), element);
-        cv::Ptr<cv::cuda::Filter> filter_dilate = cv::cuda::createMorphologyFilter(cv::MORPH_DILATE, tmp4.type(), element);
+        int morph_size1 = 2;   
+        int morph_size2 = 3;   
+        cv::Mat element1 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(morph_size1 * 2 + 1, morph_size1 * 2 + 1), cv::Point(morph_size1, morph_size1));
+        cv::Mat element2 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(morph_size2 * 2 + 1, morph_size2 * 2 + 1), cv::Point(morph_size2, morph_size2));
+        cv::Ptr<cv::cuda::Filter> filter_erode1 = cv::cuda::createMorphologyFilter(cv::MORPH_ERODE, tmp4.type(), element1);
+        cv::Ptr<cv::cuda::Filter> filter_dilate1 = cv::cuda::createMorphologyFilter(cv::MORPH_DILATE, tmp4.type(), element1);
+        cv::Ptr<cv::cuda::Filter> filter_erode2 = cv::cuda::createMorphologyFilter(cv::MORPH_ERODE, tmp4.type(), element2);
+        cv::Ptr<cv::cuda::Filter> filter_dilate2 = cv::cuda::createMorphologyFilter(cv::MORPH_DILATE, tmp4.type(), element2);
 
         //erode & dilate to remove tiny spots..
-        filter_erode->apply(tmp4, tmp3);
-        filter_dilate->apply(tmp3, tmp4);
-        filter_dilate->apply(tmp4, tmp3);
-        filter_erode->apply(tmp3, tmp4);
+        filter_erode1->apply(tmp4, tmp3);
+        filter_dilate1->apply(tmp3, tmp4);
+        filter_erode1->apply(tmp4, tmp3);
+        filter_dilate2->apply(tmp3, tmp4);
 
         tmp3.release();
 
         return tmp4;
     }
+    
+    
 
-    void vision_filtering::apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange)
+    void vision_filtering::apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv)
     {
             //generate GPU matrices.
             cv::cuda::GpuMat gpu_dst, gpu_src;
@@ -136,7 +146,7 @@ namespace terraclear
             gpu_src.upload(src_img);
 
             //color for thresholds.
-            gpu_dst = apply_gpu_threshold(gpu_src, lowrange, highrange);
+            gpu_dst = apply_gpu_threshold(gpu_src, lowrange, highrange, use_hsv);
 
              //copy GPU image back to regular cv mat
             cv::Mat img_result(gpu_dst);
@@ -156,6 +166,7 @@ namespace terraclear
             float alpha = 0.30;
             cv::addWeighted(drawing, alpha, dst_img, 1.0, 0, dst_img);
     }
+     
 
     cv::Mat vision_filtering::apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, std::vector<cv::Point> pts_src, std::vector<cv::Point> pts_dst)
     {
