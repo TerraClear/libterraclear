@@ -57,6 +57,11 @@ namespace  terraclear
         return _fps_max;
     }
     
+    uint64_t camera_async::get_total_frame_count()
+    {
+        return _total_frame_count;
+    }
+    
     cv::Mat camera_async::get_ImageBuffer()
     {
         mutex_lock();
@@ -109,6 +114,8 @@ namespace  terraclear
         //read frame...
         if (_pcam->frame_update())
         {
+            _total_frame_count++;
+            
             int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
 
             //match requested frame rate if delay enabled
