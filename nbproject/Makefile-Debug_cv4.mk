@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=Debug_cv4
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -50,14 +50,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/camera_recorder.o \
 	${OBJECTDIR}/src/camera_usb.o \
 	${OBJECTDIR}/src/camera_velocity_calculator.o \
-	${OBJECTDIR}/src/chessboard_calib.o \
 	${OBJECTDIR}/src/detector_base.o \
 	${OBJECTDIR}/src/detector_hsv.o \
 	${OBJECTDIR}/src/detector_motion.o \
 	${OBJECTDIR}/src/error_base.o \
 	${OBJECTDIR}/src/filetools.o \
 	${OBJECTDIR}/src/hsvcalibration.o \
-	${OBJECTDIR}/src/light_meter_camera_calibrator.o \
 	${OBJECTDIR}/src/msgserver.o \
 	${OBJECTDIR}/src/navmath.o \
 	${OBJECTDIR}/src/stopwatch.o \
@@ -170,11 +168,6 @@ ${OBJECTDIR}/src/camera_velocity_calculator.o: src/camera_velocity_calculator.cp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv4` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/camera_velocity_calculator.o src/camera_velocity_calculator.cpp
 
-${OBJECTDIR}/src/chessboard_calib.o: src/chessboard_calib.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv4` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/chessboard_calib.o src/chessboard_calib.cpp
-
 ${OBJECTDIR}/src/detector_base.o: src/detector_base.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
@@ -204,11 +197,6 @@ ${OBJECTDIR}/src/hsvcalibration.o: src/hsvcalibration.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv4` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/hsvcalibration.o src/hsvcalibration.cpp
-
-${OBJECTDIR}/src/light_meter_camera_calibrator.o: src/light_meter_camera_calibrator.cpp
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -I/data/sources `pkg-config --cflags opencv4` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/light_meter_camera_calibrator.o src/light_meter_camera_calibrator.cpp
 
 ${OBJECTDIR}/src/msgserver.o: src/msgserver.cpp
 	${MKDIR} -p ${OBJECTDIR}/src

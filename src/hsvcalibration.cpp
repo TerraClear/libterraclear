@@ -49,12 +49,12 @@ namespace terraclear
         
         _window_img = cv::Mat(50, 100, CV_8UC3, cv::Scalar(0xff, 0x00, 0x00));
 
-        cv::createTrackbar("HL", window_name, _h_low, 175, hsvcalibration::callback_slider, new hsvcalibration(*this));
-        cv::createTrackbar("HH", window_name, _h_high, 175, hsvcalibration::callback_slider, new hsvcalibration(*this));
-        cv::createTrackbar("SL", window_name, _s_low, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
-        cv::createTrackbar("SH", window_name, _s_high, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
-        cv::createTrackbar("VL", window_name, _v_low, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
-        cv::createTrackbar("VH", window_name, _v_high, 255, hsvcalibration::callback_slider, new hsvcalibration(*this));
+        cv::createTrackbar("HL", window_name, _h_low, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("HH", window_name, _h_high, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("SL", window_name, _s_low, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("SH", window_name, _s_high, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("VL", window_name, _v_low, 255, hsvcalibration::callback_slider, this);
+        cv::createTrackbar("VH", window_name, _v_high, 255, hsvcalibration::callback_slider, this);
 
         fill_hsv();
     }

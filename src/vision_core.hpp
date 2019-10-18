@@ -112,7 +112,8 @@ namespace terraclear
             virtual ~vision_core();
 
             static void saveBoxesJSON(std::string image_file_name, uint32_t image_width, uint32_t image_height, std::list<bounding_box> bboxes);
-            
+            static std::list<bounding_box> readBoxesJSON(std::string json_file_name, uint32_t min_area = 0);
+            static std::list<bounding_box> readBoxesTXT(std::string txtfilepath, int image_width, int image_height, uint32_t min_area = 0);
             static void mergeBoxes(std::vector<bounding_box> &object_boxes, uint32_t expand_pixels = 0);
             static cv::Rect getIntersectRect(bounding_box b1, bounding_box b2);   
             
