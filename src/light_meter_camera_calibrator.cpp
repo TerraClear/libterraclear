@@ -41,6 +41,15 @@ namespace terraclear
                 settings_results.exposure_time = _max_exposure_time;
                 settings_results.max_exposure = true;
             }
+            
+            if (settings_results.red_multiplier > 4)
+            {
+                settings_results.red_multiplier = 4;
+            }
+            if (settings_results.blue_multiplier > 4)
+            {
+                settings_results.blue_multiplier = 4;
+            }
         }
         
         return settings_results;

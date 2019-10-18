@@ -21,6 +21,8 @@
 //only compile for Serial Port Comms if required.. 
 //i.e you MUST #define TC_USE_SERIAL and use g++ with -DTC_USE_SERIAL
 
+#ifdef TC_USE_SERIAL
+
 #ifndef BASICSERIAL_HPP
 #define BASICSERIAL_HPP
 
@@ -71,3 +73,4 @@ namespace  terraclear
 
 #endif /* BASICSERIAL_HPP */
 
+#endif //TC_USE_SERIAL
