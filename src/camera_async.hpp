@@ -29,6 +29,12 @@
 #ifndef CAMERA_ASYNC_HPP
 #define CAMERA_ASYNC_HPP
 
+struct frame_info
+{
+    cv::Mat cam_frame;
+    uint64_t resting_time;
+};
+
 namespace  terraclear
 {  
     class camera_async : public thread_base
@@ -39,8 +45,9 @@ namespace  terraclear
 
             uint32_t get_fps();
             uint32_t get_fpsmax();
+            uint64_t get_total_frame_count();
             camera_base* get_basecam_ptr();
-            cv::Mat get_ImageBuffer();
+            frame_info get_ImageBuffer();
           
             uint64_t get_lost_frames();
             void reset_lost_frames();
@@ -64,6 +71,8 @@ namespace  terraclear
             
             uint64_t _ms_elapsed = 0;
             uint32_t _frame_count = 0;
+            
+            uint64_t _total_frame_count = 0;
             
             cv::Mat _buffer_camera;
             cv::Mat _buffer_back;

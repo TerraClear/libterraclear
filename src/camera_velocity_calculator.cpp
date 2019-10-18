@@ -132,7 +132,7 @@ namespace terraclear
         return retval;
     }
     
-    std::vector<bbox_t> camera_velocity_calculator::update_tracking(cv::Mat& new_img)
+    std::vector<bbox_t> camera_velocity_calculator::update_tracking(cv::Mat& new_img, uint64_t resting_time)
     {
         std::vector<bbox_t> track_boxes_new;
         // Make sure the image isnt blank. If is, dont do a tracking flow update
@@ -174,8 +174,8 @@ namespace terraclear
                     {
                         //keep tracked box
                         track_boxes_new.push_back(tmp_bbox);
-                        _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x);
-                        _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y);
+                        _calculator_x_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.x, resting_time);
+                        _calculator_y_v->update_tracker_position(tmp_bbox.track_id, tmp_bbox.y, resting_time);
                     }
                 }
                 else
