@@ -22,9 +22,9 @@ namespace terraclear
         _trackers[id] = new_tracker;
     }
     
-    void velocity_calculator::update_tracker_position(int id, int pos)
+    void velocity_calculator::update_tracker_position(int id, int pos, uint64_t resting_time)
     {
-        _trackers[id]->update_position(pos);
+        _trackers[id]->update_position(pos, resting_time);
     }
     
     void velocity_calculator::reset_tracker_anchor(int id, int pos)

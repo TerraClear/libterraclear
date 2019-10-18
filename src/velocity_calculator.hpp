@@ -14,7 +14,7 @@ namespace terraclear
         public:
             velocity_calculator(int start_fps, float time_reset_thresh, int dist_reset_thresh);
             void add_tracker(int id, int queue_size, int starting_ypos, int max_travel_dist);
-            void update_tracker_position(int id, int ypos);
+            void update_tracker_position(int id, int ypos, uint64_t resting_time);
             void reset_tracker_anchor(int id, int pos);
             float get_average_velocity();
         private:

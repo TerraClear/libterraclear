@@ -62,13 +62,18 @@ namespace  terraclear
         return _total_frame_count;
     }
     
-    cv::Mat camera_async::get_ImageBuffer()
+    frame_info camera_async::get_ImageBuffer()
     {
+        frame_info new_frame;
+        
         mutex_lock();
            _buffer_back.copyTo(_buffer_front);
         mutex_unlock();
 
-        return _buffer_front;
+        new_frame.cam_frame = _buffer_front;
+        new_frame.resting_time = _sw.get_elapsed_ms();
+        
+        return new_frame;
     }
     
     void camera_async::reset_lost_frames()
