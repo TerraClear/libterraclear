@@ -148,15 +148,9 @@ namespace terraclear
                     _tracking_list[keypair.first].obj_ptr->_frame_x_v = frame_v_x;
                     _tracking_list[keypair.first].obj_ptr->_frame_y_v = frame_v_y;
                     
-                    // predict next position using frame velocity if above paddle line else use individual linearly regressed vel
-                    if(_tracking_list[keypair.first].obj_ptr->get_object().y < _paddle_line)
-                    {
-                        _tracking_list[keypair.first].obj_ptr->predict_average();
-                    }
-                    else 
-                    {
-                        _tracking_list[keypair.first].obj_ptr->predict();   
-                    }
+                    // predict next position using frame velocity
+                    _tracking_list[keypair.first].obj_ptr->predict_average();
+             
                     //check for zero velocity
                     (keypair.second.obj_ptr->get_velocity_y() == 0) ? _tracking_list[keypair.first].obj_zero_vel_count++ 
                                                                            : _tracking_list[keypair.first].obj_zero_vel_count = 0;
