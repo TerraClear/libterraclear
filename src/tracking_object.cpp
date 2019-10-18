@@ -113,9 +113,9 @@ namespace terraclear
         // Predict using regressed velocity
         
         //time passed since previous update / predict
-        float dT =  std::round(1000.0f / (float) _sw.get_elapsed_ms());
+        float dT =  1000.0f / (float) _sw.get_elapsed_ms();
 
-        float dy =  std::round (_y_v/ dT);
+        float dy =  std::round (_y_v / dT);
         float dx =  std::round (_x_v / dT);
         
         //predict pos.
