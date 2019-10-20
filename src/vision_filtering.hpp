@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <algorithm>
 
 //OPENCV
 #include <opencv2/core.hpp>
