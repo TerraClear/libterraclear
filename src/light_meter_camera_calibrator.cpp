@@ -11,13 +11,15 @@
  * Created on October 10, 2019, 11:29 AM
  */
 
+#ifdef TC_USE_SERIAL
+
 #include "light_meter_camera_calibrator.hpp"
 
 namespace terraclear
 {
     light_meter_camera_calibrator::light_meter_camera_calibrator(int fps)
     {
-        _light_meter.open("/dev/ttyACM0", tc::Baud::BAUD_9600);
+        _light_meter.open("/dev/ttyACM0", Baud::BAUD_9600);
         _max_exposure_time = (1.0 / fps) * 1000000;
     }
 
@@ -68,3 +70,5 @@ namespace terraclear
         return results;
     }
 }
+
+#endif

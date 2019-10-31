@@ -14,6 +14,8 @@
 #ifndef LIGHT_METER_CAMERA_CALIBRATOR_HPP
 #define LIGHT_METER_CAMERA_CALIBRATOR_HPP
 
+#ifdef TC_USE_SERIAL
+
 #include <cstdlib>
 #include <stdio.h>
 #include <iostream>
@@ -52,8 +54,6 @@ struct light_readings
     int w;
 };
 
-namespace tc = terraclear;
-
 namespace terraclear
 {
     class light_meter_camera_calibrator
@@ -69,5 +69,7 @@ namespace terraclear
     };
     
 }
+
+#endif /* TC_USE_SERIAL */
 
 #endif /* LIGHT_METER_CAMERA_CALIBRATOR_HPP */
