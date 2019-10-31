@@ -21,7 +21,12 @@
 #include <iostream>
 #include <unistd.h>
 #include "math.h"
-#include "libterraclear/src/basicserial.hpp"
+
+//other libterraclear includes
+#ifndef TC_USE_SERIAL
+    #define TC_USE_SERIAL
+#endif
+#include "basicserial.hpp"
 
 #include <json/json.h>
 
