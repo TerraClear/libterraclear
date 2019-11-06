@@ -19,7 +19,8 @@ namespace terraclear
 {
     light_meter_camera_calibrator::light_meter_camera_calibrator(int fps)
     {
-        _light_meter.open("/dev/ttyACM0", Baud::BAUD_9600);
+        _light_meter = new light_meter_thread();
+        _light_meter->thread_start("light_meter_obj");
         _max_exposure_time = (1.0 / fps) * 1000000;
     }
 
@@ -27,7 +28,7 @@ namespace terraclear
     {
         camera_settings settings_results;
         
-        std::string light_info = _light_meter.readstring(128, 500);
+        std::string light_info = _light_meter->get_light_info();
         
         if (light_info.length() == LIGHT_READING_LENGTH)
         {
@@ -38,7 +39,7 @@ namespace terraclear
             settings_results.blue_multiplier = 1 / (BLUE_CONST * ((float)parsed_info.blue_channel / (float)parsed_info.green_channel));
             settings_results.exposure_time = std::exp(MODEL_INTERCEPT) * (std::pow(parsed_info.lux, MODEL_SLOPE));
             
-            if (settings_results.exposure_time > _max_exposure_time)
+            if (settings_results.exposure_time > _max_exposure_time || parsed_info.lux == 0)
             {
                 settings_results.exposure_time = _max_exposure_time;
                 settings_results.max_exposure = true;
@@ -47,10 +48,17 @@ namespace terraclear
             if (settings_results.red_multiplier > 4)
             {
                 settings_results.red_multiplier = 4;
+            } else if (parsed_info.red_channel < 2 || settings_results.red_multiplier < 0.25)
+            {
+                settings_results.red_multiplier = 1.26;
             }
+            
             if (settings_results.blue_multiplier > 4)
             {
                 settings_results.blue_multiplier = 4;
+            } else if (parsed_info.blue_channel < 2 || settings_results.blue_multiplier < 0.25)
+            {
+                settings_results.blue_multiplier = 2.32;
             }
         }
         

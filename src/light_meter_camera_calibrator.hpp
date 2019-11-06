@@ -11,10 +11,10 @@
  * Created on October 10, 2019, 11:29 AM
  */
 
+#ifdef TC_USE_SERIAL
+
 #ifndef LIGHT_METER_CAMERA_CALIBRATOR_HPP
 #define LIGHT_METER_CAMERA_CALIBRATOR_HPP
-
-#ifdef TC_USE_SERIAL
 
 #include <cstdlib>
 #include <stdio.h>
@@ -22,11 +22,8 @@
 #include <unistd.h>
 #include "math.h"
 
-//other libterraclear includes
-#ifndef TC_USE_SERIAL
-    #define TC_USE_SERIAL
-#endif
 #include "basicserial.hpp"
+#include "light_meter_thread.hpp"
 
 #include <json/json.h>
 
@@ -68,13 +65,12 @@ namespace terraclear
             camera_settings calibrate_camera_settings();
             
         private:
-            basicserial _light_meter;
+            light_meter_thread* _light_meter;
             int _max_exposure_time;
             light_readings parse_light_readings(std::string light_info);
     };
-    
 }
 
-#endif /* TC_USE_SERIAL */
-
 #endif /* LIGHT_METER_CAMERA_CALIBRATOR_HPP */
+
+#endif /* TC_USE_SERIAL */
