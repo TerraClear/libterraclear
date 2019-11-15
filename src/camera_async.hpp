@@ -29,14 +29,13 @@
 #ifndef CAMERA_ASYNC_HPP
 #define CAMERA_ASYNC_HPP
 
-struct frame_info
-{
-    cv::Mat cam_frame;
-    uint64_t resting_time;
-};
-
 namespace  terraclear
 {  
+    struct frame_info
+    {
+    cv::Mat cam_frame;
+    uint64_t resting_time;
+    };
     class camera_async : public thread_base
     {
         public:

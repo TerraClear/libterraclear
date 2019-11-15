@@ -28,16 +28,16 @@
 
 
 #define OPENCV
-#define TRACK_OPTFLOW
 #define GPU
-#include <darknet/include/yolo_v2_class.hpp>
 
 #include <map>
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
 #include "velocity_calculator.hpp"
+#include "tracker_optflow.hpp"
 
+namespace tc = terraclear;
 namespace terraclear
 {
     class camera_velocity_calculator
@@ -49,29 +49,29 @@ namespace terraclear
                 float y;
             };
             
-            std::vector<bbox_t> _track_anchors;
-            std::map<int, bbox_t> _starting_anchors;
+            std::vector<tc::bounding_box> _track_anchors;
+            std::map<int, tc::bounding_box> _starting_anchors;
             camera_velocity_calculator(cv::Size dst_size, int track_start_y, int track_end_y, int track_max_travel, int track_xy_size, float time_reset_thresh, int _dist_reset_thresh, int anchor_queue_size, bool two_tracking_rows);
-            std::vector<bbox_t> update_tracking (cv::Mat& new_img, uint64_t resting_time);
+            std::vector<tc::bounding_box> update_tracking (cv::Mat& new_img, uint64_t resting_time);
             
             float get_frame_x_v();
             float get_frame_y_v();
             
-            std::vector<bbox_t> get_anchor_tracks();
+            std::vector<tc::bounding_box> get_anchor_tracks();
 
         private:
             int _track_xy_size;
             int _track_max_travel;
             int _track_start_y;
-            std::vector<bbox_t> _track_boxes;
+            std::vector<tc::bounding_box> _track_boxes;
             
             terraclear::velocity_calculator* _calculator_x_v;
             terraclear::velocity_calculator* _calculator_y_v;
             terraclear::velocity_calculator* _calculator_x_a;
             terraclear::velocity_calculator* _calculator_y_a;
             
-            Tracker_optflow* _tracker_engine;
-            bool get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor);
+            tc::tracker_optflow* _tracker_engine;
+            bool get_tracked_anchor(std::vector<tc::bounding_box> &bbox_list, tc::bounding_box &anchor);
     };
 }
 

@@ -28,7 +28,7 @@ namespace terraclear
         _track_xy_size = track_xy_size;
         _track_max_travel = track_max_travel;
         _track_start_y = track_start_y;
-        _tracker_engine = new Tracker_optflow(0, 21, 6, 8000, -1);
+        _tracker_engine = new tc::tracker_optflow(0, 9, 3, 8000, -1);
                 
         uint32_t    track_count = 6;
         uint32_t    paddle_lane = img_size.height - paddle_offset;
@@ -46,10 +46,10 @@ namespace terraclear
         
             for (uint32_t t = 0; t < track_count; t++ )
             {
-                bbox_t tmp_box;
+                tc::bounding_box tmp_box;
                 tmp_box.x = box_x;
                 tmp_box.y = box_y;
-                tmp_box.w = tmp_box.h = track_xy_size;
+                tmp_box.width = tmp_box.height = track_xy_size;
                 tmp_box.track_id = t;
 
                 //keep track of anchors by ID
@@ -59,10 +59,10 @@ namespace terraclear
                 _calculator_x_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.x, _track_max_travel);
                 _calculator_y_v->add_tracker(tmp_box.track_id, anchor_queue_size, tmp_box.y, _track_max_travel);
 
-                bbox_t tmp_box2;
+                tc::bounding_box tmp_box2;
                 tmp_box2.x = box_x;
                 tmp_box2.y = box_y_2;
-                tmp_box2.w = tmp_box2.h = track_xy_size;
+                tmp_box2.width = tmp_box2.height = track_xy_size;
                 tmp_box2.track_id = t + track_count;
 
                 //keep track of anchors by ID
@@ -86,10 +86,10 @@ namespace terraclear
         
             for (uint32_t t = 0; t < track_count; t++ )
             {
-                bbox_t tmp_box;
+                tc::bounding_box tmp_box;
                 tmp_box.x = box_x;
                 tmp_box.y = box_y;
-                tmp_box.w = tmp_box.h = track_xy_size;
+                tmp_box.width = tmp_box.height = track_xy_size;
                 tmp_box.track_id = t;
 
                 //keep track of anchors by ID
@@ -108,7 +108,7 @@ namespace terraclear
         return;
     }
     
-    bool camera_velocity_calculator::get_tracked_anchor(std::vector<bbox_t> &bbox_list, bbox_t &anchor)
+    bool camera_velocity_calculator::get_tracked_anchor(std::vector<tc::bounding_box> &bbox_list, tc::bounding_box &anchor)
     {
         bool retval = false;
 
@@ -120,9 +120,9 @@ namespace terraclear
                 //update anchor..
                 anchor.x = bbox.x;
                 anchor.y = bbox.y;
-                anchor.w = bbox.w;
-                anchor.h = bbox.h;
-                anchor.frames_counter = bbox.frames_counter;
+                anchor.width = bbox.width;
+                anchor.height = bbox.height;
+                anchor.frame_count = bbox.frame_count;
 
                 retval = true;
                 break;                 
@@ -132,9 +132,9 @@ namespace terraclear
         return retval;
     }
     
-    std::vector<bbox_t> camera_velocity_calculator::update_tracking(cv::Mat& new_img, uint64_t resting_time)
+    std::vector<tc::bounding_box> camera_velocity_calculator::update_tracking(cv::Mat& new_img, uint64_t resting_time)
     {
-        std::vector<bbox_t> track_boxes_new;
+        std::vector<tc::bounding_box> track_boxes_new;
         // Make sure the image isnt blank. If is, dont do a tracking flow update
         
         cv::Scalar sum = cv::sum(
@@ -150,7 +150,7 @@ namespace terraclear
             for (auto anchor : _track_anchors)
             {
                 // check that original anchor has been tracked
-                bbox_t tmp_bbox = anchor;
+                tc::bounding_box tmp_bbox = anchor;
                 if (get_tracked_anchor(_track_boxes, tmp_bbox))
                 {
                     // if anchor past max travel distance, reset to top
@@ -195,7 +195,7 @@ namespace terraclear
         return track_boxes_new;
     }
     
-    std::vector<bbox_t> camera_velocity_calculator::get_anchor_tracks()
+    std::vector<tc::bounding_box> camera_velocity_calculator::get_anchor_tracks()
     {
         return _track_anchors;
     }
