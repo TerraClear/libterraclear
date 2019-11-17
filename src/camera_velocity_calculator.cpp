@@ -29,7 +29,7 @@ namespace terraclear
         _track_max_travel = track_max_travel;
         _track_start_y = track_start_y;
         _tracker_engine = new tc::tracker_optflow(0, 9, 3, 8000, -1);
-                
+        
         uint32_t    track_count = 6;
         uint32_t    paddle_lane = img_size.height - paddle_offset;
         uint32_t    track_offset_x = img_size.width / track_count;

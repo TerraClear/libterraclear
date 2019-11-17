@@ -2,6 +2,13 @@
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/cudaarithm.hpp>
 #include <opencv2/core/cuda.hpp>
+#include <memory>
+#include <vector>
+#include <deque>
+#include <algorithm>
+#include <unistd.h>
+#include <stdio.h>
+#include <iostream>
 
 #include "tracker_optflow.hpp"
 
@@ -11,32 +18,18 @@ namespace terraclear
         _gpu_count(cv::cuda::getCudaEnabledDeviceCount()), _gpu_id(std::min(_gpu_id, _gpu_count-1)),
         _flow_error((_flow_error > 0)? _flow_error:(win_size*4))
     {
-
         int const old_gpu_id = cv::cuda::getDevice();
         cv::cuda::setDevice(_gpu_id);
-        cv::cuda::Stream stream = cv::cuda::Stream();
 
-        cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> sync_PyrLKOpticalFlow_gpu = cv::cuda::SparsePyrLKOpticalFlow::create();
+        stream = cv::cuda::Stream();
+
+        sync_PyrLKOpticalFlow_gpu = cv::cuda::SparsePyrLKOpticalFlow::create();
         sync_PyrLKOpticalFlow_gpu->setWinSize(cv::Size(win_size, win_size));    // 9, 15, 21, 31
         sync_PyrLKOpticalFlow_gpu->setMaxLevel(max_level);        // +- 3 pt
         sync_PyrLKOpticalFlow_gpu->setNumIters(iterations);    // 2000, def: 30
 
         cv::cuda::setDevice(old_gpu_id);
     }
-
-    // just to avoid extra allocations
-    cv::cuda::GpuMat src_mat_gpu;
-    cv::cuda::GpuMat dst_mat_gpu, dst_grey_gpu;
-    cv::cuda::GpuMat prev_pts_flow_gpu, cur_pts_flow_gpu;
-    cv::cuda::GpuMat status_gpu, err_gpu;
-
-    cv::cuda::GpuMat src_grey_gpu;    // used in both functions
-    cv::Ptr<cv::cuda::SparsePyrLKOpticalFlow> sync_PyrLKOpticalFlow_gpu;
-    cv::cuda::Stream stream;
-
-    std::vector<tc::bounding_box> cur_bbox_vec;
-    std::vector<bool> good_bbox_vec_flags;
-    cv::Mat prev_pts_flow_cpu;
 
     void tracker_optflow::update_cur_bbox_vec(std::vector<tc::bounding_box> _cur_bbox_vec)
     {
@@ -79,7 +72,7 @@ namespace terraclear
                 src_grey_gpu = cv::cuda::GpuMat(src_mat.size(), CV_8UC1);
             }
 
-            tracker_optflow::update_cur_bbox_vec(_cur_bbox_vec);
+            update_cur_bbox_vec(_cur_bbox_vec);
 
             //src_grey_gpu.upload(src_mat, stream);    // use BGR
             src_mat_gpu.upload(src_mat, stream);

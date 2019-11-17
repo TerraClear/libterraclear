@@ -1,122 +1,102 @@
+#include <tensorflow/core/platform/env.h>
+#include <tensorflow/core/public/session.h>
+
+#include "tensorflow/cc/ops/const_op.h"
+#include "tensorflow/cc/ops/image_ops.h"
+#include "tensorflow/cc/ops/standard_ops.h"
+#include "tensorflow/core/framework/graph.pb.h"
+#include "tensorflow/core/graph/default_device.h"
+#include "tensorflow/core/graph/graph_def_builder.h"
+#include "tensorflow/core/lib/core/threadpool.h"
+#include "tensorflow/core/lib/io/path.h"
+#include "tensorflow/core/lib/strings/stringprintf.h"
+#include "tensorflow/core/platform/init_main.h"
+#include "tensorflow/core/public/session.h"
+#include "tensorflow/core/util/command_line_flags.h"
+#include "tensorflow/core/framework/tensor_shape.h"
+#include "tensorflow/core/framework/tensor.h"
+#include "tensorflow/core/lib/core/status.h"
+
+#include "tensorflow/cc/client/client_session.h"
+
 #include "tf_model.hpp"
 
 namespace  terraclear
 {
-
-    tf_model::tf_model() { }
-
-    tf_model::tf_model(const std::string &path_to_graph) 
-    { 
-        // TensorFlow graph reader
-        tensorflow::GraphDef graph_def;
-        // Read model
-        tensorflow::Status load_graph_status = tensorflow::ReadBinaryProto(tensorflow::Env::Default(), path_to_graph, &graph_def); 
-
-        // Make sure graph read properly   
-        if (!load_graph_status.ok()) 
-        {
-            std::cout << load_graph_status.ToString() << "\n";
-        }
-        
-        tensorflow::Status session_create_status = _session->Create(graph_def);
-
-        if (!session_create_status.ok())
-            std::cout << "Loaded model" << std::endl;
-
-    }
-    
-    /*
-    tf::Status readLabelsMapFile(const string &fileName)
+    tf::Status tf_model::LoadSavedModel(const std::string& path_to_graphDef)
     {
-        // Read file into a string
-        ifstream t(fileName);
+        tf::GraphDef graph_def;
+        tf::SessionOptions options;
 
-        if (t.bad())
-            return tensorflow::errors::NotFound("Failed to load labels map at '", fileName, "'");
-        
-        stringstream buffer;
-        buffer << t.rdbuf();
-        string fileString = buffer.str();
-
-        // Search entry patterns of type 'item { ... }' and parse each of them
-        smatch matcherEntry;
-        smatch matcherId;
-        smatch matcherName;
-        const regex reEntry("item \\{([\\S\\s]*?)\\}");
-        const regex reId("[0-9]+");
-        const regex reName("\'.+\'");
-        string entry;
-
-        auto stringBegin = sregex_iterator(fileString.begin(), fileString.end(), reEntry);
-        auto stringEnd = sregex_iterator();
-
-        int id;
-        string name;
-        for (sregex_iterator i = stringBegin; i != stringEnd; i++) {
-            matcherEntry = *i;
-            entry = matcherEntry.str();
-            regex_search(entry, matcherId, reId);
-            if (!matcherId.empty())
-                id = stoi(matcherId[0].str());
-            else
-                continue;
-            regex_search(entry, matcherName, reName);
-            if (!matcherName.empty())
-                name = matcherName[0].str().substr(1, matcherName[0].str().length() - 2);
-            else
-                continue;
-            _labelsMap.insert(pair<int, string>(id, name));
-        }
-        return Status::OK();
+        _f_session.reset(tf::NewSession(options));
+        TF_CHECK_OK(tf::ReadBinaryProto(tf::Env::Default(), path_to_graphDef, &graph_def));
+        tf::Status load_graph_status = _f_session->Create(graph_def);
+        if (!load_graph_status.ok())
+            std::cerr << "Error loading graph "  << std::endl;
+        return load_graph_status;
     }
 
-    tf::Status readTensorFromMat(const Mat &mat, Tensor &outTensor) 
+    tf::Status tf_model::matToTensor(cv::Mat &mat, tf::Tensor &outTensor) 
     {
         auto root = tensorflow::Scope::NewRootScope();
         using namespace ::tensorflow::ops;
 
         // Trick from https://github.com/tensorflow/tensorflow/issues/8033
         float *p = outTensor.flat<float>().data();
-        Mat fakeMat(mat.rows, mat.cols, CV_32FC3, p);
+
+        cv::Mat fakeMat(mat.rows, mat.cols, CV_32FC3, p);
+
         mat.convertTo(fakeMat, CV_32FC3);
 
-        auto input_tensor = Placeholder(root.WithOpName("input"), tensorflow::DT_FLOAT);
-        vector<pair<string, tensorflow::Tensor>> inputs = {{"input", outTensor}};
-        auto uint8Caster = Cast(root.WithOpName("uint8_Cast"), outTensor, tensorflow::DT_UINT8);
+        auto input_tensor = Placeholder(root.WithOpName("input"), tf::DT_FLOAT);
+        std::vector<std::pair<std::string, tf::Tensor>> inputs = {{"input", outTensor}};
+        auto uint8Caster = Cast(root.WithOpName("uint8_Cast"), outTensor, tf::DT_UINT8);
 
         // This runs the GraphDef network definition that we've just constructed, and
         // returns the results in the output outTensor.
-        tensorflow::GraphDef graph;
+        tf::GraphDef graph;
         TF_RETURN_IF_ERROR(root.ToGraphDef(&graph));
 
-        vector<Tensor> outTensors;
-        unique_ptr<tensorflow::Session> session(tensorflow::NewSession(tensorflow::SessionOptions()));
+        std::vector<tf::Tensor> outTensors;
+        std::unique_ptr<tf::Session> session(tf::NewSession(tf::SessionOptions()));
 
         TF_RETURN_IF_ERROR(session->Create(graph));
         TF_RETURN_IF_ERROR(session->Run({inputs}, {"uint8_Cast"}, {}, &outTensors));
 
         outTensor = outTensors.at(0);
+    return tf::Status::OK();
+}
 
-        return Status::OK();
-    }
-
-    tf::Status detect(cv::Mat& mat)
+    std::vector<tc::bounding_box> tf_model::detect(cv::Mat& img)
     {
-        // Convert new image to tensor
-        tf::Status readTensorFromMat(mat, _tensor);
-
-        tf::Status runStatus = session->Run({{inputLayer, _tensor}}, _outputLayer, {}, &_outputs);
-        if (!runStatus.ok()) {
-            LOG(ERROR) << "Running model failed: " << runStatus;
-            return -1;
-        }
+        tf::Tensor img_tensor = tf::Tensor(tf::DT_FLOAT, {1,img.rows,img.cols, 3});
+        tf::Status readTensorStatus = matToTensor(img, img_tensor);
+        tf::Status runStatus = _f_session->Run({ {_inputLayer, img_tensor} }, _outputLayer , {}, &_outputs);  
 
         // Extract results from the outputs vector
-        tf::TTypes<float>::Flat scores = outputs[1].flat<float>();
-        tf::TTypes<float>::Flat classes = outputs[2].flat<float>();
-        tf::TTypes<float>::Flat numDetections = outputs[3].flat<float>();
-        tf::TTypes<float, 3>::Tensor boxes = outputs[0].flat_outer_dims<float,3>();
+        tf::TTypes<float, 3>::Tensor boxes = _outputs[0].flat_outer_dims<float,3>();
+        tf::TTypes<float>::Flat scores = _outputs[1].flat<float>();
+        tf::TTypes<float>::Flat classes = _outputs[2].flat<float>();
+        tf::TTypes<float>::Flat numDetections = _outputs[3].flat<float>();
 
+        std::vector<tc::bounding_box> tcboxes = {};
+
+        for (int i = 0; i != numDetections.size(); i++)
+        {
+            if (scores(i) >= _confidence)
+            {
+                tc::bounding_box bbox;
+                bbox.x = boxes(0,i,0);
+                bbox.x = boxes(0,i,1);
+                bbox.width = boxes(0,i,2);
+                bbox.height = boxes(0,i,3);
+                tcboxes.push_back(bbox);
+            }
+        }
+      
+
+        return tcboxes;
     }
-    */
+
+    
 }
