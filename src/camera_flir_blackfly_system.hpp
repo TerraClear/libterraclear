@@ -28,7 +28,7 @@
 #ifndef CAMERA_FLIR_BLACKFLY_SYSTEM_HPP
 #define CAMERA_FLIR_BLACKFLY_SYSTEM_HPP
 
-#include <strstream>
+#include <iostream>
 #include <mutex>
 
 #include "Spinnaker.h"

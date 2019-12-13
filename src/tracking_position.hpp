@@ -25,7 +25,7 @@ namespace terraclear
             void update_rock_pos(int new_position);
             tracking_info get_tracking_info();
             
-            void update_position(int pos);
+            void update_position(int pos, uint64_t resting_time);
             float get_velocity();
             void reset_anchor(int pos);
             

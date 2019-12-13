@@ -138,8 +138,13 @@ namespace terraclear
     }
     
     
-
     void vision_filtering::apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv)
+    {
+        //default is green..        
+        apply_gpu_color_contouring(src_img,  dst_img, lowrange, highrange, use_hsv, cv::Scalar(0x00, 0xff, 0x00), 0.30);
+    }
+
+    void vision_filtering::apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv, cv::Scalar contour_color, float alpha)
     {
             //generate GPU matrices.
             cv::cuda::GpuMat gpu_dst, gpu_src;
@@ -147,7 +152,10 @@ namespace terraclear
             //upload image to GPU
             gpu_src.upload(src_img);
 
+            cv::cuda::cvtColor(gpu_src, gpu_src,  cv::COLOR_BGR2BGRA);
             //color for thresholds.
+            cv::cuda::meanShiftFiltering(gpu_src, gpu_dst, 20, 40);
+            
             gpu_dst = apply_gpu_threshold(gpu_src, lowrange, highrange, use_hsv);
 
              //copy GPU image back to regular cv mat
@@ -159,14 +167,22 @@ namespace terraclear
             std::vector<std::vector<cv::Point>> contours;
             cv::findContours(img_result, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-            //drawing contours on separate image
-            cv::Mat drawing = cv::Mat::zeros(dst_img.size(), CV_8UC3);
-            for( int i = 0; i< contours.size(); i++ )
-                drawContours(drawing, contours, i, cv::Scalar(0x00, 0xff, 0x00), 1, 8);
+            if (alpha > 0.75)
+            {
+                //draw directly without opacity
+                for( int i = 0; i< contours.size(); i++ )
+                    drawContours(dst_img, contours, i, contour_color, 1, 8);
+            }
+            else
+            {
+                //drawing contours on separate image
+                cv::Mat drawing = cv::Mat::zeros(dst_img.size(), CV_8UC3);
+                for( int i = 0; i< contours.size(); i++ )
+                    drawContours(drawing, contours, i, contour_color, 1, 8);
 
-            //alpha blend contour temp image with opacity onto dst image.
-            float alpha = 0.30;
-            cv::addWeighted(drawing, alpha, dst_img, 1.0, 0, dst_img);
+                //alpha blend contour temp image with opacity onto dst image.
+                cv::addWeighted(drawing, alpha, dst_img, 1.0, 0.5, dst_img);
+            }
     }
      
 

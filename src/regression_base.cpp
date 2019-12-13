@@ -20,11 +20,12 @@ namespace terraclear
             _sw.reset();
 	}
 
-	void regression_base::update_position(int& pos)
+	void regression_base::update_position(int& pos, uint64_t resting_time)
 	{
             position_time current_pos;
-            _time_sum = _time_sum + _sw.get_elapsed_ms() / 1000.0;
+            _time_sum = _time_sum + (_sw.get_elapsed_ms() + _last_time_offset - resting_time) / 1000.0;
             _sw.reset();
+            _last_time_offset = resting_time;
             current_pos.time = _time_sum;
             current_pos.position = pos;
             

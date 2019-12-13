@@ -38,7 +38,7 @@ namespace terraclear
     {
         public:
             regression_base(terraclear::regression_obj_meta& info);
-            void update_position(int& pos);
+            void update_position(int& pos, uint64_t resting_time=0);
             regression_result get_regression() const;
             
         protected:
@@ -47,6 +47,7 @@ namespace terraclear
             float _time_reset_thresh;
             int _queue_size;
             int _id;
+            uint64_t _last_time_offset = 0;
             terraclear::stopwatch _sw;
     };
 }
