@@ -51,6 +51,7 @@ namespace terraclear
             static cv::cuda::GpuMat apply_normalization_rgb_gpu(cv::cuda::GpuMat& src_img);
             static cv::cuda::GpuMat apply_gpu_threshold(cv::cuda::GpuMat& src_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv = true);
             static void             apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv = true);
+            static void             apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv, cv::Scalar contour_color, float alpha);
             static cv::Mat          apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, std::vector<cv::Point> pts_src, std::vector<cv::Point> pts_dst);
             static cv::Mat          apply_gpu_rotate(cv::Mat src_img, float rotation_angle);
 
