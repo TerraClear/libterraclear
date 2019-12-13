@@ -14,6 +14,8 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/imgproc.hpp>
+#include <iostream>
+#include <fstream>
 
 #include "vision_filtering.hpp"
 
@@ -187,7 +189,29 @@ namespace terraclear
 
         return ret_img;
     }
+    
+   
+    
+    
+    cv::Mat vision_filtering::apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, cv::Mat h_mat)
+    {
+        cv::cuda::GpuMat gpu_src(src_img);
+        cv::cuda::GpuMat gpu_dst;
 
+        // Calculate Homography
+        
+        //GPU warp original & resize.
+        cv::cuda::warpPerspective(gpu_src, gpu_dst, h_mat, dst_size); // do perspective transformation
+
+        //copy GPU image back to regular cv mat
+        cv::Mat ret_img(gpu_dst);    
+
+        gpu_src.release();
+        gpu_dst.release();
+
+        return ret_img;
+    }
+   
     cv::Mat vision_filtering::apply_gpu_rotate(cv::Mat src_img, float rotation_angle)
     {
         cv::cuda::GpuMat gpu_src(src_img);
@@ -277,7 +301,7 @@ namespace terraclear
         cv::Mat dst_img;
         cv::Size dst_size(src_img.cols, src_img.rows);
 
-        //Rotate.
+        //Rotate.apply_
         cv::warpAffine(src_img, dst_img, rotation_matrix, dst_size); 
 
         return dst_img;
