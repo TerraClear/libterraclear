@@ -188,22 +188,10 @@ namespace terraclear
 
     cv::Mat vision_filtering::apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, std::vector<cv::Point> pts_src, std::vector<cv::Point> pts_dst)
     {
-        cv::cuda::GpuMat gpu_src(src_img);
-        cv::cuda::GpuMat gpu_dst;
-
         // Calculate Homography
         cv::Mat h_mat = cv::findHomography(pts_src, pts_dst);
 
-        //GPU warp original & resize.
-        cv::cuda::warpPerspective(gpu_src, gpu_dst, h_mat, dst_size); // do perspective transformation
-
-        //copy GPU image back to regular cv mat
-        cv::Mat ret_img(gpu_dst);    
-
-        gpu_src.release();
-        gpu_dst.release();
-
-        return ret_img;
+        return apply_gpu_warp(src_img, dst_size, h_mat);
     }
     
    
