@@ -19,6 +19,7 @@
  * 
 */
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <algorithm>
 
@@ -26,6 +27,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/features2d.hpp>
 #include <opencv2/calib3d.hpp>
 
 //OPENCV GPU
@@ -35,6 +37,8 @@
 #include <opencv2/cudawarping.hpp>
 #include <opencv2/cudafeatures2d.hpp>
 
+// #include <opencv2/core/types.hpp>
+// #include <opencv2/core/hal/interface.h>
 
 #ifndef VISION_FILTERING_HPP
 #define VISION_FILTERING_HPP
