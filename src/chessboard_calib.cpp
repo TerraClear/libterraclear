@@ -11,8 +11,8 @@
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/calib3d.hpp>
 
-#include <libterraclear/src/chessboard_calib.hpp>
-#include <libterraclear/src/filetools.hpp>
+#include "chessboard_calib.hpp"
+#include "filetools.hpp"
 
 namespace  terraclear
 {   
@@ -34,10 +34,18 @@ namespace  terraclear
         return cv::findChessboardCorners(_img, board_sz, corners);
     }
     
+    void chessboard_calib::addManualCorners(std::vector<cv::Point2f> internal_corners)
+    {
+        for (int i = 0; i < internal_corners.size(); i++)
+        {
+            corners.push_back(internal_corners.at(i));
+        }
+    }
+    
     void chessboard_calib::calcChessboardCorners(cv::Size boardSize, terraclear::Pattern patternType = terraclear::Pattern::CHESSBOARD)
     {
         objectPoints.resize(0);
-
+        
         switch (patternType)
         {
             case CHESSBOARD:
@@ -73,9 +81,9 @@ namespace  terraclear
     cv::Mat chessboard_calib::init_transform()
     {
         cv::Mat rvec, tvec;
-
+        
         cv::solvePnP(objectPoints, corners, cameraMatrix, distCoeffs, rvec, tvec);
-
+        
         cv::Mat R_desired = (cv::Mat_<double>(3,3) <<
                         0, -1, 0,
                         1, 0, 0,
@@ -88,11 +96,11 @@ namespace  terraclear
         cv::Mat origin1 = R*origin + tvec;
         
         double d_inv1 = 1.0 / normal1.dot(origin1);
-
+        
         cv::Mat R_1to2, tvec_1to2;
         cv::Mat tvec_desired = tvec.clone();
         chessboard_calib::computeC2MC1(R, tvec, R_desired, tvec_desired, R_1to2, tvec_1to2);
-       
+        
         _transform_matrix = R_1to2 + d_inv1 * tvec_1to2*normal1.t();
         _transform_matrix = cameraMatrix * _transform_matrix * cameraMatrix.inv();
         cv::Mat final_mat = _transform_matrix/_transform_matrix.at<double>(2,2);

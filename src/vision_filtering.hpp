@@ -18,8 +18,8 @@
  * CREATED BY: Koos du Preez - koos@terraclear.com
  * 
 */
-
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <algorithm>
 
@@ -27,6 +27,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/features2d.hpp>
 #include <opencv2/calib3d.hpp>
 
 //OPENCV GPU
@@ -36,6 +37,8 @@
 #include <opencv2/cudawarping.hpp>
 #include <opencv2/cudafeatures2d.hpp>
 
+// #include <opencv2/core/types.hpp>
+// #include <opencv2/core/hal/interface.h>
 
 #ifndef VISION_FILTERING_HPP
 #define VISION_FILTERING_HPP
@@ -50,8 +53,10 @@ namespace terraclear
 
             //gpu versions of filters and transforms
             static cv::cuda::GpuMat apply_normalization_rgb_gpu(cv::cuda::GpuMat& src_img);
-            static cv::cuda::GpuMat apply_gpu_threshold(cv::cuda::GpuMat& src_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv = true);
+            static cv::cuda::GpuMat apply_gpu_threshold(cv::cuda::GpuMat& src_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv = true);      
             static void             apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv = true);
+            static void             apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv, cv::Scalar contour_color, float alpha);            
+            static cv::Mat          apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, cv::Mat h_mat);          
             static cv::Mat          apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, std::vector<cv::Point> pts_src, std::vector<cv::Point> pts_dst);
             static cv::Mat          apply_gpu_rotate(cv::Mat src_img, float rotation_angle);
 

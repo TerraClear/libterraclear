@@ -14,6 +14,8 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/imgproc.hpp>
+#include <iostream>
+#include <fstream>
 
 #include "vision_filtering.hpp"
 
@@ -136,8 +138,13 @@ namespace terraclear
     }
     
     
-
     void vision_filtering::apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv)
+    {
+        //default is green..        
+        apply_gpu_color_contouring(src_img,  dst_img, lowrange, highrange, use_hsv, cv::Scalar(0x00, 0xff, 0x00), 0.30);
+    }
+
+    void vision_filtering::apply_gpu_color_contouring(cv::Mat& src_img,  cv::Mat& dst_img, cv::Scalar lowrange, cv::Scalar highrange, bool use_hsv, cv::Scalar contour_color, float alpha)
     {
             //generate GPU matrices.
             cv::cuda::GpuMat gpu_dst, gpu_src;
@@ -145,7 +152,10 @@ namespace terraclear
             //upload image to GPU
             gpu_src.upload(src_img);
 
+            cv::cuda::cvtColor(gpu_src, gpu_src,  cv::COLOR_BGR2BGRA);
             //color for thresholds.
+            cv::cuda::meanShiftFiltering(gpu_src, gpu_dst, 20, 40);
+            
             gpu_dst = apply_gpu_threshold(gpu_src, lowrange, highrange, use_hsv);
 
              //copy GPU image back to regular cv mat
@@ -157,24 +167,38 @@ namespace terraclear
             std::vector<std::vector<cv::Point>> contours;
             cv::findContours(img_result, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-            //drawing contours on separate image
-            cv::Mat drawing = cv::Mat::zeros(dst_img.size(), CV_8UC3);
-            for( int i = 0; i< contours.size(); i++ )
-                drawContours(drawing, contours, i, cv::Scalar(0x00, 0xff, 0x00), 1, 8);
+            if (alpha > 0.75)
+            {
+                //draw directly without opacity
+                for( int i = 0; i< contours.size(); i++ )
+                    drawContours(dst_img, contours, i, contour_color, 1, 8);
+            }
+            else
+            {
+                //drawing contours on separate image
+                cv::Mat drawing = cv::Mat::zeros(dst_img.size(), CV_8UC3);
+                for( int i = 0; i< contours.size(); i++ )
+                    drawContours(drawing, contours, i, contour_color, 1, 8);
 
-            //alpha blend contour temp image with opacity onto dst image.
-            float alpha = 0.30;
-            cv::addWeighted(drawing, alpha, dst_img, 1.0, 0, dst_img);
+                //alpha blend contour temp image with opacity onto dst image.
+                cv::addWeighted(drawing, alpha, dst_img, 1.0, 0.5, dst_img);
+            }
     }
      
 
     cv::Mat vision_filtering::apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, std::vector<cv::Point> pts_src, std::vector<cv::Point> pts_dst)
     {
-        cv::cuda::GpuMat gpu_src(src_img);
-        cv::cuda::GpuMat gpu_dst;
-
         // Calculate Homography
         cv::Mat h_mat = cv::findHomography(pts_src, pts_dst);
+
+        return apply_gpu_warp(src_img, dst_size, h_mat);
+    }
+    
+    
+    cv::Mat vision_filtering::apply_gpu_warp(cv::Mat src_img, cv::Size dst_size, cv::Mat h_mat)
+    {
+        cv::cuda::GpuMat gpu_src(src_img);
+        cv::cuda::GpuMat gpu_dst;
 
         //GPU warp original & resize.
         cv::cuda::warpPerspective(gpu_src, gpu_dst, h_mat, dst_size); // do perspective transformation
@@ -187,7 +211,7 @@ namespace terraclear
 
         return ret_img;
     }
-
+   
     cv::Mat vision_filtering::apply_gpu_rotate(cv::Mat src_img, float rotation_angle)
     {
         cv::cuda::GpuMat gpu_src(src_img);
@@ -277,7 +301,7 @@ namespace terraclear
         cv::Mat dst_img;
         cv::Size dst_size(src_img.cols, src_img.rows);
 
-        //Rotate.
+        //Rotate.apply_
         cv::warpAffine(src_img, dst_img, rotation_matrix, dst_size); 
 
         return dst_img;

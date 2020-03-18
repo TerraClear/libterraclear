@@ -25,6 +25,7 @@ namespace  terraclear
             chessboard_calib(std::string camera_xml);
             void update_frame(const cv::Mat img_src);
             bool findChessBoard(const cv::Size board_sz);
+            void addManualCorners(std::vector<cv::Point2f> internal_corners);
             void calcChessboardCorners(cv::Size boardSize, terraclear::Pattern patternType);
             void computeC2MC1(const cv::Mat &R1, const cv::Mat &tvec1, const cv::Mat &R2, const cv::Mat &tvec2, cv::Mat &R_1to2, cv::Mat &tvec_1to2);
             cv::Mat init_transform();

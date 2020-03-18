@@ -14,8 +14,8 @@
 #include <opencv2/cudawarping.hpp>
 #include <opencv2/calib3d.hpp>
 
-#include "libterraclear/src/vision_warp.h"
-#include <libterraclear/src/filetools.hpp>
+#include "vision_warp.hpp"
+#include "filetools.hpp"
 
 using namespace cv;
 using namespace std;

@@ -74,4 +74,3 @@ namespace  terraclear
 #endif /* BASICSERIAL_HPP */
 
 #endif //TC_USE_SERIAL
-

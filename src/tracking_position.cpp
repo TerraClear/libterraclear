@@ -21,7 +21,7 @@ namespace terraclear
         regression_base::update_position(pos);
     }
 
-    void tracking_position::update_position(int pos)
+    void tracking_position::update_position(int pos, uint64_t resting_time)
     {
         //If distance traveled getting too large, set values back
         if (_position_history.front().position > _dist_reset_thresh)
@@ -37,7 +37,7 @@ namespace terraclear
         int pos_diff = pos - _previous_position;
         _previous_position = pos;
         _position_sum += pos_diff;
-        regression_base::update_position(_position_sum);
+        regression_base::update_position(_position_sum, resting_time);
     }
 
     tracking_position::tracking_info tracking_position::get_tracking_info()

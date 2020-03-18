@@ -57,13 +57,23 @@ namespace  terraclear
         return _fps_max;
     }
     
-    cv::Mat camera_async::get_ImageBuffer()
+    uint64_t camera_async::get_total_frame_count()
     {
+        return _total_frame_count;
+    }
+    
+    frame_info camera_async::get_ImageBuffer()
+    {
+        frame_info new_frame;
+        
         mutex_lock();
            _buffer_back.copyTo(_buffer_front);
         mutex_unlock();
 
-        return _buffer_front;
+        new_frame.cam_frame = _buffer_front;
+        new_frame.resting_time = _sw.get_elapsed_ms();
+        
+        return new_frame;
     }
     
     void camera_async::reset_lost_frames()
@@ -109,6 +119,8 @@ namespace  terraclear
         //read frame...
         if (_pcam->frame_update())
         {
+            _total_frame_count++;
+            
             int ms_left = (1000 / _fps_max) - _sw.get_elapsed_ms();
 
             //match requested frame rate if delay enabled
