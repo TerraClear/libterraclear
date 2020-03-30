@@ -34,15 +34,18 @@ namespace terraclear
 
             //pixel area as min area to change to trigger motion.
             void set_motion_threshold(double motion_threshold);
+            void set_blur_kernel(unsigned short kernel_size);
             
             //pure virtual implementation
             std::vector<bounding_box> detect_objects();
 
             //debug mode
             bool _debug_mode = false;
+            bool _contour_mode = false;
             
         private:
-            double _motion_threshold = 500;
+            double _motion_threshold = 150;
+            double _kernel_size = 5;
             cv::Mat _imgsrc_old;
             uint64_t _detect_count = 0;
 

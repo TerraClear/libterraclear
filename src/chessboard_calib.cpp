@@ -11,8 +11,8 @@
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/calib3d.hpp>
 
-#include <libterraclear/src/chessboard_calib.hpp>
-#include <libterraclear/src/filetools.hpp>
+#include "chessboard_calib.hpp"
+#include "filetools.hpp"
 
 namespace  terraclear
 {   

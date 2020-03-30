@@ -10,6 +10,7 @@ used by the compiler & linker. Then clone all depencies & sources into that fold
 Dependencies:
 ----------------
 - libcppjson-dev :  sudo apt-get install libjsoncpp-dev
+- cxxopts : Clone into parent folder - https://github.com/TerraClear/cxxopts
 - libserialport (OPTIONAL - Compile with -DTC_USE_SERIAL): get from https://sigrok.org/wiki/Libserialport (requires autoconf and libtool install)
 - realsense2 libs  (OPTIONAL - Compile with -DTC_USE_REALSENSE): https://github.com/IntelRealSense/librealsense/blob/master/doc/installation.md
 
