@@ -22,7 +22,10 @@
 #ifndef LIGHT_METER_THREAD_HPP
 #define LIGHT_METER_THREAD_HPP
 
-#define LIGHT_READING_LENGTH 35
+namespace
+{
+    int LIGHT_READING_LENGTH = 35;
+}
 
 namespace  terraclear
 {  
