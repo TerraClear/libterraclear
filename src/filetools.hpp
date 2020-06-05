@@ -44,6 +44,7 @@ namespace  terraclear
             
             //static helper functions
             static bool         file_exists(const std::string  filename);
+            static bool         directory_exists(const std::string& dirname);
             static std::string  get_filename(std::string file_path);
             static std::string  get_base_path(std::string file_path);
             static std::string  get_extension(std::string file_name);
@@ -51,6 +52,7 @@ namespace  terraclear
             static std::string  replace_extension(std::string file_name, std::string new_extension);
             static std::string  path_append(std::string path_str, std::string append_str);
             static std::string  generate_filename_seq(std::string file_name, std::string extra = "");
+            static std::string  generate_directory_seq(std::string dirname, std::string extra = "");
             
             static std::vector <std::string>    read_directory( const std::string path, bool sort_by_name = true);
             static std::vector <std::string>    sort_files(std::vector<std::string> file_list, bool ascending = true);

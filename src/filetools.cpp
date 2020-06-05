@@ -37,6 +37,14 @@ namespace  terraclear
       std::ifstream ifile(filename.c_str(), std::ifstream::in | std::ifstream::binary);
       return (bool)ifile;
     }
+    
+    
+    // check if directory exists..
+    bool filetools::directory_exists(const std::string& dirname)
+    {
+      DIR* dir = opendir(dirname.c_str());
+      return (bool)dir;
+    }
 
     std::vector <std::string> filetools::sort_files(std::vector<std::string> file_list, bool ascending)
     {
@@ -257,6 +265,35 @@ namespace  terraclear
         } while (file_exists(tmp_file));
 
         return tmp_file;
+    }
+    
+     // generates a folder name to prevent duplicates...
+    std::string filetools::generate_directory_seq(std::string dirname, std::string extra)
+    {
+      int dirSeq = 1;
+      int maxTries = 1000000;
+      std::string defaultDir = dirname;
+      std::string tmpDir = defaultDir;
+
+      do
+      {
+        std::stringstream stringStream;
+        stringStream << dirname << extra << "_" << dirSeq;
+        tmpDir = stringStream.str();
+
+        dirSeq++;
+        maxTries--;
+
+        // max Dir sequence generation reached, use default and overwrite.
+        if (maxTries <= 0)
+        {
+          tmpDir = defaultDir;
+          break;
+        }
+
+      } while (directory_exists(tmpDir));
+
+      return tmpDir;
     }
     
     //read lines from text file..
