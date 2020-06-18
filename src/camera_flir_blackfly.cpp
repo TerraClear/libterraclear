@@ -232,7 +232,7 @@ namespace terraclear
                 uint32_t height = image_ptr->GetHeight();
 
                 //convert bgr8
-                flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8);
+                flir::ImagePtr img_converted_ptr = image_ptr->Convert(flir::PixelFormatEnums::PixelFormat_BGR8, flir::ColorProcessingAlgorithm::BILINEAR);
 
                 //image data contains padding. When allocating Mat container size, you need to account for the X,Y image data padding.
                 _buffer_camera = cv::Mat(height + ypad, width + xpad, CV_8UC3, img_converted_ptr->GetData(), img_converted_ptr->GetStride());
