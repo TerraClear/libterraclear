@@ -1,6 +1,7 @@
 # libterraclear
 
-TerraClear Shared C++ libary
+TerraClear Shared C++ libary - 
+** This library is over 2 years old and heavily out of date. We are now using a much improved modern C++ internal API **
 
 Folder Structures
 ------------------
